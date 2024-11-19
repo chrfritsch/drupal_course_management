@@ -1,0 +1,9 @@
+name: course-management
+recipe: drupal10
+config:
+  webroot: web
+services:
+  pma:
+    type: phpmyadmin
+    hosts:
+      - database
