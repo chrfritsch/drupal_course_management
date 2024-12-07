@@ -1,0 +1,5 @@
+name: 'course_content_management'
+type: module
+description: 'Provide api to get content'
+package: Custom
+core_version_requirement: ^10 || ^11

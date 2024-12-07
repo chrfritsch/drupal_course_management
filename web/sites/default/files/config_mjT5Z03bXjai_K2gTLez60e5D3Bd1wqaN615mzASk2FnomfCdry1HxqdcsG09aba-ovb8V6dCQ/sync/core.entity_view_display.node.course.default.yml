@@ -1,0 +1,28 @@
+uuid: 43b9e1ce-c30a-489e-a027-2a626bf40c4e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.course.field_course_description
+    - node.type.course
+  module:
+    - text
+    - user
+id: node.course.default
+targetEntityType: node
+bundle: course
+mode: default
+content:
+  field_course_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

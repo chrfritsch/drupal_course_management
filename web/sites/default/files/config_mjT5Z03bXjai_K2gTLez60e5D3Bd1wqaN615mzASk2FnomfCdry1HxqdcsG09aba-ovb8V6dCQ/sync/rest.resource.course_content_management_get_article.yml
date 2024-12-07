@@ -1,0 +1,19 @@
+uuid: 0d9f90d0-85c4-4ccd-9b93-31ed908f929a
+langcode: en
+status: true
+dependencies:
+  module:
+    - course_content_management
+    - serialization
+    - user
+_core:
+  default_config_hash: Hw9IsgHmwT4bAz4fS88fsgGNIlJd5wqzHyVnuc0qWRE
+id: course_content_management_get_article
+plugin_id: course_content_management_get_article
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie
