@@ -42,7 +42,7 @@ class TestContent extends ControllerBase {
   }
 
   /**
-   * Provides example content for route specific authentication.
+   * Provides example content for route specific course_management_authentication.
    *
    * @return string
    *   The user name of the current logged in user.

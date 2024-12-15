@@ -3,12 +3,12 @@
 namespace Drupal\user;
 
 /**
- * An interface for validating user authentication credentials.
+ * An interface for validating user course_management_authentication credentials.
  */
 interface UserAuthenticationInterface {
 
   /**
-   * Validates user authentication credentials.
+   * Validates user course_management_authentication credentials.
    *
    * @param string $identifier
    *   The user identifier to authenticate. Usually the username.
@@ -19,7 +19,7 @@ interface UserAuthenticationInterface {
   public function lookupAccount($identifier): UserInterface|false;
 
   /**
-   * Validates user authentication credentials for an account.
+   * Validates user course_management_authentication credentials for an account.
    *
    * This can be used where the account has already been located using the login
    * credentials.

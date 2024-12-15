@@ -1,0 +1,9 @@
+user_info.upload_avatar:
+  path: '/api/user-info-api/{uid}/avatar'
+  defaults:
+    _controller: '\Drupal\user_info\Controller\UserAvatarController::upload'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
+  options:
+    _auth: ['basic_auth']

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Cache policy for pages requested with REST Test Auth.
  *
  * This policy disallows caching of requests that use the REST Test Auth
- * authentication provider for security reasons (just like basic_auth).
+ * course_management_authentication provider for security reasons (just like basic_auth).
  * Otherwise responses for authenticated requests can get into the page cache
  * and could be delivered to unprivileged users.
  *

@@ -1,6 +1,6 @@
 name: 'HTTP Basic Authentication'
 type: module
-description: 'Provides an HTTP Basic authentication provider.'
+description: 'Provides an HTTP Basic course_management_authentication provider.'
 package: Web services
 version: VERSION
 dependencies:

@@ -31,7 +31,7 @@ class ContentModerationStateResourceTest extends KernelTestBase {
       'configuration' => [
         'methods' => ['GET'],
         'formats' => ['json'],
-        'authentication' => ['cookie'],
+        'course_management_authentication' => ['cookie'],
       ],
     ])
       ->enable()

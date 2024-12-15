@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
  *   necessary to subclass it at all. In order to reach the point where Drupal
  *   can use the Symfony session management unmodified, the code implemented
  *   here needs to be extracted either into a dedicated session handler proxy
- *   (e.g. sid-hashing) or relocated to the authentication subsystem.
+ *   (e.g. sid-hashing) or relocated to the course_management_authentication subsystem.
  */
 class SessionManager extends NativeSessionStorage implements SessionManagerInterface {
 

@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Generate a challenge when access is denied for unauthenticated users.
  *
  * On a 403 (access denied), if there are no credentials on the request, some
- * authentication methods (e.g. basic auth) require that a challenge is sent to
+ * course_management_authentication methods (e.g. basic auth) require that a challenge is sent to
  * the client.
  */
 interface AuthenticationProviderChallengeInterface {
@@ -22,7 +22,7 @@ interface AuthenticationProviderChallengeInterface {
    *   The previous exception.
    *
    * @return \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface|null
-   *   An exception to be used in order to generate an authentication challenge.
+   *   An exception to be used in order to generate an course_management_authentication challenge.
    */
   public function challengeException(Request $request, \Exception $previous);
 

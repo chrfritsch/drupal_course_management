@@ -3,12 +3,12 @@
 namespace Drupal\Core\Authentication;
 
 /**
- * A collector class for authentication providers.
+ * A collector class for course_management_authentication providers.
  */
 class AuthenticationCollector implements AuthenticationCollectorInterface {
 
   /**
-   * Array of all registered authentication providers, keyed by ID.
+   * Array of all registered course_management_authentication providers, keyed by ID.
    *
    * @var \Drupal\Core\Authentication\AuthenticationProviderInterface[]
    */

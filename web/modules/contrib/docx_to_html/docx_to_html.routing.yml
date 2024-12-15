@@ -1,0 +1,7 @@
+docx_to_html.page:
+  path: '/docx-to-html'
+  defaults:
+    _controller: '\Drupal\docx_to_html\Controller\DocxToHtmlController::content'
+    _title: 'DOCX to HTML Converter'
+  requirements:
+    _permission: 'access docx to html converter'

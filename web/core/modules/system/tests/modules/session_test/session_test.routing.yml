@@ -101,7 +101,7 @@ session_test.trace_handler:
 session_test.get_session_basic_auth:
   path: '/session-test/get-session'
   defaults:
-    _title: 'Get session information using basic authentication'
+    _title: 'Get session information using basic course_management_authentication'
     _controller: '\Drupal\session_test\Controller\SessionTestController::getSession'
   options:
     no_cache: TRUE
@@ -122,7 +122,7 @@ session_test.get_session_no_auth:
 session_test.set_session:
   path: '/session-test/set-session/{test_value}'
   defaults:
-    _title: 'Set a session value using basic authentication'
+    _title: 'Set a session value using basic course_management_authentication'
     _controller: '\Drupal\session_test\Controller\SessionTestController::setSession'
   options:
     no_cache: TRUE

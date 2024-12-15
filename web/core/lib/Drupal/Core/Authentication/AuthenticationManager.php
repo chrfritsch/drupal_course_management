@@ -6,9 +6,9 @@ use Drupal\Core\Routing\RouteMatch;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Manager for authentication.
+ * Manager for course_management_authentication.
  *
- * On each request, let all authentication providers try to authenticate the
+ * On each request, let all course_management_authentication providers try to authenticate the
  * user. The providers are iterated according to their priority and the first
  * provider detecting credentials for its method wins. No further provider will
  * get triggered.
@@ -18,17 +18,17 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthenticationManager implements AuthenticationProviderInterface, AuthenticationProviderFilterInterface, AuthenticationProviderChallengeInterface {
 
   /**
-   * The authentication provider collector.
+   * The course_management_authentication provider collector.
    *
    * @var \Drupal\Core\Authentication\AuthenticationCollectorInterface
    */
   protected $authCollector;
 
   /**
-   * Creates a new authentication manager instance.
+   * Creates a new course_management_authentication manager instance.
    *
    * @param \Drupal\Core\Authentication\AuthenticationCollectorInterface $auth_collector
-   *   The authentication provider collector.
+   *   The course_management_authentication provider collector.
    */
   public function __construct(AuthenticationCollectorInterface $auth_collector) {
     $this->authCollector = $auth_collector;
@@ -89,13 +89,13 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
   }
 
   /**
-   * Returns the id of the authentication provider for a request.
+   * Returns the id of the course_management_authentication provider for a request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    *
    * @return string|null
-   *   The id of the first authentication provider which applies to the request.
+   *   The id of the first course_management_authentication provider which applies to the request.
    *   If no application detects appropriate credentials, then NULL is returned.
    */
   protected function getProvider(Request $request) {
@@ -113,7 +113,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    *   The incoming request.
    *
    * @return string|null
-   *   The ID of the first authentication provider which applies to the request.
+   *   The ID of the first course_management_authentication provider which applies to the request.
    *   If no application detects appropriate credentials, then NULL is returned.
    */
   protected function getChallenger(Request $request) {
@@ -135,7 +135,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @param bool $authenticated
    *   Whether or not the request is authenticated.
    * @param string $provider_id
-   *   The id of the authentication provider to check access for.
+   *   The id of the course_management_authentication provider to check access for.
    *
    * @return bool
    *   TRUE if provider is allowed, FALSE otherwise.
@@ -166,7 +166,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    * @param string $provider_id
-   *   The id of the authentication provider to check access for.
+   *   The id of the course_management_authentication provider to check access for.
    *
    * @return bool
    *   TRUE if provider is allowed, FALSE otherwise.

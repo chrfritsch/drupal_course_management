@@ -180,7 +180,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
     catch (\PDOException $e) {
       if (static::getSQLState($e) == static::CONNECTION_FAILURE) {
-        if (str_contains($e->getMessage(), 'password authentication failed for user')) {
+        if (str_contains($e->getMessage(), 'password course_management_authentication failed for user')) {
           throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
         }
         elseif (str_contains($e->getMessage(), 'database') && str_contains($e->getMessage(), 'does not exist')) {

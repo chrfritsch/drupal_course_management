@@ -96,9 +96,9 @@ class ResourceRoutes implements EventSubscriberInterface {
       if (($methods && ($method = $methods[0]) && $rest_resource_config->getFormats($method))) {
         $route->setRequirement('_csrf_request_header_token', 'TRUE');
 
-        // Check that authentication providers are defined.
+        // Check that course_management_authentication providers are defined.
         if (empty($rest_resource_config->getAuthenticationProviders($method))) {
-          $this->logger->error('At least one authentication provider must be defined for resource @id', ['@id' => $rest_resource_config->id()]);
+          $this->logger->error('At least one course_management_authentication provider must be defined for resource @id', ['@id' => $rest_resource_config->id()]);
           continue;
         }
 
@@ -113,7 +113,7 @@ class ResourceRoutes implements EventSubscriberInterface {
         //   that may send response bodies (unless hardcoded by the plugin)
         // - set the allowed request body content types/formats for methods that
         //   allow request bodies to be sent (unless hardcoded by the plugin)
-        // - set the allowed authentication providers
+        // - set the allowed course_management_authentication providers
         if (in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'], TRUE) && !$route->hasRequirement('_format')) {
           $route->addRequirements(['_format' => implode('|', $rest_resource_config->getFormats($method))]);
         }

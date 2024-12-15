@@ -83,7 +83,7 @@ class ConfigDependenciesTest extends KernelTestBase {
           'configuration' => [
             'methods' => ['GET', 'POST'],
             'formats' => ['json'],
-            'authentication' => ['cookie', 'basic_auth'],
+            'course_management_authentication' => ['cookie', 'basic_auth'],
           ],
         ],
       ],
@@ -162,41 +162,41 @@ class ConfigDependenciesTest extends KernelTestBase {
           'configuration' => [
             'methods' => ['GET', 'POST'],
             'formats' => ['xml', 'json'],
-            'authentication' => ['cookie', 'basic_auth'],
+            'course_management_authentication' => ['cookie', 'basic_auth'],
           ],
         ],
         'serialization',
         [
           'methods' => ['GET', 'POST'],
           'formats' => ['xml'],
-          'authentication' => ['cookie', 'basic_auth'],
+          'course_management_authentication' => ['cookie', 'basic_auth'],
         ],
       ],
-      'resource with multiple authentication providers' => [
+      'resource with multiple course_management_authentication providers' => [
         [
           'plugin_id' => 'entity:entity_test',
           'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
           'configuration' => [
             'methods' => ['GET', 'POST'],
             'formats' => ['json', 'xml'],
-            'authentication' => ['cookie', 'basic_auth'],
+            'course_management_authentication' => ['cookie', 'basic_auth'],
           ],
         ],
         'basic_auth',
         [
           'methods' => ['GET', 'POST'],
           'formats' => ['json', 'xml'],
-          'authentication' => ['cookie'],
+          'course_management_authentication' => ['cookie'],
         ],
       ],
-      'resource with only basic_auth authentication' => [
+      'resource with only basic_auth course_management_authentication' => [
         [
           'plugin_id' => 'entity:entity_test',
           'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
           'configuration' => [
             'methods' => ['GET', 'POST'],
             'formats' => ['json', 'xml'],
-            'authentication' => ['basic_auth'],
+            'course_management_authentication' => ['basic_auth'],
           ],
         ],
         'basic_auth',

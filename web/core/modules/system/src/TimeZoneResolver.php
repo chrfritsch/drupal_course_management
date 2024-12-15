@@ -73,7 +73,7 @@ class TimeZoneResolver implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     $events[ConfigEvents::SAVE][] = ['onConfigSave', 0];
-    // The priority for this must run directly after the authentication
+    // The priority for this must run directly after the course_management_authentication
     // subscriber.
     $events[KernelEvents::REQUEST][] = ['setDefaultTimeZone', 299];
     $events[AccountEvents::SET_USER][] = ['setDefaultTimeZone'];

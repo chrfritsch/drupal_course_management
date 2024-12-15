@@ -337,7 +337,7 @@ $settings['update_free_access'] = FALSE;
  *   requests.
  * - $settings['http_client_config']['proxy']['https']: The proxy URL for HTTPS
  *   requests.
- * You can pass in the user name and password for basic authentication in the
+ * You can pass in the user name and password for basic course_management_authentication in the
  * URLs in these settings.
  *
  * You can also define an array of host names that can be accessed directly,
@@ -908,3 +908,41 @@ $settings['config_sync_directory'] = 'sites/default/files/config_mjT5Z03bXjai_K2
 $config['system.logging']['error_level'] = 'verbose';
 $config['system.performance']['css']['preprocess'] = FALSE;
 $config['system.performance']['js']['preprocess'] = FALSE;
+
+$settings['trusted_host_patterns'] = [
+  '^localhost$',
+  '^course\-management\.lndo\.site$',
+  '^127\.0\.0\.1$',
+  // Thêm các domain khác nếu cần
+];
+
+// Cấu hình VNPAY.
+$settings['vnpay_config'] = [
+  'tmn_code' => 'PPIGSYV9',
+  'hash_secret' => 'N9QQ5MH6N511DYKEP0G3XWGA0EIPSS00',
+  'payment_url' => 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html'
+];
+
+// Cấu hình CORS
+$settings['cors_enabled'] = TRUE;
+
+if ($settings['cors_enabled'] && isset($_SERVER['HTTP_ORIGIN'])) {
+  $allowed_origins = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+  ];
+
+  if (in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {
+    header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Expose-Headers: Set-Cookie');
+    header('Access-Control-Allow-Headers: X-CSRF-Token, Authorization, Content-Type, Accept, Origin, X-Requested-With, cache-control, pragma');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    header('Access-Control-Max-Age: 1000');
+  }
+
+  if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+  }
+}

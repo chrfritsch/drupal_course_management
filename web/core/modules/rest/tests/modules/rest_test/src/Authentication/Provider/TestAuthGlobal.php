@@ -6,7 +6,7 @@ use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Global authentication provider for testing purposes.
+ * Global course_management_authentication provider for testing purposes.
  */
 class TestAuthGlobal implements AuthenticationProviderInterface {
 

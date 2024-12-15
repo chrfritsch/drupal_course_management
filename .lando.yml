@@ -14,3 +14,6 @@ services:
     type: phpmyadmin
     hosts:
       - database
+    overrides:
+      ports:
+        - "8080:80"

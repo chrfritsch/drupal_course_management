@@ -1,0 +1,13 @@
+{
+  "name": "drupal/docx_to_html",
+  "type": "drupal-module",
+  "description": "This is a lightweight View plugin module that provides a calendar view format powered by FullCalendar JavaScript.",
+  "keywords": ["Drupal", "docx_to_html", "mammoth.js"],
+  "license": "BSD-2-Clause",
+  "homepage": "https://www.drupal.org/project/docx_to_html",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/docx_to_html",
+    "source": "https://git.drupalcode.org/project/docx_to_html"
+  }
+}

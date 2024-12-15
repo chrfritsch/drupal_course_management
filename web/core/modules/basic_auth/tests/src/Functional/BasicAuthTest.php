@@ -11,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 
 /**
- * Tests for BasicAuth authentication provider.
+ * Tests for BasicAuth course_management_authentication provider.
  *
  * @group basic_auth
  */
@@ -37,7 +37,7 @@ class BasicAuthTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests http basic authentication.
+   * Tests http basic course_management_authentication.
    */
   public function testBasicAuth(): void {
     // Enable page caching.
@@ -48,7 +48,7 @@ class BasicAuthTest extends BrowserTestBase {
     $account = $this->drupalCreateUser();
     $url = Url::fromRoute('router_test.11');
 
-    // Ensure we can log in with valid authentication details.
+    // Ensure we can log in with valid course_management_authentication details.
     $this->basicAuthGet($url, $account->getAccountName(), $account->pass_raw);
     $this->assertSession()->pageTextContains($account->getAccountName());
     $this->assertSession()->statusCodeEquals(200);
@@ -57,7 +57,7 @@ class BasicAuthTest extends BrowserTestBase {
     // Check that Cache-Control is not set to public.
     $this->assertSession()->responseHeaderNotContains('Cache-Control', 'public');
 
-    // Ensure that invalid authentication details give access denied.
+    // Ensure that invalid course_management_authentication details give access denied.
     $this->basicAuthGet($url, $account->getAccountName(), $this->randomMachineName());
     $this->assertSession()->pageTextNotContains($account->getAccountName());
     $this->assertSession()->statusCodeEquals(403);
@@ -245,7 +245,7 @@ class BasicAuthTest extends BrowserTestBase {
   }
 
   /**
-   * Tests if the controller is called before authentication.
+   * Tests if the controller is called before course_management_authentication.
    *
    * @see https://www.drupal.org/node/2817727
    */

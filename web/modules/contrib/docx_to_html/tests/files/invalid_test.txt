@@ -1,0 +1,2 @@
+This file is used for PHP test.
+You shouldn't be able to see this file via a browser.

@@ -29,19 +29,19 @@ class AuthenticationProviderPassTest extends UnitTestCase {
     $definition->addTag('authentication_provider', ['provider_id' => 'bunny_auth']);
     $definition->addTag('_provider', ['provider' => 'test_provider_a']);
     $definition->setPublic(TRUE);
-    $container->setDefinition('test_provider_a.authentication.bunny_auth', $definition);
+    $container->setDefinition('test_provider_a.course_management_authentication.bunny_auth', $definition);
 
     $definition = new Definition('TestClass');
     $definition->addTag('authentication_provider', ['provider_id' => 'llama_auth', 'priority' => 100]);
     $definition->addTag('_provider', ['provider' => 'test_provider_a']);
     $definition->setPublic(TRUE);
-    $container->setDefinition('test_provider_a.authentication.llama_auth', $definition);
+    $container->setDefinition('test_provider_a.course_management_authentication.llama_auth', $definition);
 
     $definition = new Definition('TestClass');
     $definition->addTag('authentication_provider', ['provider_id' => 'camel_auth', 'priority' => -100]);
     $definition->addTag('_provider', ['provider' => 'test_provider_b']);
     $definition->setPublic(TRUE);
-    $container->setDefinition('test_provider_b.authentication.camel_auth', $definition);
+    $container->setDefinition('test_provider_b.course_management_authentication.camel_auth', $definition);
 
     $compiler_pass = new AuthenticationProviderPass();
     $compiler_pass->process($container);

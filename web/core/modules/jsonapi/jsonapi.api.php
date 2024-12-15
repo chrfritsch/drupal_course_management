@@ -148,7 +148,7 @@ use Drupal\Core\Access\AccessResult;
  *   properties on a field are normalized.
  * - The same data type normalizers as those used by core's Serialization and
  *   REST modules are also used by the JSON:API module.
- * - All available authentication mechanisms are allowed.
+ * - All available course_management_authentication mechanisms are allowed.
  *
  * @section tests Test Coverage
  * The JSON:API module comes with extensive unit and kernel tests. But most

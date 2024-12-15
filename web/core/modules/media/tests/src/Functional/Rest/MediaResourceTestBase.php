@@ -59,7 +59,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
       'configuration' => [
         'methods' => ['GET'],
         'formats' => [static::$format],
-        'authentication' => isset(static::$auth) ? [static::$auth] : [],
+        'course_management_authentication' => isset(static::$auth) ? [static::$auth] : [],
       ],
       'status' => TRUE,
     ])->save();
@@ -355,7 +355,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
       'configuration' => [
         'methods' => ['POST'],
         'formats' => [static::$format],
-        'authentication' => isset(static::$auth) ? [static::$auth] : [],
+        'course_management_authentication' => isset(static::$auth) ? [static::$auth] : [],
       ],
       'status' => TRUE,
     ])->save();

@@ -142,7 +142,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
       'configuration' => [
         'methods' => ['POST'],
         'formats' => [static::$format],
-        'authentication' => [static::$auth],
+        'course_management_authentication' => [static::$auth],
       ],
       'status' => TRUE,
     ])->save();
@@ -155,7 +155,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
       'configuration' => [
         'methods' => ['GET'],
         'formats' => [static::$format],
-        'authentication' => isset(static::$auth) ? [static::$auth] : [],
+        'course_management_authentication' => isset(static::$auth) ? [static::$auth] : [],
       ],
       'status' => TRUE,
     ])->save();

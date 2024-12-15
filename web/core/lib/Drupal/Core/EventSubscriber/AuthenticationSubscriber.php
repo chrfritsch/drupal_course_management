@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Authentication subscriber.
  *
- * Trigger authentication during the request.
+ * Trigger course_management_authentication during the request.
  */
 class AuthenticationSubscriber implements EventSubscriberInterface {
 
@@ -48,10 +48,10 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
   protected $accountProxy;
 
   /**
-   * Constructs an authentication subscriber.
+   * Constructs an course_management_authentication subscriber.
    *
    * @param \Drupal\Core\Authentication\AuthenticationProviderInterface $authentication_provider
-   *   An authentication provider.
+   *   An course_management_authentication provider.
    * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
    *   Account proxy.
    */
@@ -84,7 +84,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Denies access if authentication provider is not allowed on this route.
+   * Denies access if course_management_authentication provider is not allowed on this route.
    *
    * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The request event.
@@ -93,7 +93,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
     if (isset($this->filter) && $event->isMainRequest()) {
       $request = $event->getRequest();
       if ($this->authenticationProvider->applies($request) && !$this->filter->appliesToRoutedRequest($request, TRUE)) {
-        throw new AccessDeniedHttpException('The used authentication method is not allowed on this route.');
+        throw new AccessDeniedHttpException('The used course_management_authentication method is not allowed on this route.');
       }
     }
   }
@@ -102,7 +102,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    * Respond with a challenge on access denied exceptions if appropriate.
    *
    * On a 403 (access denied), if there are no credentials on the request, some
-   * authentication methods (e.g. basic auth) require that a challenge is sent
+   * course_management_authentication methods (e.g. basic auth) require that a challenge is sent
    * to the client.
    *
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
@@ -122,7 +122,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Detect disallowed authentication methods on access denied exceptions.
+   * Detect disallowed course_management_authentication methods on access denied exceptions.
    *
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event.
@@ -132,7 +132,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
       $request = $event->getRequest();
       $exception = $event->getThrowable();
       if ($exception instanceof AccessDeniedHttpException && $this->authenticationProvider->applies($request) && !$this->filter->appliesToRoutedRequest($request, TRUE)) {
-        $event->setThrowable(new AccessDeniedHttpException('The used authentication method is not allowed on this route.', $exception));
+        $event->setThrowable(new AccessDeniedHttpException('The used course_management_authentication method is not allowed on this route.', $exception));
       }
     }
   }
@@ -141,7 +141,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    // The priority for authentication must be higher than the highest event
+    // The priority for course_management_authentication must be higher than the highest event
     // subscriber accessing the current user. Especially it must be higher than
     // LanguageRequestSubscriber as LanguageManager accesses the current user if
     // the language module is enabled.

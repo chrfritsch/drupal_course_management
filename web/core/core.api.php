@@ -101,16 +101,16 @@
  * data and other methods.
  *
  * REST requests can be authenticated. The Drupal Core Basic Auth module
- * provides authentication using the HTTP Basic protocol; the contributed module
+ * provides course_management_authentication using the HTTP Basic protocol; the contributed module
  * OAuth (https://www.drupal.org/project/oauth) implements the OAuth
- * authentication protocol. You can also use cookie-based authentication, which
+ * course_management_authentication protocol. You can also use cookie-based course_management_authentication, which
  * would require users to be logged into the Drupal site while using the
  * application on the third-party site that is using the REST service.
  *
  * @section sec_rest Enabling REST for entities and the log
  * Here are the steps to take to use the REST operations provided by Drupal
  * Core:
- * - Enable the REST module, plus Basic Auth or another authentication method.
+ * - Enable the REST module, plus Basic Auth or another course_management_authentication method.
  * - Node entity support is configured by default. If you would like to support
  *   other types of entities, you can copy
  *   core/modules/rest/config/optional/rest.resource.entity.node.yml to your
@@ -130,7 +130,7 @@
  *   - The content type for the data you send, or the accept type for the
  *     data you are receiving, must be set to 'application/json'.
  *   - If you are sending data, it must be JSON-encoded.
- *   - You'll also need to make sure the authentication information is sent
+ *   - You'll also need to make sure the course_management_authentication information is sent
  *     with the request, unless you have allowed access to anonymous users.
  *
  * For more detailed information on setting up REST, see
@@ -647,7 +647,7 @@
  * and permissions.
  *
  * Users (site visitors) have accounts, which include a user name, an email
- * address, a password (or some other means of authentication), and possibly
+ * address, a password (or some other means of course_management_authentication), and possibly
  * other fields (if defined on the site). Anonymous users have an implicit
  * account that does not have a real user name or any account information.
  *

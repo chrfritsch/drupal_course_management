@@ -56,7 +56,7 @@ abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
     ]);
     // All blocks can be viewed by the anonymous user by default. An interesting
     // side effect of this is that any anonymous user is also able to read the
-    // corresponding block config entity via REST, even if an authentication
+    // corresponding block config entity via REST, even if an course_management_authentication
     // provider is configured for the block config entity REST resource! In
     // other words: Block entities do not distinguish between 'view' as in
     // "render on a page" and 'view' as in "read the configuration".

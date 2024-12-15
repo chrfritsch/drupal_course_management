@@ -22,7 +22,7 @@ class RestUIForm extends ConfigFormBase {
   protected $moduleHandler;
 
   /**
-   * The authentication collector.
+   * The course_management_authentication collector.
    *
    * @var \Drupal\Core\Authentication\AuthenticationCollectorInterface
    */
@@ -181,7 +181,7 @@ class RestUIForm extends ConfigFormBase {
    * @param \Drupal\rest\Plugin\ResourceInterface $plugin
    *   The REST Resource plugin being configured.
    * @param array $authentication_providers
-   *   All available authentication providers, to use for #options.
+   *   All available course_management_authentication providers, to use for #options.
    * @param array $format_options
    *   All available formats, to use for #options.
    * @param array $config
@@ -249,7 +249,7 @@ class RestUIForm extends ConfigFormBase {
    * @param \Drupal\rest\Plugin\ResourceInterface $plugin
    *   The REST Resource plugin being configured.
    * @param array $authentication_providers
-   *   All available authentication providers, to use for #options.
+   *   All available course_management_authentication providers, to use for #options.
    * @param array $format_options
    *   All available formats, to use for #options.
    * @param array $config
@@ -294,11 +294,11 @@ class RestUIForm extends ConfigFormBase {
 
     // Authentication providers.
     $enabled_auth = [];
-    if (isset($config['authentication'])) {
-      $enabled_auth = $config['authentication'];
+    if (isset($config['course_management_authentication'])) {
+      $enabled_auth = $config['course_management_authentication'];
     }
 
-    $form['settings']['authentication'] = [
+    $form['settings']['course_management_authentication'] = [
       '#title' => $this->t('Authentication providers'),
       '#type' => 'checkboxes',
       '#options' => $authentication_providers,
@@ -338,14 +338,14 @@ class RestUIForm extends ConfigFormBase {
       foreach ($methods as $method => $values) {
         if ($values[$method]) {
           $method_checked = TRUE;
-          // At least one format and authentication provider must be selected.
+          // At least one format and course_management_authentication provider must be selected.
           $formats = array_filter($values['settings']['formats']);
           if (empty($formats)) {
             $form_state->setErrorByName('methods][' . $method . '][settings][formats', $this->t('At least one format must be selected for method @method.', ['@method' => $method]));
           }
           $auth = array_filter($values['settings']['auth']);
           if (empty($auth)) {
-            $form_state->setErrorByName('methods][' . $method . '][settings][auth', $this->t('At least one authentication provider must be selected for method @method.', ['@method' => $method]));
+            $form_state->setErrorByName('methods][' . $method . '][settings][auth', $this->t('At least one course_management_authentication provider must be selected for method @method.', ['@method' => $method]));
           }
         }
       }
@@ -372,8 +372,8 @@ class RestUIForm extends ConfigFormBase {
     if (empty($settings) || empty(array_filter($settings['formats']))) {
       $form_state->setErrorByName('formats', $this->t('At least one request format must be selected.'));
     }
-    if (empty($settings) || empty(array_filter($settings['authentication']))) {
-      $form_state->setErrorByName('authentication', $this->t('At least one authentication provider must be selected'));
+    if (empty($settings) || empty(array_filter($settings['course_management_authentication']))) {
+      $form_state->setErrorByName('course_management_authentication', $this->t('At least one course_management_authentication provider must be selected'));
     }
   }
 
@@ -443,7 +443,7 @@ class RestUIForm extends ConfigFormBase {
     $configuration = [
       'methods' => array_keys(array_filter($settings['methods'])),
       'formats' => array_keys(array_filter($settings['formats'])),
-      'authentication' => array_keys(array_filter($settings['authentication'])),
+      'course_management_authentication' => array_keys(array_filter($settings['course_management_authentication'])),
     ];
     return $configuration;
   }

@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Docx_to_html module hook handle file.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function docx_to_html_theme() {
+  return [
+    'docx_to_html_page' => [
+      'variables' => [],
+      'template' => 'docx-to-html-page',
+    ],
+  ];
+}

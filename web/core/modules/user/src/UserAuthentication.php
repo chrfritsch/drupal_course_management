@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Password\PasswordInterface;
 
 /**
- * Validates user authentication credentials.
+ * Validates user course_management_authentication credentials.
  */
 class UserAuthentication implements UserAuthInterface, UserAuthenticationInterface {
 

@@ -61,7 +61,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   protected $csrfToken;
 
   /**
-   * The user authentication.
+   * The user course_management_authentication.
    * @var \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface
    */
   protected $userAuth;
@@ -104,7 +104,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
    * @param \Drupal\user\UserAuthenticationInterface|\Drupal\user\UserAuthInterface $user_auth
-   *   The user authentication.
+   *   The user course_management_authentication.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Symfony\Component\Serializer\Serializer $serializer

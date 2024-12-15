@@ -42,7 +42,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * For example, for the node test coverage, there is the (abstract)
  * \Drupal\Tests\rest\Functional\EntityResource\Node\NodeResourceTestBase, which
- * is then again subclassed for every authentication provider:
+ * is then again subclassed for every course_management_authentication provider:
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonAnonTest
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonBasicAuthTest
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonCookieTest
@@ -171,7 +171,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $format = $single_format
       ? [static::$format]
       : [static::$format, 'foobar'];
-    // It's possible to not have any authentication providers enabled, when
+    // It's possible to not have any course_management_authentication providers enabled, when
     // testing public (anonymous) usage of a REST resource.
     $auth = isset(static::$auth) ? [static::$auth] : [];
     $this->provisionResource($format, $auth);
@@ -445,7 +445,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     $this->provisionEntityResource();
 
-    // DX: forgetting authentication: authentication provider-specific error
+    // DX: forgetting course_management_authentication: course_management_authentication provider-specific error
     // response.
     if (static::$auth) {
       $response = $this->request('GET', $url, $request_options);
@@ -457,16 +457,16 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     $request_options[RequestOptions::HEADERS]['REST-test-auth'] = '1';
 
-    // DX: 403 when attempting to use disallowed authentication provider.
+    // DX: 403 when attempting to use disallowed course_management_authentication provider.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(403, 'The used authentication method is not allowed on this route.', $response);
+    $this->assertResourceErrorResponse(403, 'The used course_management_authentication method is not allowed on this route.', $response);
 
     unset($request_options[RequestOptions::HEADERS]['REST-test-auth']);
     $request_options[RequestOptions::HEADERS]['REST-test-auth-global'] = '1';
 
-    // DX: 403 when attempting to use disallowed global authentication provider.
+    // DX: 403 when attempting to use disallowed global course_management_authentication provider.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(403, 'The used authentication method is not allowed on this route.', $response);
+    $this->assertResourceErrorResponse(403, 'The used course_management_authentication method is not allowed on this route.', $response);
 
     unset($request_options[RequestOptions::HEADERS]['REST-test-auth-global']);
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('GET'));
@@ -750,7 +750,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
 
     if (static::$auth) {
-      // DX: forgetting authentication: authentication provider-specific error
+      // DX: forgetting course_management_authentication: course_management_authentication provider-specific error
       // response.
       $response = $this->request('POST', $url, $request_options);
       $this->assertResponseWhenMissingAuthentication('POST', $response);
@@ -801,7 +801,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body;
 
     // Before sending a well-formed request, allow the normalization and
-    // authentication provider edge cases to also be tested.
+    // course_management_authentication provider edge cases to also be tested.
     $this->assertNormalizationEdgeCases('POST', $url, $request_options);
     $this->assertAuthenticationEdgeCases('POST', $url, $request_options);
 
@@ -942,7 +942,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
 
     if (static::$auth) {
-      // DX: forgetting authentication: authentication provider-specific error
+      // DX: forgetting course_management_authentication: course_management_authentication provider-specific error
       // response.
       $response = $this->request('PATCH', $url, $request_options);
       $this->assertResponseWhenMissingAuthentication('PATCH', $response);
@@ -1057,7 +1057,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body;
 
     // Before sending a well-formed request, allow the normalization and
-    // authentication provider edge cases to also be tested.
+    // course_management_authentication provider edge cases to also be tested.
     $this->assertNormalizationEdgeCases('PATCH', $url, $request_options);
     $this->assertAuthenticationEdgeCases('PATCH', $url, $request_options);
 
@@ -1152,7 +1152,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->provisionEntityResource();
 
     if (static::$auth) {
-      // DX: forgetting authentication: authentication provider-specific error
+      // DX: forgetting course_management_authentication: course_management_authentication provider-specific error
       // response.
       $response = $this->request('DELETE', $url, $request_options);
       $this->assertResponseWhenMissingAuthentication('DELETE', $response);
@@ -1166,7 +1166,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     $this->setUpAuthorization('DELETE');
 
-    // Before sending a well-formed request, allow the authentication provider's
+    // Before sending a well-formed request, allow the course_management_authentication provider's
     // edge cases to also be tested.
     $this->assertAuthenticationEdgeCases('DELETE', $url, $request_options);
 
@@ -1339,12 +1339,12 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * Drupal returns a 403 response instead of a 406 response when:
    * - there is a canonical route, i.e. one that serves HTML
-   * - unless the user is logged in with any non-global authentication provider,
+   * - unless the user is logged in with any non-global course_management_authentication provider,
    *   because then they tried to access a route that requires the user to be
-   *   authenticated, but they used an authentication provider that is only
+   *   authenticated, but they used an course_management_authentication provider that is only
    *   accepted for specific routes, and HTML routes never have such specific
-   *   authentication providers specified. (By default, only 'cookie' is a
-   *   global authentication provider.)
+   *   course_management_authentication providers specified. (By default, only 'cookie' is a
+   *   global course_management_authentication provider.)
    *
    * @todo Remove this in https://www.drupal.org/node/2805279.
    *

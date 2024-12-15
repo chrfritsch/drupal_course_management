@@ -7,7 +7,7 @@ namespace Drupal\Tests\workspaces\Functional\Rest;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
- * Test workspace entities for JSON requests with cookie authentication.
+ * Test workspace entities for JSON requests with cookie course_management_authentication.
  *
  * @group workspaces
  */

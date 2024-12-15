@@ -1,0 +1,17 @@
+#output {
+  border: 1px solid lightskyblue;
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+  overflow: auto;
+  display: none; /* Hide the output initially */
+}
+
+#copy-button {
+  display: none; /* Hide the button initially */
+}
+
+div.docx-html-tool {
+  margin-top: 10px;
+  display: block;
+}

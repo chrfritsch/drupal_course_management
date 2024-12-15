@@ -1,0 +1,10 @@
+# course_register.routing.yml
+course_register.vnpay_return:
+  path: '/payment/vnpay-return'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\VnpayController::vnpayReturn'
+    _title: 'VNPAY Payment Return'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE

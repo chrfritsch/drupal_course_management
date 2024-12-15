@@ -8,7 +8,7 @@ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
- * Test workspace entities for XML requests with cookie authentication.
+ * Test workspace entities for XML requests with cookie course_management_authentication.
  *
  * @group workspaces
  */

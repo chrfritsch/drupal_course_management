@@ -8,7 +8,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 
 /**
- * Tests authentication for REST display.
+ * Tests course_management_authentication for REST display.
  *
  * @group rest
  */
@@ -34,7 +34,7 @@ class RestExportAuthTest extends ViewTestBase {
   }
 
   /**
-   * Checks that correct authentication providers are available for choosing.
+   * Checks that correct course_management_authentication providers are available for choosing.
    *
    * @link https://www.drupal.org/node/2825204
    */
@@ -58,7 +58,7 @@ class RestExportAuthTest extends ViewTestBase {
     // The "basic_auth" will always be available since module,
     // providing it, has the same name.
     $this->assertSession()->fieldExists('edit-auth-basic-auth');
-    // The "cookie" authentication provider defined by "user" module.
+    // The "cookie" course_management_authentication provider defined by "user" module.
     $this->assertSession()->fieldExists('edit-auth-cookie');
     // Wrong behavior in "getAuthOptions()" method makes this option available
     // instead of "cookie".

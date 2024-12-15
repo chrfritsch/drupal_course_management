@@ -3,7 +3,7 @@
 namespace Drupal\Core\Authentication;
 
 /**
- * Interface for collectors of registered authentication providers.
+ * Interface for collectors of registered course_management_authentication providers.
  */
 interface AuthenticationCollectorInterface {
 
@@ -36,21 +36,21 @@ interface AuthenticationCollectorInterface {
   public function isGlobal($provider_id);
 
   /**
-   * Returns an authentication provider.
+   * Returns an course_management_authentication provider.
    *
    * @param string $provider_id
    *   The provider ID.
    *
    * @return \Drupal\Core\Authentication\AuthenticationProviderInterface|null
-   *   The authentication provider which matches the ID.
+   *   The course_management_authentication provider which matches the ID.
    */
   public function getProvider($provider_id);
 
   /**
-   * Returns the sorted array of authentication providers.
+   * Returns the sorted array of course_management_authentication providers.
    *
    * @return \Drupal\Core\Authentication\AuthenticationProviderInterface[]
-   *   An array of authentication provider objects.
+   *   An array of course_management_authentication provider objects.
    */
   public function getSortedProviders();
 

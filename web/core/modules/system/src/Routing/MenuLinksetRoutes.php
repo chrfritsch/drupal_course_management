@@ -18,7 +18,7 @@ use Symfony\Component\Routing\RouteCollection;
 class MenuLinksetRoutes extends RouteSubscriberBase implements ContainerInjectionInterface {
 
   /**
-   * An array of enabled authentication provider IDs.
+   * An array of enabled course_management_authentication provider IDs.
    *
    * @var string[]
    */
@@ -28,7 +28,7 @@ class MenuLinksetRoutes extends RouteSubscriberBase implements ContainerInjectio
    * EventSubscriber constructor.
    *
    * @param string[] $authenticationProviders
-   *   An array of authentication providers, keyed by ID.
+   *   An array of course_management_authentication providers, keyed by ID.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    * @param \Drupal\Core\Routing\RouteBuilderInterface $routeBuilder
@@ -42,7 +42,7 @@ class MenuLinksetRoutes extends RouteSubscriberBase implements ContainerInjectio
    * Alter routes.
    *
    * If the endpoint is configured to be enabled, dynamically enable all
-   * authentication providers on this module's routes since they cannot be known
+   * course_management_authentication providers on this module's routes since they cannot be known
    * in advance.
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection

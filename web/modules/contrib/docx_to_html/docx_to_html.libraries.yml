@@ -1,0 +1,13 @@
+docx_to_html:
+  version: 1.x
+  css:
+    theme:
+      css/docx_to_html.css: {}
+  js:
+    js/mammoth.browser.min.js: {}
+    js/docx_to_html.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/drupal.message

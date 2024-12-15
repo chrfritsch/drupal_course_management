@@ -69,7 +69,7 @@ class UpdateKernel extends DrupalKernel {
       $request_stack->push($request);
       $this->preHandle($request);
 
-      // Handle the actual request. We need the session both for authentication
+      // Handle the actual request. We need the session both for course_management_authentication
       // as well as the DB update, like
       // \Drupal\system\Controller\DbUpdateController::batchFinished.
       $this->bootSession($request);

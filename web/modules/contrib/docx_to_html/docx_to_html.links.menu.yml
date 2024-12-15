@@ -1,0 +1,13 @@
+docx_to_html.admin:
+  title: 'DOCX to HTML Converter'
+  description: 'Convert DOCX files to HTML.'
+  parent: system.admin_config_content
+  route_name: docx_to_html.page
+  weight: 10
+
+docx_to_html.shortcut:
+  title: 'DOCX to HTML Converter'
+  description: 'Convert DOCX files to HTML.'
+  parent: system.admin 
+  route_name: docx_to_html.page
+  weight: 100

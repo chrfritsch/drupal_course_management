@@ -7,7 +7,7 @@ use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Alters user authentication routes to support additional serialization formats.
+ * Alters user course_management_authentication routes to support additional serialization formats.
  */
 class UserRouteAlterSubscriber implements EventSubscriberInterface {
 
@@ -37,7 +37,7 @@ class UserRouteAlterSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Adds supported formats to the user authentication HTTP routes.
+   * Adds supported formats to the user course_management_authentication HTTP routes.
    *
    * @param \Drupal\Core\Routing\RouteBuildEvent $event
    *   The event to process.

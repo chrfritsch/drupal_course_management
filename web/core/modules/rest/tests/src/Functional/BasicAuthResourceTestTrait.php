@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * Characteristics:
  * - Every request must send an Authorization header.
- * - When accessing a URI that requires authentication without being
+ * - When accessing a URI that requires course_management_authentication without being
  *   authenticated, a 401 response must be sent.
  * - Because every request must send an authorization, there is no danger of
  *   CSRF attacks.
@@ -35,7 +35,7 @@ trait BasicAuthResourceTestTrait {
    */
   protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {
     if ($method !== 'GET') {
-      return $this->assertResourceErrorResponse(401, 'No authentication credentials provided.', $response);
+      return $this->assertResourceErrorResponse(401, 'No course_management_authentication credentials provided.', $response);
     }
 
     $expected_page_cache_header_value = $method === 'GET' ? 'MISS' : FALSE;
@@ -50,7 +50,7 @@ trait BasicAuthResourceTestTrait {
     if (!in_array('user.roles', $expected_cacheability->getCacheContexts(), TRUE)) {
       $expected_cacheability->addCacheContexts(['user.roles:anonymous']);
     }
-    $this->assertResourceErrorResponse(401, 'No authentication credentials provided.', $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), $expected_page_cache_header_value, FALSE);
+    $this->assertResourceErrorResponse(401, 'No course_management_authentication credentials provided.', $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), $expected_page_cache_header_value, FALSE);
   }
 
   /**

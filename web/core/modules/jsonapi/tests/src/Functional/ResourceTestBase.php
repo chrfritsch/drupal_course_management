@@ -192,7 +192,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected $anotherEntity;
 
   /**
-   * The account to use for authentication.
+   * The account to use for course_management_authentication.
    *
    * @var null|\Drupal\Core\Session\AccountInterface
    */
@@ -624,7 +624,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * Sets up the necessary authorization for handling revisions.
    *
    * @param string $method
-   *   The HTTP method for which to set up authentication.
+   *   The HTTP method for which to set up course_management_authentication.
    *
    * @see ::testRevisions()
    */
@@ -2583,10 +2583,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
-   * Returns Guzzle request options for authentication.
+   * Returns Guzzle request options for course_management_authentication.
    *
    * @return array
-   *   Guzzle request options to use for authentication.
+   *   Guzzle request options to use for course_management_authentication.
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */

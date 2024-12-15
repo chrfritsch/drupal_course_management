@@ -1,0 +1,13 @@
+name: 'DOCX to HTML Converter'
+type: module
+description: 'A custom module to convert DOCX files to HTML using Mammoth.js.'
+core_version_requirement: ^10 || ^11
+package: Content authoring tool
+configure: docx_to_html.page
+libraries:
+  - docx_to_html/docx_to_html
+
+# Information added by Drupal.org packaging script on 2024-06-24
+version: '1.0.0'
+project: 'docx_to_html'
+datestamp: 1719191788

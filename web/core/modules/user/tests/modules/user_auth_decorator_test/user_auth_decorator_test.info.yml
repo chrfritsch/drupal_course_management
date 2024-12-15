@@ -1,5 +1,5 @@
 name: 'User Auth Service decorated only with UserAuthInterface'
 type: module
-description: 'Support module for user authentication testing.'
+description: 'Support module for user course_management_authentication testing.'
 package: Testing
 version: VERSION

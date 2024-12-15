@@ -37,7 +37,7 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
   protected $userStorage;
 
   /**
-   * The user authentication object.
+   * The user course_management_authentication object.
    *
    * @var \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface
    */
@@ -65,7 +65,7 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
    * @param \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface $user_auth
-   *   The user authentication object.
+   *   The user course_management_authentication object.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer

@@ -49,7 +49,7 @@ class RouteCachingQueryAlteredTest extends BrowserTestBase {
    */
   public function testRouteCollectionCacheAfterException(): void {
     // Force an exception early in the Kernel middleware on a cold cache by
-    // simulating bad Bearer authentication.
+    // simulating bad Bearer course_management_authentication.
     $this->drupalGet('/router-test/rejects-query-strings', [], [
       'Authorization' => 'Bearer invalid',
     ]);
