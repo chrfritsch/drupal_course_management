@@ -1,0 +1,20 @@
+uuid: 6e84da41-1bc6-4b44-af1e-6f49f5639eeb
+langcode: en
+status: true
+dependencies:
+  config:
+    - rest.resource.user_registration
+  module:
+    - node
+    - rest
+    - toolbar
+id: teacher
+label: Teacher
+weight: 5
+is_admin: null
+permissions:
+  - 'access content overview'
+  - 'access toolbar'
+  - 'access user profiles'
+  - 'administer rest resources'
+  - 'restful post user_registration'

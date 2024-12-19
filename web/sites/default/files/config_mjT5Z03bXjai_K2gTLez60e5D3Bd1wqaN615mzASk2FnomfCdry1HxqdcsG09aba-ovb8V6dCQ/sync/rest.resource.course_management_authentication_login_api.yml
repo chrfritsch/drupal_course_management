@@ -1,0 +1,18 @@
+uuid: 06400159-3ca2-4c4d-8a1d-8a959053957d
+langcode: en
+status: false
+dependencies:
+  module:
+    - course_management_authentication
+    - serialization
+    - user
+id: course_management_authentication_login_api
+plugin_id: course_management_authentication_login_api
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - cookie

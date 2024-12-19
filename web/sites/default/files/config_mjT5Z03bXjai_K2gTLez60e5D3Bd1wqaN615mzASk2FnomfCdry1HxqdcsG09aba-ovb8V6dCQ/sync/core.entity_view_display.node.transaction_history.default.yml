@@ -1,0 +1,75 @@
+uuid: bfa6b56d-6fb9-425f-abf5-989f9f6382d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.transaction_history.field_transaction_course
+    - field.field.node.transaction_history.field_transaction_date
+    - field.field.node.transaction_history.field_transaction_id
+    - field.field.node.transaction_history.field_transaction_method
+    - field.field.node.transaction_history.field_transaction_semester
+    - field.field.node.transaction_history.field_transaction_user
+    - node.type.transaction_history
+  module:
+    - datetime
+    - user
+id: node.transaction_history.default
+targetEntityType: node
+bundle: transaction_history
+mode: default
+content:
+  field_transaction_course:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_transaction_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_transaction_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_transaction_method:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_transaction_semester:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_transaction_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

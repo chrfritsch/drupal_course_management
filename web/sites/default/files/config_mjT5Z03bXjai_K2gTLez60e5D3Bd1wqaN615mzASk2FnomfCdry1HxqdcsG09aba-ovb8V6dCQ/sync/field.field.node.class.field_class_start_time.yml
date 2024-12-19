@@ -1,0 +1,21 @@
+uuid: 7875bdf8-74c5-44ca-975d-e4915699294d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_class_start_time
+    - node.type.class
+  module:
+    - time_field
+id: node.class.field_class_start_time
+field_name: field_class_start_time
+entity_type: node
+bundle: class
+label: 'Class start time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: time

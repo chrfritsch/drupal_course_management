@@ -1,0 +1,19 @@
+uuid: 1171eac0-83f7-48a7-91fa-086b40a77ac8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_academic_year
+    - taxonomy.vocabulary.semester
+id: taxonomy_term.semester.field_academic_year
+field_name: field_academic_year
+entity_type: taxonomy_term
+bundle: semester
+label: 'Academic year'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

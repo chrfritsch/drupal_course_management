@@ -1,0 +1,20 @@
+uuid: 1dae64f4-cd57-41ab-89ea-62e924eca460
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_workplace
+  module:
+    - user
+id: user.user.field_workplace
+field_name: field_workplace
+entity_type: user
+bundle: user
+label: Workplace
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

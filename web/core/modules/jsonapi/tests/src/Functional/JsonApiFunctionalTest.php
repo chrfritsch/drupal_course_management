@@ -845,7 +845,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     );
     $this->assertEquals(400, $response->getStatusCode());
     $response = $this->request('DELETE', $relationship_url, [
-      // Send a request with no course_management_authentication.
+      // Send a request with no authentication.
       'body' => Json::encode($body),
       'headers' => ['Content-Type' => 'application/vnd.api+json'],
     ]);

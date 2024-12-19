@@ -1,0 +1,21 @@
+uuid: a90479b6-aa45-473d-bcdf-25e3ab766fe2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_end_exam
+    - node.type.exam_schedule
+  module:
+    - time_field
+id: node.exam_schedule.field_end_exam
+field_name: field_end_exam
+entity_type: node
+bundle: exam_schedule
+label: 'End exam'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: time

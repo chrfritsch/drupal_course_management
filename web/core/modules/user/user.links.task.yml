@@ -23,7 +23,7 @@ user.pass:
   base_route: user.page
   title: 'Reset your password'
 
-# Other course_management_authentication methods may add pages below user/login/.
+# Other authentication methods may add pages below user/login/.
 user.login:
   route_name: user.login
   base_route: user.page

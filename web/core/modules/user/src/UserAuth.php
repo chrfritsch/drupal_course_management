@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Password\PasswordInterface;
 
 /**
- * Validates user course_management_authentication credentials.
+ * Validates user authentication credentials.
  */
 class UserAuth implements UserAuthInterface {
 
@@ -50,7 +50,7 @@ class UserAuth implements UserAuthInterface {
 
       if ($account = reset($account_search)) {
         if ($this->passwordChecker->check($password, $account->getPassword())) {
-          // Successful course_management_authentication.
+          // Successful authentication.
           $uid = $account->id();
 
           // Update user to new password scheme if needed.

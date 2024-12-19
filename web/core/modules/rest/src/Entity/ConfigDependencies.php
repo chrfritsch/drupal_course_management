@@ -21,7 +21,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
   protected $formatProviders;
 
   /**
-   * The course_management_authentication providers, keyed by ID.
+   * The authentication providers, keyed by ID.
    *
    * @var string[]
    */
@@ -33,7 +33,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
    * @param string[] $format_providers
    *   The serialization format providers, keyed by format.
    * @param string[] $auth_providers
-   *   The course_management_authentication providers, keyed by ID.
+   *   The authentication providers, keyed by ID.
    */
   public function __construct(array $format_providers, array $auth_providers) {
     $this->formatProviders = $format_providers;
@@ -73,7 +73,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
 
     // Dependency calculation is the same for either granularity, the most
     // notable difference is that for the 'resource' granularity, the same
-    // course_management_authentication providers and formats are supported for every method.
+    // authentication providers and formats are supported for every method.
     switch ($granularity) {
       case RestResourceConfigInterface::METHOD_GRANULARITY:
         $methods = $rest_config->getMethods();
@@ -87,18 +87,18 @@ class ConfigDependencies implements ContainerInjectionInterface {
         throw new \InvalidArgumentException('Invalid granularity specified.');
     }
 
-    // The dependency lists for course_management_authentication providers and formats
+    // The dependency lists for authentication providers and formats
     // generated on container build.
     $dependencies = [];
     foreach ($methods as $request_method) {
-      // Add dependencies based on the supported course_management_authentication providers.
+      // Add dependencies based on the supported authentication providers.
       foreach ($rest_config->getAuthenticationProviders($request_method) as $auth) {
         if (isset($this->authProviders[$auth])) {
           $module_name = $this->authProviders[$auth];
           $dependencies['module'][] = $module_name;
         }
       }
-      // Add dependencies based on the supported course_management_authentication formats.
+      // Add dependencies based on the supported authentication formats.
       foreach ($rest_config->getFormats($request_method) as $format) {
         if (isset($this->formatProviders[$format])) {
           $module_name = $this->formatProviders[$format];
@@ -154,7 +154,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
     $changed = FALSE;
     // Only module-related dependencies can be fixed. All other types of
     // dependencies cannot, because they were not generated based on supported
-    // course_management_authentication providers or formats.
+    // authentication providers or formats.
     if (isset($dependencies['module'])) {
       // Try to fix dependencies.
       $removed_auth = array_keys(array_intersect($this->authProviders, $dependencies['module']));
@@ -162,7 +162,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
       $configuration_before = $configuration = $rest_config->get('configuration');
       if (!empty($removed_auth) || !empty($removed_formats)) {
         // Try to fix dependency problems by removing affected
-        // course_management_authentication providers and formats.
+        // authentication providers and formats.
         foreach (array_keys($rest_config->get('configuration')) as $request_method) {
           foreach ($removed_formats as $format) {
             if (in_array($format, $rest_config->getFormats($request_method), TRUE)) {
@@ -175,7 +175,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
             }
           }
           if (empty($configuration[$request_method]['supported_auth'])) {
-            // Remove the key if there are no more course_management_authentication providers
+            // Remove the key if there are no more authentication providers
             // supported by this request method.
             unset($configuration[$request_method]['supported_auth']);
           }
@@ -186,7 +186,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
           }
           if (empty($configuration[$request_method])) {
             // Remove the request method altogether if it no longer has any
-            // supported course_management_authentication providers or formats.
+            // supported authentication providers or formats.
             unset($configuration[$request_method]);
           }
         }
@@ -220,19 +220,19 @@ class ConfigDependencies implements ContainerInjectionInterface {
     $changed = FALSE;
     // Only module-related dependencies can be fixed. All other types of
     // dependencies cannot, because they were not generated based on supported
-    // course_management_authentication providers or formats.
+    // authentication providers or formats.
     if (isset($dependencies['module'])) {
       // Try to fix dependencies.
       $removed_auth = array_keys(array_intersect($this->authProviders, $dependencies['module']));
       $removed_formats = array_keys(array_intersect($this->formatProviders, $dependencies['module']));
       $configuration_before = $configuration = $rest_config->get('configuration');
       if (!empty($removed_auth) || !empty($removed_formats)) {
-        // All methods support the same formats and course_management_authentication providers, so
+        // All methods support the same formats and authentication providers, so
         // get those for whichever the first listed method is.
         $first_method = $rest_config->getMethods()[0];
 
         // Try to fix dependency problems by removing affected
-        // course_management_authentication providers and formats.
+        // authentication providers and formats.
         foreach ($removed_formats as $format) {
           if (in_array($format, $rest_config->getFormats($first_method), TRUE)) {
             $configuration['formats'] = array_diff($configuration['formats'], $removed_formats);
@@ -240,20 +240,20 @@ class ConfigDependencies implements ContainerInjectionInterface {
         }
         foreach ($removed_auth as $auth) {
           if (in_array($auth, $rest_config->getAuthenticationProviders($first_method), TRUE)) {
-            $configuration['course_management_authentication'] = array_diff($configuration['course_management_authentication'], $removed_auth);
+            $configuration['authentication'] = array_diff($configuration['authentication'], $removed_auth);
           }
         }
-        if (empty($configuration['course_management_authentication'])) {
-          // Remove the key if there are no more course_management_authentication providers
+        if (empty($configuration['authentication'])) {
+          // Remove the key if there are no more authentication providers
           // supported.
-          unset($configuration['course_management_authentication']);
+          unset($configuration['authentication']);
         }
         if (empty($configuration['formats'])) {
           // Remove the key if there are no more formats supported.
           unset($configuration['formats']);
         }
-        if (empty($configuration['course_management_authentication']) || empty($configuration['formats'])) {
-          // If there no longer are any supported course_management_authentication providers or
+        if (empty($configuration['authentication']) || empty($configuration['formats'])) {
+          // If there no longer are any supported authentication providers or
           // formats, this REST resource can no longer function, and so we
           // cannot fix this config entity to keep it working.
           $configuration = [];

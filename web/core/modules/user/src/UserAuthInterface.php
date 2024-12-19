@@ -3,12 +3,12 @@
 namespace Drupal\user;
 
 /**
- * An interface for validating user course_management_authentication credentials.
+ * An interface for validating user authentication credentials.
  */
 interface UserAuthInterface {
 
   /**
-   * Validates user course_management_authentication credentials.
+   * Validates user authentication credentials.
    *
    * @param string $username
    *   The user name to authenticate.

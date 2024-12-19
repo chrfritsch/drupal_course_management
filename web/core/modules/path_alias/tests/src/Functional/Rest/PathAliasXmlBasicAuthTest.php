@@ -8,7 +8,7 @@ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
- * Test path_alias entities for XML requests with cookie course_management_authentication.
+ * Test path_alias entities for XML requests with cookie authentication.
  *
  * @group path_alias
  */

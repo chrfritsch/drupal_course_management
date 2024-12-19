@@ -91,13 +91,13 @@ class StyleSerializerTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(401);
 
     // Not even logging in would make it possible to see the view, because then
-    // we are denied based on course_management_authentication method (cookie).
+    // we are denied based on authentication method (cookie).
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('test/serialize/auth_with_perm', ['query' => ['_format' => 'json']]);
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalLogout();
 
-    // But if we use the basic auth course_management_authentication strategy, we should be able
+    // But if we use the basic auth authentication strategy, we should be able
     // to see the page.
     $url = $this->buildUrl('test/serialize/auth_with_perm');
     $response = \Drupal::httpClient()->get($url, [

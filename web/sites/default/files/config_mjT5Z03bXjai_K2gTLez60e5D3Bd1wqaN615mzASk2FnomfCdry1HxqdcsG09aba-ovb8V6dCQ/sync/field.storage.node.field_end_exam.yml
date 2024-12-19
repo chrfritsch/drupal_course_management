@@ -1,0 +1,19 @@
+uuid: 9ebbb3db-fd8f-4d1f-8175-5dcda1316d98
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - time_field
+id: node.field_end_exam
+field_name: field_end_exam
+entity_type: node
+type: time
+settings: {  }
+module: time_field
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

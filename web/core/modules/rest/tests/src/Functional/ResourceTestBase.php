@@ -50,7 +50,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected static $mimeType = 'application/json';
 
   /**
-   * The course_management_authentication mechanism to use in this test.
+   * The authentication mechanism to use in this test.
    *
    * (The default is 'cookie' because that doesn't depend on any module.)
    *
@@ -70,7 +70,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected static $resourceConfigId = NULL;
 
   /**
-   * The account to use for course_management_authentication, if any.
+   * The account to use for authentication, if any.
    *
    * @var null|\Drupal\Core\Session\AccountInterface
    */
@@ -125,7 +125,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     else {
       // Otherwise, also create an account, so that any test involving User
-      // entities will have the same user IDs regardless of course_management_authentication.
+      // entities will have the same user IDs regardless of authentication.
       $this->createUser();
     }
 
@@ -142,7 +142,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param string[] $formats
    *   The allowed formats for this resource.
    * @param string[] $authentication
-   *   The allowed course_management_authentication providers for this resource.
+   *   The allowed authentication providers for this resource.
    * @param string[] $methods
    *   The allowed methods for this resource.
    */
@@ -153,7 +153,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'configuration' => [
         'methods' => $methods,
         'formats' => $formats,
-        'course_management_authentication' => $authentication,
+        'authentication' => $authentication,
       ],
       'status' => TRUE,
     ])->save();
@@ -198,15 +198,15 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * In case of a test verifying publicly accessible REST resources: grant
    * permissions to the anonymous user role.
    *
-   * In case of a test verifying behavior when using a particular course_management_authentication
+   * In case of a test verifying behavior when using a particular authentication
    * provider: create a user with a particular set of permissions.
    *
    * Because of the $method parameter, it's possible to first set up
-   * course_management_authentication for only GET, then add POST, et cetera. This then also
+   * authentication for only GET, then add POST, et cetera. This then also
    * allows for verifying a 403 in case of missing authorization.
    *
    * @param string $method
-   *   The HTTP method for which to set up course_management_authentication.
+   *   The HTTP method for which to set up authentication.
    *
    * @see ::grantPermissionsToAnonymousRole()
    * @see ::grantPermissionsToAuthenticatedRole()
@@ -214,7 +214,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   abstract protected function setUpAuthorization($method);
 
   /**
-   * Verifies the error response in case of missing course_management_authentication.
+   * Verifies the error response in case of missing authentication.
    *
    * @param string $method
    *   HTTP method.
@@ -240,7 +240,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   abstract protected function assertNormalizationEdgeCases($method, Url $url, array $request_options);
 
   /**
-   * Asserts course_management_authentication provider-specific edge cases.
+   * Asserts authentication provider-specific edge cases.
    *
    * (Should be called before sending a well-formed request.)
    *
@@ -264,20 +264,20 @@ abstract class ResourceTestBase extends BrowserTestBase {
   abstract protected function getExpectedUnauthorizedAccessCacheability();
 
   /**
-   * Initializes course_management_authentication.
+   * Initializes authentication.
    *
-   * E.g. for cookie course_management_authentication, we first need to get a cookie.
+   * E.g. for cookie authentication, we first need to get a cookie.
    */
   protected function initAuthentication() {}
 
   /**
-   * Returns Guzzle request options for course_management_authentication.
+   * Returns Guzzle request options for authentication.
    *
    * @param string $method
    *   The HTTP method for this authenticated request.
    *
    * @return array
-   *   Guzzle request options to use for course_management_authentication.
+   *   Guzzle request options to use for authentication.
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */

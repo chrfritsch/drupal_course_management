@@ -1,0 +1,19 @@
+uuid: 4defc676-a10e-40af-aaba-c76840bea95d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_exam_location
+    - node.type.exam_schedule
+id: node.exam_schedule.field_exam_location
+field_name: field_exam_location
+entity_type: node
+bundle: exam_schedule
+label: 'Exam location'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

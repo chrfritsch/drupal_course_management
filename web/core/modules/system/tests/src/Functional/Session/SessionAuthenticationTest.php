@@ -45,10 +45,10 @@ class SessionAuthenticationTest extends BrowserTestBase {
   }
 
   /**
-   * Check that a basic course_management_authentication session does not leak.
+   * Check that a basic authentication session does not leak.
    *
    * Regression test for a bug that caused a session initiated by basic
-   * course_management_authentication to persist over subsequent unauthorized requests.
+   * authentication to persist over subsequent unauthorized requests.
    */
   public function testSessionFromBasicAuthenticationDoesNotLeak(): void {
     // This route is authorized through basic_auth only, not cookie.
@@ -62,28 +62,28 @@ class SessionAuthenticationTest extends BrowserTestBase {
     $session = $this->getSession();
     $this->assertSession()->statusCodeEquals(401);
 
-    // We should be able to access the route with basic course_management_authentication.
+    // We should be able to access the route with basic authentication.
     $this->basicAuthGet($protected_url, $this->user->getAccountName(), $this->user->passRaw);
     $this->assertSession()->statusCodeEquals(200);
 
     // Check that the correct user is logged in.
-    $this->assertEquals($this->user->id(), json_decode($session->getPage()->getContent())->user, 'The correct user is authenticated on a route with basic course_management_authentication.');
+    $this->assertEquals($this->user->id(), json_decode($session->getPage()->getContent())->user, 'The correct user is authenticated on a route with basic authentication.');
     $session->restart();
 
-    // If we now try to access a page without basic course_management_authentication then we
+    // If we now try to access a page without basic authentication then we
     // should no longer be logged in.
     $this->drupalGet($unprotected_url);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertEquals(0, json_decode($session->getPage()->getContent())->user, 'The user is no longer authenticated after visiting a page without basic course_management_authentication.');
+    $this->assertEquals(0, json_decode($session->getPage()->getContent())->user, 'The user is no longer authenticated after visiting a page without basic authentication.');
 
-    // If we access the protected page again without basic course_management_authentication we
+    // If we access the protected page again without basic authentication we
     // should get 401 Unauthorized.
     $this->drupalGet($protected_url);
     $this->assertSession()->statusCodeEquals(401);
   }
 
   /**
-   * Tests if a session can be initiated through basic course_management_authentication.
+   * Tests if a session can be initiated through basic authentication.
    */
   public function testBasicAuthSession(): void {
     // Set a session value on a request through basic auth.
@@ -117,16 +117,16 @@ class SessionAuthenticationTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that a session is not started automatically by basic course_management_authentication.
+   * Tests that a session is not started automatically by basic authentication.
    */
   public function testBasicAuthNoSession(): void {
     // A route that is authorized through basic_auth only, not cookie.
     $no_cookie_url = Url::fromRoute('session_test.get_session_basic_auth');
 
-    // A route that is authorized with standard cookie course_management_authentication.
+    // A route that is authorized with standard cookie authentication.
     $cookie_url = 'user/login';
 
-    // If we authenticate with a third party course_management_authentication system then no
+    // If we authenticate with a third party authentication system then no
     // session cookie should be set, the third party system is responsible for
     // sustaining the session.
     $this->basicAuthGet($no_cookie_url, $this->user->getAccountName(), $this->user->passRaw);

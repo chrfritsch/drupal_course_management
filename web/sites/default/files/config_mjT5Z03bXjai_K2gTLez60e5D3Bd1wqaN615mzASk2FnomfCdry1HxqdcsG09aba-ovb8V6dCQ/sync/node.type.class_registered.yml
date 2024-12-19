@@ -1,0 +1,18 @@
+uuid: 7cbd0b93-76cc-4fac-a692-9972e0f9c6dc
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: 'Class registered'
+type: class_registered
+description: 'Display a list of classes registered by a specific user.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

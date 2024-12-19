@@ -337,7 +337,7 @@ $settings['update_free_access'] = FALSE;
  *   requests.
  * - $settings['http_client_config']['proxy']['https']: The proxy URL for HTTPS
  *   requests.
- * You can pass in the user name and password for basic course_management_authentication in the
+ * You can pass in the user name and password for basic authentication in the
  * URLs in these settings.
  *
  * You can also define an array of host names that can be accessed directly,

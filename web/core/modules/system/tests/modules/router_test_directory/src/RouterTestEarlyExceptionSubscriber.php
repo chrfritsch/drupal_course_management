@@ -24,7 +24,7 @@ class RouterTestEarlyExceptionSubscriber implements EventSubscriberInterface {
     if ($event->isMainRequest() && $event->getRequest()->headers->get('Authorization') === 'Bearer invalid') {
       throw new HttpException(
         Response::HTTP_UNAUTHORIZED,
-        'This is a common exception during course_management_authentication.'
+        'This is a common exception during authentication.'
       );
     }
   }
@@ -34,7 +34,7 @@ class RouterTestEarlyExceptionSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     // This is the same priority as AuthenticationSubscriber, however
-    // exceptions are not restricted to course_management_authentication; this is a common,
+    // exceptions are not restricted to authentication; this is a common,
     // early point to emulate an exception, e.g. when an OAuth token is
     // rejected.
     $events[KernelEvents::REQUEST][] = ['onKernelRequest', 300];

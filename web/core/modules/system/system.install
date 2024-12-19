@@ -987,7 +987,7 @@ function system_requirements($phase) {
       $requirements['update access'] = [
         'value' => t('Not protected'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The update.php script is accessible to everyone without course_management_authentication check, which is a security risk. You must change the @settings_name value in your settings.php back to FALSE.', ['@settings_name' => '$settings[\'update_free_access\']']),
+        'description' => t('The update.php script is accessible to everyone without authentication check, which is a security risk. You must change the @settings_name value in your settings.php back to FALSE.', ['@settings_name' => '$settings[\'update_free_access\']']),
       ];
     }
     else {

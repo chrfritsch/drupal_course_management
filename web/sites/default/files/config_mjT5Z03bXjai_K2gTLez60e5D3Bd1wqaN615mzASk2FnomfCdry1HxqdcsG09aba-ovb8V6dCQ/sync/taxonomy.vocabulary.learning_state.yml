@@ -1,0 +1,9 @@
+uuid: fe1cc1df-bc45-49dd-9404-7e8a0015aef1
+langcode: en
+status: true
+dependencies: {  }
+name: 'Learning state'
+vid: learning_state
+description: null
+weight: 0
+new_revision: false

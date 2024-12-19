@@ -1,0 +1,82 @@
+uuid: c3d08117-ec99-4017-8033-b31be0400205
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.student_scores.field_average
+    - field.field.node.student_scores.field_course_in_scores
+    - field.field.node.student_scores.field_final
+    - field.field.node.student_scores.field_midterm
+    - field.field.node.student_scores.field_testing_state
+    - field.field.node.student_scores.field_user_in_scores
+    - node.type.student_scores
+  module:
+    - user
+id: node.student_scores.default
+targetEntityType: node
+bundle: student_scores
+mode: default
+content:
+  field_average:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_course_in_scores:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_final:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_midterm:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_testing_state:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_user_in_scores:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

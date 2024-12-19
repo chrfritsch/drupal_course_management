@@ -1,0 +1,23 @@
+uuid: a7a90d10-b688-44f7-af62-2dbaf5bf0d15
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_course_tuition_fee
+    - node.type.course
+id: node.course.field_course_tuition_fee
+field_name: field_course_tuition_fee
+entity_type: node
+bundle: course
+label: 'Course Tuition Fee'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0.0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

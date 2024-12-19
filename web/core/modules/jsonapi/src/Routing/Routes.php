@@ -74,7 +74,7 @@ class Routes implements ContainerInjectionInterface {
    * @param \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository
    *   The JSON:API resource type repository.
    * @param string[] $authentication_providers
-   *   The course_management_authentication providers, keyed by ID.
+   *   The authentication providers, keyed by ID.
    * @param string $jsonapi_base_path
    *   The JSON:API base path.
    */
@@ -125,7 +125,7 @@ class Routes implements ContainerInjectionInterface {
 
     $routes->addCollection($upload_routes);
 
-    // Enable all available course_management_authentication providers.
+    // Enable all available authentication providers.
     $routes->addOptions(['_auth' => $this->providerIds]);
 
     // Flag every route as belonging to the JSON:API module.

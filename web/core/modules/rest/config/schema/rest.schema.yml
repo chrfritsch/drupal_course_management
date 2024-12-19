@@ -48,7 +48,7 @@ rest_resource.resource:
         label: 'Format'
     authentication:
       type: sequence
-      label: 'Supported course_management_authentication providers'
+      label: 'Supported authentication providers'
       sequence:
         type: string
         label: 'Authentication provider'
@@ -64,7 +64,7 @@ rest_request:
         label: 'Format'
     supported_auth:
       type: sequence
-      label: 'Supported course_management_authentication'
+      label: 'Supported authentication'
       sequence:
         type: string
         label: 'Authentication'

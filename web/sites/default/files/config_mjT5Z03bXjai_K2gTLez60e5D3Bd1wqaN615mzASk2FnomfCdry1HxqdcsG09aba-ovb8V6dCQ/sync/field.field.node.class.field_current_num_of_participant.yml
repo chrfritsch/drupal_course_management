@@ -1,0 +1,25 @@
+uuid: 940c6a5c-76ce-464e-af7f-1822513437ae
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_current_num_of_participant
+    - node.type.class
+id: node.class.field_current_num_of_participant
+field_name: field_current_num_of_participant
+entity_type: node
+bundle: class
+label: 'Current num of participant'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

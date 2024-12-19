@@ -69,7 +69,7 @@ abstract class MobileNumberTfa extends TfaBasePlugin implements TfaValidationInt
         $this->mobileNumber = $this->mobileNumberUtil->testMobileNumber($m);
       }
       catch (MobileNumberException $e) {
-        throw new Exception("Two factor course_management_authentication failed: \n" . $e->getMessage(), $e->getCode());
+        throw new Exception("Two factor authentication failed: \n" . $e->getMessage(), $e->getCode());
       }
     }
   }

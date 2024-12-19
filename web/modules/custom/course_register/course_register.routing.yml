@@ -8,3 +8,59 @@ course_register.vnpay_return:
     _access: 'TRUE'
   options:
     no_cache: TRUE
+
+course_register.content_class:
+  path: '/admin/content/class'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ContentController::classContent'
+    _title: 'Classes'
+  requirements:
+    _permission: 'access content overview'
+
+course_register.content_course:
+ path: '/admin/content/course'
+ defaults:
+   _controller: '\Drupal\course_register\Controller\ContentController::courseContent'
+   _title: 'Courses'
+ requirements:
+   _permission: 'access content overview'
+
+course_register.content_class_registered:
+ path: '/admin/content/class-registered'
+ defaults:
+   _controller: '\Drupal\course_register\Controller\ContentController::classRegisteredContent'
+   _title: 'Class Registrations'
+ requirements:
+   _permission: 'access content overview'
+
+course_register.content_transaction:
+ path: '/admin/content/transaction'
+ defaults:
+   _controller: '\Drupal\course_register\Controller\ContentController::transactionContent'
+   _title: 'Transactions'
+ requirements:
+   _permission: 'access content overview'
+
+course_register.content_exam_schedule:
+  path: '/admin/content/exam-schedule'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ContentController::examScheduleContent'
+    _title: 'Exam Schedule'
+  requirements:
+    _permission: 'access content overview'
+
+course_register.content_student_scores:
+  path: '/admin/content/student-scores'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ContentController::studentScoresContent'
+    _title: 'Student Scores'
+  requirements:
+    _permission: 'access content overview'
+
+course_register.content_certificate:
+  path: '/admin/content/certificate'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ContentController::certificateContent'
+    _title: 'Certificates'
+  requirements:
+    _permission: 'access content overview'

@@ -1,0 +1,19 @@
+uuid: 419ac34d-f6ba-47b5-9777-12bac2e7c832
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - serialization
+    - user_info
+id: user_info_api
+plugin_id: user_info_api
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - PATCH
+  formats:
+    - json
+  authentication:
+    - basic_auth

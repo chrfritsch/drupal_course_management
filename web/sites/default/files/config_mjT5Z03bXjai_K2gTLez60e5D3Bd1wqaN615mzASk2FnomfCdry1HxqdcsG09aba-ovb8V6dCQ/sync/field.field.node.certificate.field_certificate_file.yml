@@ -1,0 +1,27 @@
+uuid: f1644ffd-59d1-4b6a-bf45-9f095a28d645
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_certificate_file
+    - node.type.certificate
+  module:
+    - file
+id: node.certificate.field_certificate_file
+field_name: field_certificate_file
+entity_type: node
+bundle: certificate
+label: 'Certificate File'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt pdf docx xlsx'
+  max_filesize: ''
+  description_field: false
+field_type: file

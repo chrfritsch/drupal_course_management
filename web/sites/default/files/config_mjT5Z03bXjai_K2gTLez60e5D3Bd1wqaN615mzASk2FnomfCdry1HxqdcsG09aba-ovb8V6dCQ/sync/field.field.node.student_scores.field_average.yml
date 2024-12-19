@@ -1,0 +1,25 @@
+uuid: 2a21dfd5-330a-41cd-b6e7-efddf9e7452d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_average
+    - node.type.student_scores
+id: node.student_scores.field_average
+field_name: field_average
+entity_type: node
+bundle: student_scores
+label: Average
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0.0
+default_value_callback: ''
+settings:
+  min: 0.0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

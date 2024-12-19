@@ -1,0 +1,9 @@
+uuid: 22282680-f12d-49fd-b8d9-f88290fe9f77
+langcode: en
+status: true
+dependencies: {  }
+name: 'Training program'
+vid: training_program
+description: null
+weight: 0
+new_revision: false

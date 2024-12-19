@@ -1,0 +1,20 @@
+uuid: 72696a38-f6eb-4cfa-84f5-9707662e7ca6
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_course_tuition_fee
+field_name: field_course_tuition_fee
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

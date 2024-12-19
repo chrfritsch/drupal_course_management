@@ -82,14 +82,14 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
   protected $renderer;
 
   /**
-   * The collector of course_management_authentication providers.
+   * The collector of authentication providers.
    *
    * @var \Drupal\Core\Authentication\AuthenticationCollectorInterface
    */
   protected $authenticationCollector;
 
   /**
-   * The course_management_authentication providers, like 'cookie' and 'basic_auth'.
+   * The authentication providers, like 'cookie' and 'basic_auth'.
    *
    * @var string[]
    */
@@ -118,7 +118,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param string[] $authentication_providers
-   *   The course_management_authentication providers, keyed by ID.
+   *   The authentication providers, keyed by ID.
    * @param string[] $serializer_format_providers
    *   The serialization format providers, keyed by format.
    */
@@ -128,7 +128,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
     $this->renderer = $renderer;
     // $authentication_providers as defined in
     // \Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass
-    // and as such it is an array, with course_management_authentication providers (cookie,
+    // and as such it is an array, with authentication providers (cookie,
     // basic_auth) as keys and modules providing those as values (user,
     // basic_auth).
     $this->authenticationProviderIds = array_keys($authentication_providers);
@@ -255,7 +255,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    // Options for REST course_management_authentication.
+    // Options for REST authentication.
     $options['auth'] = ['default' => []];
 
     // Set the default style plugin to 'json'.
@@ -279,7 +279,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
     parent::optionsSummary($categories, $options);
 
     // Authentication.
-    $auth = $this->getOption('auth') ? implode(', ', $this->getOption('auth')) : $this->t('No course_management_authentication is set');
+    $auth = $this->getOption('auth') ? implode(', ', $this->getOption('auth')) : $this->t('No authentication is set');
 
     unset($categories['page'], $categories['exposed']);
     // Hide some settings, as they aren't useful for pure data output.
@@ -314,11 +314,11 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     if ($form_state->get('section') === 'auth') {
-      $form['#title'] .= $this->t('The supported course_management_authentication methods for this view');
+      $form['#title'] .= $this->t('The supported authentication methods for this view');
       $form['auth'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Authentication methods'),
-        '#description' => $this->t('These are the supported course_management_authentication providers for this view. When this view is requested, the client will be forced to authenticate with one of the selected providers. Make sure you set the appropriate requirements at the <em>Access</em> section since the Authentication System will fallback to the anonymous user if it fails to authenticate. For example: require Access: Role | Authenticated User.'),
+        '#description' => $this->t('These are the supported authentication providers for this view. When this view is requested, the client will be forced to authenticate with one of the selected providers. Make sure you set the appropriate requirements at the <em>Access</em> section since the Authentication System will fallback to the anonymous user if it fails to authenticate. For example: require Access: Role | Authenticated User.'),
         '#options' => $this->getAuthOptions(),
         '#default_value' => $this->getOption('auth'),
       ];
@@ -361,8 +361,8 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
       // Format as a string using pipes as a delimiter.
       $route->setRequirement('_format', implode('|', $formats));
 
-      // Add course_management_authentication to the route if it was set. If no course_management_authentication was
-      // set, the default course_management_authentication will be used, which is cookie based by
+      // Add authentication to the route if it was set. If no authentication was
+      // set, the default authentication will be used, which is cookie based by
       // default.
       $auth = $this->getOption('auth');
       if (!empty($auth)) {

@@ -1,0 +1,25 @@
+uuid: c859c9ef-5d94-4a46-8879-06b30f856ddc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_midterm
+    - node.type.student_scores
+id: node.student_scores.field_midterm
+field_name: field_midterm
+entity_type: node
+bundle: student_scores
+label: Midterm
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0.0
+default_value_callback: ''
+settings:
+  min: 0.0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

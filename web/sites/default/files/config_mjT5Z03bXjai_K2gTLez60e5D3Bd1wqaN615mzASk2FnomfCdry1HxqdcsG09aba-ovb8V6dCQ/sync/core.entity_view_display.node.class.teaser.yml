@@ -1,0 +1,42 @@
+uuid: cf9a4422-426b-48b1-9727-79856a2556fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.class.field_class_code
+    - field.field.node.class.field_class_course_reference
+    - field.field.node.class.field_class_end_date
+    - field.field.node.class.field_class_end_time
+    - field.field.node.class.field_class_open_date
+    - field.field.node.class.field_class_start_time
+    - field.field.node.class.field_class_teacher
+    - field.field.node.class.field_class_weekdays
+    - field.field.node.class.field_current_num_of_participant
+    - field.field.node.class.field_max_num_of_participant
+    - field.field.node.class.field_room
+    - node.type.class
+  module:
+    - user
+id: node.class.teaser
+targetEntityType: node
+bundle: class
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_class_code: true
+  field_class_course_reference: true
+  field_class_end_date: true
+  field_class_end_time: true
+  field_class_open_date: true
+  field_class_start_time: true
+  field_class_teacher: true
+  field_class_weekdays: true
+  field_current_num_of_participant: true
+  field_max_num_of_participant: true
+  field_room: true

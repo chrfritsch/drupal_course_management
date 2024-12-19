@@ -54,11 +54,11 @@ class RestUITest extends WebDriverTestBase {
     // Assert that the 'resource' configuration form is build as default.
     $this->assertSession()->fieldExists('wrapper[settings][methods][GET]');
     $this->assertSession()->fieldExists('wrapper[settings][formats][json]');
-    $this->assertSession()->fieldExists('wrapper[settings][course_management_authentication][cookie]');
+    $this->assertSession()->fieldExists('wrapper[settings][authentication][cookie]');
 
     // Method granularity.
     // Adjust the node resource so it allows GET method with JSON format and
-    // Cookie course_management_authentication.
+    // Cookie authentication.
     $page->findField('granularity')->selectOption(RestResourceConfigInterface::METHOD_GRANULARITY);
     $this->assertSession()->waitForField('wrapper[methods][GET]');
     $page->findField('wrapper[methods][GET][GET]')->check();
@@ -70,7 +70,7 @@ class RestUITest extends WebDriverTestBase {
 
     // Resource granularity.
     // Adjust the node resource so it allows GET method, JSON format and
-    // Cookie course_management_authentication.
+    // Cookie authentication.
     $this->drupalGet('admin/config/services/rest/resource/entity%3Anode/edit');
 
     $page = $this->getSession()->getPage();
@@ -78,7 +78,7 @@ class RestUITest extends WebDriverTestBase {
     $this->assertSession()->waitForField('wrapper[settings][methods][GET]');
     $page->findField('wrapper[settings][methods][GET]')->check();
     $page->findField('wrapper[settings][formats][json]')->check();
-    $page->findField('wrapper[settings][course_management_authentication][cookie]')->check();
+    $page->findField('wrapper[settings][authentication][cookie]')->check();
 
     $page->pressButton('Save configuration');
     $this->assertSession()->pageTextContains('The resource has been updated.');

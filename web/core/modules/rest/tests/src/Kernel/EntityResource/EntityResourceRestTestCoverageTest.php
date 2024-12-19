@@ -15,7 +15,7 @@ use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
  *
  * Every entity type must have test coverage for:
  * - every format in core (json + xml)
- * - every course_management_authentication provider in core (anon, cookie, basic_auth)
+ * - every authentication provider in core (anon, cookie, basic_auth)
  *
  * Additionally, every entity type must have the correct parent test class.
  *

@@ -142,7 +142,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
         return $this->getAuthenticationProvidersForMethodGranularity($method);
 
       case RestResourceConfigInterface::RESOURCE_GRANULARITY:
-        return $this->configuration['course_management_authentication'];
+        return $this->configuration['authentication'];
 
       default:
         throw new \InvalidArgumentException('Invalid granularity specified.');
@@ -150,13 +150,13 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
   }
 
   /**
-   * Retrieves a list of supported course_management_authentication providers.
+   * Retrieves a list of supported authentication providers.
    *
    * @param string $method
    *   The request method e.g GET or POST.
    *
    * @return string[]
-   *   A list of supported course_management_authentication provider IDs.
+   *   A list of supported authentication provider IDs.
    */
   public function getAuthenticationProvidersForMethodGranularity($method) {
     $method = $this->normalizeRestMethod($method);

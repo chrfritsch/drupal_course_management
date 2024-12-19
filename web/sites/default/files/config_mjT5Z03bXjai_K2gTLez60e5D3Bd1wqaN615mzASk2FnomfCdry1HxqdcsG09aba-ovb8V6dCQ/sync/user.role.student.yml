@@ -1,0 +1,20 @@
+uuid: b459e19a-b245-4d3c-85f8-dfd48d032c4e
+langcode: en
+status: true
+dependencies:
+  config:
+    - rest.resource.user_registration
+  module:
+    - node
+    - rest
+    - toolbar
+id: student
+label: Student
+weight: 4
+is_admin: null
+permissions:
+  - 'access content overview'
+  - 'access toolbar'
+  - 'access user profiles'
+  - 'administer rest resources'
+  - 'restful post user_registration'

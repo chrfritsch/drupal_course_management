@@ -1,0 +1,19 @@
+uuid: 1470e6d2-0fa4-4e87-a7b9-52a00764b6d5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transaction_id
+    - node.type.transaction_history
+id: node.transaction_history.field_transaction_id
+field_name: field_transaction_id
+entity_type: node
+bundle: transaction_history
+label: 'Transaction id'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

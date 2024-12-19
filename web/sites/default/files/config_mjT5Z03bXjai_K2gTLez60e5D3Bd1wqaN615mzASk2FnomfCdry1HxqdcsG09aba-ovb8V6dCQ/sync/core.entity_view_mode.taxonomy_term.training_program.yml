@@ -1,0 +1,11 @@
+uuid: 575bf87f-4382-4997-8f59-18946f6ff12a
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.training_program
+label: 'Training program'
+description: ''
+targetEntityType: taxonomy_term
+cache: true

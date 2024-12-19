@@ -1,0 +1,32 @@
+uuid: c31a3c9e-15c4-474a-9538-cdbf5698e4ec
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.exam_schedule.field_course
+    - field.field.node.exam_schedule.field_date_exam
+    - field.field.node.exam_schedule.field_end_exam
+    - field.field.node.exam_schedule.field_exam_class
+    - field.field.node.exam_schedule.field_exam_location
+    - field.field.node.exam_schedule.field_start_exam
+    - node.type.exam_schedule
+  module:
+    - user
+id: node.exam_schedule.teaser
+targetEntityType: node
+bundle: exam_schedule
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_course: true
+  field_date_exam: true
+  field_end_exam: true
+  field_exam_class: true
+  field_exam_location: true
+  field_start_exam: true

@@ -1,0 +1,20 @@
+uuid: 1c808df9-1924-4e08-b463-4c54f16d681f
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_max_num_of_participant
+field_name: field_max_num_of_participant
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

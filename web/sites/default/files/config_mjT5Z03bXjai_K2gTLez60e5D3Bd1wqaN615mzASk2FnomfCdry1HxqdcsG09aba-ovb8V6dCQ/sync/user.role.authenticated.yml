@@ -4,11 +4,18 @@ status: true
 dependencies:
   config:
     - filter.format.basic_html
+    - filter.format.webform_default
+    - rest.resource.course_management_authentication_login_api
+    - rest.resource.course_management_authentication_register_api
+    - rest.resource.course_register_register_course_api
+    - rest.resource.user_info_api
+    - rest.resource.user_registration
   module:
     - comment
     - contact
     - file
     - filter
+    - rest
     - search
     - shortcut
     - system
@@ -23,8 +30,16 @@ permissions:
   - 'access content'
   - 'access shortcuts'
   - 'access site-wide contact form'
+  - 'administer rest resources'
   - 'delete own files'
   - 'post comments'
+  - 'restful get user_info_api'
+  - 'restful patch user_info_api'
+  - 'restful post course_management_authentication_login_api'
+  - 'restful post course_management_authentication_register_api'
+  - 'restful post course_register_register_course_api'
+  - 'restful post user_registration'
   - 'search content'
   - 'skip comment approval'
   - 'use text format basic_html'
+  - 'use text format webform_default'

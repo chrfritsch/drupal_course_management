@@ -1,0 +1,20 @@
+uuid: ba3aaef6-0214-48f6-8331-5376a63fcd17
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_class_weekdays
+field_name: field_class_weekdays
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

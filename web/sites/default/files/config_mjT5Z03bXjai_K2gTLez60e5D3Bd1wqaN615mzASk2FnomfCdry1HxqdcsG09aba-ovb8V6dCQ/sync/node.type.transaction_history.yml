@@ -1,0 +1,18 @@
+uuid: e6cc4ced-df3e-44ca-924d-978f135db908
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: 'Transaction history'
+type: transaction_history
+description: 'This play history of transaction.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

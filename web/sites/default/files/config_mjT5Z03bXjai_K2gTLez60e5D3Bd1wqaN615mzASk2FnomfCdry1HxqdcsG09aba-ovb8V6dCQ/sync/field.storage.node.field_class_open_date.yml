@@ -1,0 +1,20 @@
+uuid: ea04e051-50d2-4cd8-87fc-bf0dde201a15
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_class_open_date
+field_name: field_class_open_date
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

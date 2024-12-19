@@ -1,0 +1,120 @@
+uuid: 871e6ecb-68df-44e0-9b6c-39e2dd5445b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.other
+    - field.field.node.class.field_class_code
+    - field.field.node.class.field_class_course_reference
+    - field.field.node.class.field_class_end_date
+    - field.field.node.class.field_class_end_time
+    - field.field.node.class.field_class_open_date
+    - field.field.node.class.field_class_start_time
+    - field.field.node.class.field_class_teacher
+    - field.field.node.class.field_class_weekdays
+    - field.field.node.class.field_current_num_of_participant
+    - field.field.node.class.field_max_num_of_participant
+    - field.field.node.class.field_room
+    - node.type.class
+  module:
+    - datetime
+    - time_field
+    - user
+id: node.class.other
+targetEntityType: node
+bundle: class
+mode: other
+content:
+  field_class_code:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_class_course_reference:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 111
+    region: content
+  field_class_end_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 108
+    region: content
+  field_class_end_time:
+    type: time_formatter
+    label: above
+    settings:
+      time_format: 'h:i a'
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_class_open_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_class_start_time:
+    type: time_formatter
+    label: above
+    settings:
+      time_format: 'h:i a'
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_class_weekdays:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  field_current_num_of_participant:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_max_num_of_participant:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_room:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_class_teacher: true

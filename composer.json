@@ -27,6 +27,9 @@
         "drupal/mobile_number": "^2.0",
         "drupal/restui": "^1.22",
         "drupal/time_field": "^2.1",
+        "drupal/views_data_export": "^1.5",
+        "drupal/webform": "^6.2",
+        "drupal/webform_entity_handler": "^2.0",
         "drush/drush": "^12.5"
     },
     "conflict": {

@@ -1,0 +1,21 @@
+uuid: b4425121-559a-4f5d-b06a-774e7492b102
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_start_exam
+    - node.type.exam_schedule
+  module:
+    - time_field
+id: node.exam_schedule.field_start_exam
+field_name: field_start_exam
+entity_type: node
+bundle: exam_schedule
+label: 'Start exam'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: time

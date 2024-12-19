@@ -7,7 +7,7 @@ namespace Drupal\Tests\path_alias\Functional\Rest;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
- * Test path_alias entities for JSON requests with cookie course_management_authentication.
+ * Test path_alias entities for JSON requests with cookie authentication.
  *
  * @group path_alias
  */

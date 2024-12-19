@@ -90,7 +90,7 @@ class UserAuthTest extends UnitTestCase {
   }
 
   /**
-   * Tests failing course_management_authentication with missing credential parameters.
+   * Tests failing authentication with missing credential parameters.
    *
    * @covers ::authenticate
    *

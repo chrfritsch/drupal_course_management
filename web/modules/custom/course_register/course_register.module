@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * Implements hook_cron().
+ */
+function course_register_cron() {
+  $year = date('Y');
+  $vid = 'semester';
+
+  // Query xem đã có terms cho năm hiện tại chưa
+  $query = \Drupal::entityQuery('taxonomy_term')
+    ->condition('vid', $vid)
+    ->condition('name', $year)
+    ->execute();
+
+  if (empty($query)) {
+    // Tạo terms mới cho năm hiện tại
+    $term = \Drupal\taxonomy\Entity\Term::create([
+      'vid' => $vid,
+      'name' => "Học kỳ I ($year-" . ($year + 1) . ")",
+    ]);
+    $term->save();
+
+    $term = \Drupal\taxonomy\Entity\Term::create([
+      'vid' => $vid,
+      'name' => "Học kỳ II ($year-" . ($year + 1) . ")",
+    ]);
+    $term->save();
+
+    $term = \Drupal\taxonomy\Entity\Term::create([
+      'vid' => $vid,
+      'name' => "Học kỳ hè ($year)",
+    ]);
+    $term->save();
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function course_register_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+  // Kiểm tra xem entity có phải là node và có type là student_scores không
+  if ($entity->getEntityTypeId() !== 'node' ||
+    !in_array($entity->bundle(), ['student_scores', 'certificate'])) {
+    return;
+  }
+
+  try {
+    // Lấy reference đến user - khác nhau giữa 2 content type
+    if ($entity->bundle() === 'student_scores') {
+      $user_id = $entity->get('field_user_in_scores')->target_id;
+      $course_id = $entity->get('field_course_in_scores')->target_id;
+    } else {
+      $user_id = $entity->get('field_complete_lesson_user')->target_id;
+      $course_id = $entity->get('field_course_information')->target_id;
+    }
+
+    if ($user_id) {
+      $user = \Drupal\user\Entity\User::load($user_id);
+      $user_fullname = $user ? $user->getDisplayName() : '';
+    }
+
+    // Lấy reference đến course
+    if ($course_id) {
+      $course = \Drupal\node\Entity\Node::load($course_id);
+      $course_name = $course ? $course->label() : '';
+    }
+
+    // Tạo title mới nếu có đủ thông tin
+    if (!empty($user_fullname) && !empty($course_name)) {
+      $prefix = $entity->bundle() === 'student_scores' ? '[Điểm]' : '[Chứng chỉ]';
+      $new_title = sprintf('%s %s | %s', $prefix, $course_name, $user_fullname);
+      $entity->setTitle($new_title);
+    }
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('course_register')->error('Lỗi khi tạo title cho student_scores: @error', [
+      '@error' => $e->getMessage(),
+    ]);
+  }
+}

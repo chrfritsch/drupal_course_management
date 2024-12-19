@@ -1,0 +1,21 @@
+uuid: 0bab1a7a-0aec-49b9-b66c-84b6ec1a6ee5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_class_open_date
+    - node.type.class
+  module:
+    - datetime
+id: node.class.field_class_open_date
+field_name: field_class_open_date
+entity_type: node
+bundle: class
+label: 'Class open date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

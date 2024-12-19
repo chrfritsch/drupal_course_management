@@ -1,0 +1,29 @@
+uuid: b222b980-2bd9-4e4c-8da3-12fdccfb8f1d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_course_training_program
+    - node.type.course
+    - taxonomy.vocabulary.training_program
+id: node.course.field_course_training_program
+field_name: field_course_training_program
+entity_type: node
+bundle: course
+label: 'Course training program'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      training_program: training_program
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

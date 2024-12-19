@@ -1,0 +1,115 @@
+uuid: 88db4d46-70b4-4462-a319-2292608146cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.exam_schedule.field_course
+    - field.field.node.exam_schedule.field_date_exam
+    - field.field.node.exam_schedule.field_end_exam
+    - field.field.node.exam_schedule.field_exam_class
+    - field.field.node.exam_schedule.field_exam_location
+    - field.field.node.exam_schedule.field_start_exam
+    - node.type.exam_schedule
+  module:
+    - datetime
+    - path
+    - time_field
+id: node.exam_schedule.default
+targetEntityType: node
+bundle: exam_schedule
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_course:
+    type: options_select
+    weight: 121
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_date_exam:
+    type: datetime_default
+    weight: 122
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_end_exam:
+    type: time_widget
+    weight: 124
+    region: content
+    settings:
+      enabled: false
+      step: 5
+    third_party_settings: {  }
+  field_exam_class:
+    type: options_select
+    weight: 126
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_exam_location:
+    type: string_textfield
+    weight: 125
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_start_exam:
+    type: time_widget
+    weight: 123
+    region: content
+    settings:
+      enabled: false
+      step: 5
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 15
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 120
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 16
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

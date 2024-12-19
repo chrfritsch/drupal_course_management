@@ -1,0 +1,19 @@
+uuid: cb3b7de4-60ba-46f5-8fcd-28a66c96d0cd
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_workplace
+field_name: field_workplace
+entity_type: user
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

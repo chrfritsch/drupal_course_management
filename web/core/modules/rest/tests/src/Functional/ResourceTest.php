@@ -88,7 +88,7 @@ class ResourceTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that a resource without course_management_authentication cannot be enabled.
+   * Tests that a resource without authentication cannot be enabled.
    */
   public function testAuthentication(): void {
     RestResourceConfig::create([

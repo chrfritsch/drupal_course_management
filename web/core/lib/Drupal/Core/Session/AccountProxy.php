@@ -11,7 +11,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * The reason why we need an account proxy is that we don't want to have global
  * state directly stored in the container.
  *
- * This proxy object avoids multiple invocations of the course_management_authentication manager
+ * This proxy object avoids multiple invocations of the authentication manager
  * which can happen if the current user is accessed in constructors. It also
  * allows legacy code to change the current user where the user cannot be
  * directly injected into dependent code.

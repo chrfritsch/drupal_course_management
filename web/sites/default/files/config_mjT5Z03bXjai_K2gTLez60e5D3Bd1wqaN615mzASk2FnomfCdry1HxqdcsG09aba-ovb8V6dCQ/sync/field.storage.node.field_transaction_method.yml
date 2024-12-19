@@ -1,0 +1,21 @@
+uuid: f826293d-53a1-4dab-8bbc-c76405db5dc5
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_transaction_method
+field_name: field_transaction_method
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

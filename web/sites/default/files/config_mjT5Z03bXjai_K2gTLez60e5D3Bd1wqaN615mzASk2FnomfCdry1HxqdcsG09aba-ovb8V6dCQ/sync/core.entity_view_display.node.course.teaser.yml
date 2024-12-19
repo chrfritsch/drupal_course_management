@@ -4,7 +4,12 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.course.field_course_code
     - field.field.node.course.field_course_description
+    - field.field.node.course.field_course_semester
+    - field.field.node.course.field_course_thumbnail
+    - field.field.node.course.field_course_training_program
+    - field.field.node.course.field_course_tuition_fee
     - node.type.course
   module:
     - user
@@ -19,4 +24,9 @@ content:
     weight: 100
     region: content
 hidden:
+  field_course_code: true
   field_course_description: true
+  field_course_semester: true
+  field_course_thumbnail: true
+  field_course_training_program: true
+  field_course_tuition_fee: true

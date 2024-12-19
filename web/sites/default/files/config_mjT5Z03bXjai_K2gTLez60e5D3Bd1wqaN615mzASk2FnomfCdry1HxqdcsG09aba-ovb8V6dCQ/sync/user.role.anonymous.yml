@@ -4,10 +4,12 @@ status: true
 dependencies:
   config:
     - filter.format.restricted_html
+    - rest.resource.user_registration
   module:
     - comment
     - contact
     - filter
+    - rest
     - search
     - system
 _core:
@@ -20,5 +22,7 @@ permissions:
   - 'access comments'
   - 'access content'
   - 'access site-wide contact form'
+  - 'administer rest resources'
+  - 'restful post user_registration'
   - 'search content'
   - 'use text format restricted_html'

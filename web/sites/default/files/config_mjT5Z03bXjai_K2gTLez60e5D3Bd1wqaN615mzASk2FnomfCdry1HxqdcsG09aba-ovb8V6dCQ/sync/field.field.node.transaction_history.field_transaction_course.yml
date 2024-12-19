@@ -1,0 +1,29 @@
+uuid: 756549c5-9bc9-4a56-a9bd-e67e0893b1a1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transaction_course
+    - node.type.course
+    - node.type.transaction_history
+id: node.transaction_history.field_transaction_course
+field_name: field_transaction_course
+entity_type: node
+bundle: transaction_history
+label: 'Transaction course'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      course: course
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

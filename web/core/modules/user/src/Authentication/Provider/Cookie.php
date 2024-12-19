@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Cookie based course_management_authentication provider.
+ * Cookie based authentication provider.
  */
 class Cookie implements AuthenticationProviderInterface, EventSubscriberInterface {
 
@@ -47,7 +47,7 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
   protected $messenger;
 
   /**
-   * Constructs a new cookie course_management_authentication provider.
+   * Constructs a new cookie authentication provider.
    *
    * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
    *   The session configuration.

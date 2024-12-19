@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
- * HTTP Basic course_management_authentication provider.
+ * HTTP Basic authentication provider.
  */
 class BasicAuth implements AuthenticationProviderInterface, AuthenticationProviderChallengeInterface {
 
@@ -49,12 +49,12 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
   protected $entityTypeManager;
 
   /**
-   * Constructs a HTTP basic course_management_authentication provider object.
+   * Constructs a HTTP basic authentication provider object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface $user_auth
-   *   The user course_management_authentication service.
+   *   The user authentication service.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -155,7 +155,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
 
     // A 403 is converted to a 401 here, but it doesn't matter what the
     // cacheability was of the 403 exception: what matters here is that
-    // course_management_authentication credentials are missing, i.e. this request was made
+    // authentication credentials are missing, i.e. this request was made
     // as an anonymous user.
     // Therefore, the following actions will be taken:
     // 1. Verify whether the current user has the 'anonymous' role or not. This
@@ -176,8 +176,8 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
       ->addCacheTags(['config:user.role.anonymous'])
       ->addCacheContexts(['user.roles:anonymous']);
     return $request->isMethodCacheable()
-      ? new CacheableUnauthorizedHttpException($cacheability, (string) $challenge, 'No course_management_authentication credentials provided.', $previous)
-      : new UnauthorizedHttpException((string) $challenge, 'No course_management_authentication credentials provided.', $previous);
+      ? new CacheableUnauthorizedHttpException($cacheability, (string) $challenge, 'No authentication credentials provided.', $previous)
+      : new UnauthorizedHttpException((string) $challenge, 'No authentication credentials provided.', $previous);
   }
 
 }

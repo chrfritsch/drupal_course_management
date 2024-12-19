@@ -1,0 +1,25 @@
+uuid: 96776455-a831-4d18-8adf-741ef68ca6b0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_final
+    - node.type.student_scores
+id: node.student_scores.field_final
+field_name: field_final
+entity_type: node
+bundle: student_scores
+label: Final
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0.0
+default_value_callback: ''
+settings:
+  min: 0.0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

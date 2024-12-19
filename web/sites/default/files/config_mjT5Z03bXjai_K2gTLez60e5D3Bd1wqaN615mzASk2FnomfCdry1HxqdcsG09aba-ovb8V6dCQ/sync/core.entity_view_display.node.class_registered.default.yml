@@ -1,0 +1,46 @@
+uuid: 02730cf8-7640-4bb7-bd20-273a8c51f126
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.class_registered.field_class_registered
+    - field.field.node.class_registered.field_class_registered_semester
+    - field.field.node.class_registered.field_user_class_registered
+    - node.type.class_registered
+  module:
+    - user
+id: node.class_registered.default
+targetEntityType: node
+bundle: class_registered
+mode: default
+content:
+  field_class_registered:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_class_registered_semester:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_user_class_registered:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

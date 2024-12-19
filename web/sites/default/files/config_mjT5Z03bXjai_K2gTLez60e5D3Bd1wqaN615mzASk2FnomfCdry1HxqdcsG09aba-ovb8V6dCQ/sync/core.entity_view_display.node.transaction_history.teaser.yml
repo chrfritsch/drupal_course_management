@@ -1,0 +1,32 @@
+uuid: c772e742-6f56-4c70-b4f1-6d561021acae
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.transaction_history.field_transaction_course
+    - field.field.node.transaction_history.field_transaction_date
+    - field.field.node.transaction_history.field_transaction_id
+    - field.field.node.transaction_history.field_transaction_method
+    - field.field.node.transaction_history.field_transaction_semester
+    - field.field.node.transaction_history.field_transaction_user
+    - node.type.transaction_history
+  module:
+    - user
+id: node.transaction_history.teaser
+targetEntityType: node
+bundle: transaction_history
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_transaction_course: true
+  field_transaction_date: true
+  field_transaction_id: true
+  field_transaction_method: true
+  field_transaction_semester: true
+  field_transaction_user: true

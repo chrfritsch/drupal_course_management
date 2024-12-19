@@ -1,0 +1,71 @@
+uuid: ab269014-f6cc-4302-854d-7657cc07097d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.other
+    - field.field.node.course.field_course_code
+    - field.field.node.course.field_course_description
+    - field.field.node.course.field_course_semester
+    - field.field.node.course.field_course_thumbnail
+    - field.field.node.course.field_course_training_program
+    - field.field.node.course.field_course_tuition_fee
+    - node.type.course
+  module:
+    - image
+    - text
+    - user
+id: node.course.other
+targetEntityType: node
+bundle: course
+mode: other
+content:
+  field_course_code:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_course_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_course_thumbnail:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_course_training_program:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_course_tuition_fee:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  field_course_semester: true
+  links: true

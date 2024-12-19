@@ -7,7 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Test course_management_authentication provider.
+ * Test authentication provider.
  */
 class Auth implements AuthenticationProviderInterface {
 
@@ -19,7 +19,7 @@ class Auth implements AuthenticationProviderInterface {
   protected $userStorage;
 
   /**
-   * Constructs an course_management_authentication provider object.
+   * Constructs an authentication provider object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.

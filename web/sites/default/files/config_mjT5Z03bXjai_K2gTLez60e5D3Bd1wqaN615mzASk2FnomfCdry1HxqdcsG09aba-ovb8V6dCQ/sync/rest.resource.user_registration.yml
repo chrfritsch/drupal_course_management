@@ -1,0 +1,17 @@
+uuid: 13464269-c03f-4636-942f-6533e41c6653
+langcode: en
+status: false
+dependencies:
+  module:
+    - serialization
+    - user
+id: user_registration
+plugin_id: user_registration
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  course_management_authentication:
+    - cookie

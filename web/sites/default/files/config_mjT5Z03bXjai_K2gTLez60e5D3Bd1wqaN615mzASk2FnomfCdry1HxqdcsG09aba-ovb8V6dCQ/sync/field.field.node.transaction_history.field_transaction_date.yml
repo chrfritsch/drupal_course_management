@@ -1,0 +1,21 @@
+uuid: 83409aae-cab9-4f58-ad9f-b5db0c8d47e9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transaction_date
+    - node.type.transaction_history
+  module:
+    - datetime
+id: node.transaction_history.field_transaction_date
+field_name: field_transaction_date
+entity_type: node
+bundle: transaction_history
+label: 'Transaction date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

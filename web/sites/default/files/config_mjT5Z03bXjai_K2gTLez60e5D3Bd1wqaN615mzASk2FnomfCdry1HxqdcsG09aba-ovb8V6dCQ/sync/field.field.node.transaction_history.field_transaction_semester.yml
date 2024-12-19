@@ -1,0 +1,29 @@
+uuid: 10d895bd-64de-40fa-98be-8ff8d0fd0e35
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transaction_semester
+    - node.type.transaction_history
+    - taxonomy.vocabulary.semester
+id: node.transaction_history.field_transaction_semester
+field_name: field_transaction_semester
+entity_type: node
+bundle: transaction_history
+label: 'Transaction semester'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      semester: semester
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

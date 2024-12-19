@@ -946,3 +946,5 @@ if ($settings['cors_enabled'] && isset($_SERVER['HTTP_ORIGIN'])) {
     exit();
   }
 }
+
+$settings['file_private_path'] = 'sites/default/files/private';

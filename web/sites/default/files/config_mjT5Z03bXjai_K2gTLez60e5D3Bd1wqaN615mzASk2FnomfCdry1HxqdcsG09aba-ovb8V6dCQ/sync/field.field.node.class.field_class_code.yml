@@ -1,0 +1,19 @@
+uuid: 35e5f771-3b0b-4cc4-90e2-b80e40a671e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_class_code
+    - node.type.class
+id: node.class.field_class_code
+field_name: field_class_code
+entity_type: node
+bundle: class
+label: 'Class code'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

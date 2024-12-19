@@ -1,0 +1,18 @@
+uuid: 95c140b2-612c-4092-afde-9c1f2efa328e
+langcode: en
+status: true
+dependencies:
+  module:
+    - course_management_authentication
+    - serialization
+    - user
+id: course_management_authentication_register_api
+plugin_id: course_management_authentication_register_api
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - cookie

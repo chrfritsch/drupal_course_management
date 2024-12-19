@@ -1,4 +1,4 @@
-uuid: f12b0a56-6a6c-4920-a6b0-4de2a18f9510
+uuid: dd4aeb69-cb75-49a5-96a2-e7df1ed8db63
 langcode: en
 status: true
 dependencies:
@@ -8,7 +8,7 @@ dependencies:
 id: node.field_course_description
 field_name: field_course_description
 entity_type: node
-type: text_with_summary
+type: text_long
 settings: {  }
 module: text
 locked: false

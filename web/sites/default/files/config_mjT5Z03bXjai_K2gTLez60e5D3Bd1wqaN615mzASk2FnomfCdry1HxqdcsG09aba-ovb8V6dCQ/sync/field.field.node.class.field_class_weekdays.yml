@@ -1,0 +1,23 @@
+uuid: a971c3ac-f0c2-4425-a94f-ed3ef6f49f7e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_class_weekdays
+    - node.type.class
+id: node.class.field_class_weekdays
+field_name: field_class_weekdays
+entity_type: node
+bundle: class
+label: 'Class weekdays'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

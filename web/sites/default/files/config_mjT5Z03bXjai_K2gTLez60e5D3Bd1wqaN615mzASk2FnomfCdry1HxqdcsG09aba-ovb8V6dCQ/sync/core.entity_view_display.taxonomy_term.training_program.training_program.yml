@@ -1,0 +1,22 @@
+uuid: 8ae67bdb-67fb-4d6d-9420-6d2fe1b23e8e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.training_program
+    - taxonomy.vocabulary.training_program
+  module:
+    - text
+id: taxonomy_term.training_program.training_program
+targetEntityType: taxonomy_term
+bundle: training_program
+mode: training_program
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

@@ -27,6 +27,10 @@ use Symfony\Component\Routing\Route;
  *   label = @Translation("API"),
  *   uri_paths = {
  *     "canonical" = "/api/user-info-api/{uid}"
+ *   },
+ *   methods = {
+ *     "GET",
+ *     "PATCH"
  *   }
  * )
  *
@@ -121,9 +125,9 @@ final class UserProfileResource extends ResourceBase {
   public function get($uid) {
     try {
       // Kiểm tra quyền truy cập
-      if (!$this->currentUser->hasPermission('access user profiles')) {
-        throw new HttpException(403, 'Không có quyền truy cập thông tin người dùng.');
-      }
+//      if (!$this->currentUser->hasPermission('access user profiles')) {
+//        throw new HttpException(403, 'Không có quyền truy cập thông tin người dùng.');
+//      }
 
       // Load user entity
       $user = $this->entityTypeManager->getStorage('user')->load($uid);
@@ -142,16 +146,20 @@ final class UserProfileResource extends ResourceBase {
         'workplace' => $user->get('field_workplace')->value,
         'avatar' => $user->get('field_avatar')->entity ? $user->get('field_avatar')->entity->createFileUrl() : NULL,
       ];
-
-      // Lấy thông tin career (taxonomy term)
+  
       if ($user->get('field_user_career')->entity) {
         $data['career'] = [
           'tid' => $user->get('field_user_career')->entity->id(),
           'name' => $user->get('field_user_career')->entity->getName(),
         ];
       }
-
-      return new ResourceResponse($data);
+  
+      $response = new ResourceResponse($data);
+      // Disable caching
+      $response->addCacheableDependency($user);
+      $response->getCacheableMetadata()->setCacheMaxAge(0);
+      
+      return $response;
     }
     catch (\Exception $e) {
       throw new HttpException(500, 'Có lỗi xảy ra: ' . $e->getMessage());

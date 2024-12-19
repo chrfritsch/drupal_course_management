@@ -1,0 +1,9 @@
+uuid: 15cf425a-353b-4979-9faa-81d6c8d04d66
+langcode: en
+status: true
+dependencies: {  }
+name: Semester
+vid: semester
+description: 'Học kỳ'
+weight: 0
+new_revision: false

@@ -1,0 +1,21 @@
+uuid: 31366cba-e989-4a34-b919-b09595a5fa93
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date_exam
+    - node.type.exam_schedule
+  module:
+    - datetime
+id: node.exam_schedule.field_date_exam
+field_name: field_date_exam
+entity_type: node
+bundle: exam_schedule
+label: 'Date exam'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

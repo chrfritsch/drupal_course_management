@@ -1,0 +1,29 @@
+uuid: 9d1f9926-d1a2-4684-85ec-4d149161e4e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_class_registered_semester
+    - node.type.class_registered
+    - taxonomy.vocabulary.semester
+id: node.class_registered.field_class_registered_semester
+field_name: field_class_registered_semester
+entity_type: node
+bundle: class_registered
+label: 'Class registered semester'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      semester: semester
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

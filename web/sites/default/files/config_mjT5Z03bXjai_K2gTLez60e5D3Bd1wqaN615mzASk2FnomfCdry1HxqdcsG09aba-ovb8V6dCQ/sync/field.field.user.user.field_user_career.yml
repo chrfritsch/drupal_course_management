@@ -1,0 +1,30 @@
+uuid: 8f350a31-2285-40f3-b1ef-daa736ef07cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_user_career
+    - taxonomy.vocabulary.career
+  module:
+    - user
+id: user.user.field_user_career
+field_name: field_user_career
+entity_type: user
+bundle: user
+label: 'User career'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      career: career
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

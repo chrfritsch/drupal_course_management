@@ -3,7 +3,7 @@
 namespace Drupal\Core\Password;
 
 /**
- * Secure password hashing functions for user course_management_authentication.
+ * Secure password hashing functions for user authentication.
  */
 interface PasswordInterface {
 

@@ -57,10 +57,10 @@ class ResponseGeneratorTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
     $this->assertSession()->responseHeaderEquals('X-Generator', $expectedGeneratorHeader);
 
-    // Enable cookie-based course_management_authentication for the entity:node REST resource.
+    // Enable cookie-based authentication for the entity:node REST resource.
     $resource_config = RestResourceConfig::load('entity.node');
     $configuration = $resource_config->get('configuration');
-    $configuration['course_management_authentication'][] = 'cookie';
+    $configuration['authentication'][] = 'cookie';
     $resource_config->set('configuration', $configuration)->save();
     $this->rebuildAll();
 

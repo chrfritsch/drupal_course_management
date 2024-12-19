@@ -1,0 +1,26 @@
+uuid: 583d66d4-9cf6-421f-b01e-dfbed538fb06
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.class_registered.field_class_registered
+    - field.field.node.class_registered.field_class_registered_semester
+    - field.field.node.class_registered.field_user_class_registered
+    - node.type.class_registered
+  module:
+    - user
+id: node.class_registered.teaser
+targetEntityType: node
+bundle: class_registered
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_class_registered: true
+  field_class_registered_semester: true
+  field_user_class_registered: true

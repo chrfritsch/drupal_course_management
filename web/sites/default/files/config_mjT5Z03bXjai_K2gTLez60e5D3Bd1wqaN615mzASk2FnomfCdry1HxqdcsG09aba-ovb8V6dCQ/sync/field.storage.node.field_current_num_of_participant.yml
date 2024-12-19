@@ -1,0 +1,20 @@
+uuid: 892c3539-4ed1-46bc-85d2-14f99b9bedec
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_current_num_of_participant
+field_name: field_current_num_of_participant
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

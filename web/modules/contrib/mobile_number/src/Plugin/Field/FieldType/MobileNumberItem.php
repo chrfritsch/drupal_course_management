@@ -201,8 +201,8 @@ class MobileNumberItem extends FieldItemBase {
     if ($form['#entity'] instanceof User && FALSE) {
       $element['tfa'] = [
         '#type' => 'checkbox',
-        '#title' => t('Use this field for two-factor course_management_authentication'),
-        '#description' => t("If enabled, users will be able to choose if to use the number for two factor course_management_authentication. Only one field can be set true for this value, verification must be enabled, and the field must be of cardinality 1. Users are required to verify their number when enabling their two-factor authenticaion. <a href='https://www.drupal.org/project/tfa' target='_blank'>Two Factor Authentication</a> must be installed, as well as a supported sms provider such as <a href='https://www.drupal.org/project/smsframework' target='_blank'>SMS Framework</a>."),
+        '#title' => t('Use this field for two-factor authentication'),
+        '#description' => t("If enabled, users will be able to choose if to use the number for two factor authentication. Only one field can be set true for this value, verification must be enabled, and the field must be of cardinality 1. Users are required to verify their number when enabling their two-factor authenticaion. <a href='https://www.drupal.org/project/tfa' target='_blank'>Two Factor Authentication</a> must be installed, as well as a supported sms provider such as <a href='https://www.drupal.org/project/smsframework' target='_blank'>SMS Framework</a>."),
         '#default_value' => $this->tfaAllowed() && $util->getTfaField() === $this->getFieldDefinition()
           ->getName(),
         '#disabled' => !$this->tfaAllowed(),

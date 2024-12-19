@@ -15,7 +15,7 @@ use Psr\Http\Message\ResponseInterface;
  * - After performing a valid "log in" request, the server responds with a 2xx
  *   status code and a 'Set-Cookie' response header. This cookie is what
  *   continues to identify the user in subsequent requests.
- * - When accessing a URI that requires course_management_authentication without being
+ * - When accessing a URI that requires authentication without being
  *   authenticated, a standard 403 response must be sent.
  * - Because of the reliance on cookies, and the fact that user agents send
  *   cookies with every request, this is vulnerable to CSRF attacks. To mitigate
@@ -94,8 +94,8 @@ trait CookieResourceTestTrait {
    * {@inheritdoc}
    */
   protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {
-    // Requests needing cookie course_management_authentication but missing it results in a 403
-    // response. The cookie course_management_authentication mechanism sets no response message.
+    // Requests needing cookie authentication but missing it results in a 403
+    // response. The cookie authentication mechanism sets no response message.
     // Hence, effectively, this is just the 403 response that one gets as the
     // anonymous user trying to access a certain REST resource.
     // @see \Drupal\user\Authentication\Provider\Cookie

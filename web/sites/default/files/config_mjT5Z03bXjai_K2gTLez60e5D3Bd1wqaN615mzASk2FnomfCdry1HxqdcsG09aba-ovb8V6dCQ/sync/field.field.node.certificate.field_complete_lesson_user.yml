@@ -1,0 +1,29 @@
+uuid: f2c3f415-d19c-4276-98d1-ea3143cc0d29
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_complete_lesson_user
+    - node.type.certificate
+id: node.certificate.field_complete_lesson_user
+field_name: field_complete_lesson_user
+entity_type: node
+bundle: certificate
+label: 'Complete lesson user'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    filter:
+      type: _none
+    include_anonymous: true
+field_type: entity_reference

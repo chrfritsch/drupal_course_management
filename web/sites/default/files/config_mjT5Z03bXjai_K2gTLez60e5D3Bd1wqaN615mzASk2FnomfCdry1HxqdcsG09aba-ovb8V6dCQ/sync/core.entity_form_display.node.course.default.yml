@@ -3,9 +3,16 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.course.field_course_code
     - field.field.node.course.field_course_description
+    - field.field.node.course.field_course_semester
+    - field.field.node.course.field_course_thumbnail
+    - field.field.node.course.field_course_training_program
+    - field.field.node.course.field_course_tuition_fee
+    - image.style.thumbnail
     - node.type.course
   module:
+    - image
     - path
     - text
 id: node.course.default
@@ -19,15 +26,48 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_course_code:
+    type: string_textfield
+    weight: 125
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_course_description:
-    type: text_textarea_with_summary
+    type: text_textarea
     weight: 121
     region: content
     settings:
-      rows: 9
-      summary_rows: 3
+      rows: 5
       placeholder: ''
-      show_summary: false
+    third_party_settings: {  }
+  field_course_semester:
+    type: options_select
+    weight: 126
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_course_thumbnail:
+    type: image_image
+    weight: 122
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_course_training_program:
+    type: options_select
+    weight: 124
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_course_tuition_fee:
+    type: number
+    weight: 123
+    region: content
+    settings:
+      placeholder: ''
     third_party_settings: {  }
   path:
     type: path

@@ -1,0 +1,9 @@
+uuid: 4486ba15-3512-4200-8ec1-92bc04f2c4e6
+langcode: en
+status: true
+dependencies: {  }
+name: Rating
+vid: rating
+description: null
+weight: 0
+new_revision: false

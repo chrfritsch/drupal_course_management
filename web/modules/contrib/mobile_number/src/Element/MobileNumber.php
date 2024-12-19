@@ -90,7 +90,7 @@ class MobileNumber extends FormElement {
 
     return $result;
   }
-
+  
   /**
    * Mobile number element process callback.
    *
@@ -253,7 +253,7 @@ class MobileNumber extends FormElement {
       if (!empty($settings['tfa'])) {
         $element['tfa'] = [
           '#type' => 'checkbox',
-          '#title' => t('Enable two-factor course_management_authentication'),
+          '#title' => t('Enable two-factor authentication'),
           '#default_value' => !empty($value['tfa']) ? 1 : 0,
           '#prefix' => '<div class="mobile-number-tfa">',
           '#suffix' => '</div>',

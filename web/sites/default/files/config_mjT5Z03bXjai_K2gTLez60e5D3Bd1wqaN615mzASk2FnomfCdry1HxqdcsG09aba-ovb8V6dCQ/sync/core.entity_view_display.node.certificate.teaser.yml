@@ -1,0 +1,30 @@
+uuid: ca03a666-1d1d-4831-a732-91df0ca36f06
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.certificate.field_certificate_file
+    - field.field.node.certificate.field_complete_lesson_user
+    - field.field.node.certificate.field_course_information
+    - field.field.node.certificate.field_issue_date
+    - field.field.node.certificate.field_performance_level
+    - node.type.certificate
+  module:
+    - user
+id: node.certificate.teaser
+targetEntityType: node
+bundle: certificate
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_certificate_file: true
+  field_complete_lesson_user: true
+  field_course_information: true
+  field_issue_date: true
+  field_performance_level: true

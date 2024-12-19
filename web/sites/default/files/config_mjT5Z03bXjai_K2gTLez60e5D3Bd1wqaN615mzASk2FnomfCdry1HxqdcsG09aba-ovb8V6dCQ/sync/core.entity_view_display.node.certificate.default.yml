@@ -1,0 +1,67 @@
+uuid: 292c57fd-8e3f-4121-ae80-9433050ea2b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.certificate.field_certificate_file
+    - field.field.node.certificate.field_complete_lesson_user
+    - field.field.node.certificate.field_course_information
+    - field.field.node.certificate.field_issue_date
+    - field.field.node.certificate.field_performance_level
+    - node.type.certificate
+  module:
+    - datetime
+    - file
+    - user
+id: node.certificate.default
+targetEntityType: node
+bundle: certificate
+mode: default
+content:
+  field_certificate_file:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_complete_lesson_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_course_information:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_issue_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_performance_level:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

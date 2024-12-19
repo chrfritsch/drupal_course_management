@@ -232,7 +232,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   // a test environment.
   $test_prefix = FALSE;
 
-  // A valid test request will contain a hashed and salted course_management_authentication code.
+  // A valid test request will contain a hashed and salted authentication code.
   // Check if this code is present in a cookie or custom user agent string.
   $http_user_agent = $_SERVER['HTTP_USER_AGENT'] ?? NULL;
   $user_agent = $_COOKIE['SIMPLETEST_USER_AGENT'] ?? $http_user_agent;

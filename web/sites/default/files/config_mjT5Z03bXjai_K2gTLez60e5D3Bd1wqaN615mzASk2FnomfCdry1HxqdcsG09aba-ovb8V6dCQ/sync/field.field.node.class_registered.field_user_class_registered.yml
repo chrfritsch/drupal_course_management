@@ -1,0 +1,29 @@
+uuid: 43a9eca9-a2d0-4a60-8aa5-1eb5dd88ff76
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_user_class_registered
+    - node.type.class_registered
+id: node.class_registered.field_user_class_registered
+field_name: field_user_class_registered
+entity_type: node
+bundle: class_registered
+label: 'User class registered'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    filter:
+      type: _none
+    include_anonymous: true
+field_type: entity_reference

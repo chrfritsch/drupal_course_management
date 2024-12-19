@@ -79,6 +79,96 @@ final class RegisterCourseApiResource extends ResourceBase {
   }
 
   /**
+   * Lấy học kỳ hiện tại.
+   */
+  private function getCurrentSemester() {
+    $current_date = new \DateTime();
+
+    // Query term học kỳ dựa trên ngày hiện tại
+    $query = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', 'semester')
+      ->condition('field_semester_start_date', $current_date->format('Y-m-d'), '<=')
+      ->condition('field_semester_end_date', $current_date->format('Y-m-d'), '>=')
+      ->accessCheck(TRUE)
+      ->range(0, 1);
+
+    $tids = $query->execute();
+
+    if (!empty($tids)) {
+      return \Drupal\taxonomy\Entity\Term::load(reset($tids));
+    }
+
+    // Nếu không tìm thấy học kỳ hiện tại, kiểm tra xem có học kỳ trong năm học không
+    return $this->checkAndCreateSemester();
+  }
+
+  /**
+   * Kiểm tra và tạo học kỳ mới nếu cần.
+   */
+  private function checkAndCreateSemester() {
+    $current_date = new \DateTime();
+    $year = (int) $current_date->format('Y');
+    $month = (int) $current_date->format('n');
+
+    // Xác định học kỳ và thời gian
+    if ($month >= 8 && $month <= 12) {
+      $semester_name = "Học kỳ I ($year-" . ($year + 1) . ")";
+      $academic_year = "$year-" . ($year + 1);
+    }
+    elseif ($month >= 1 && $month <= 5) {
+      $semester_name = "Học kỳ II (" . ($year - 1) . "-$year)";
+      $academic_year = ($year - 1) . "-$year";
+    }
+    else {
+      $semester_name = "Học kỳ hè ($year)";
+      $academic_year = ($year - 1) . "-$year";
+    }
+
+    // Kiểm tra xem học kỳ này đã tồn tại trong năm học chưa
+    $query = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', 'semester')
+      ->condition('name', $semester_name)
+      ->condition('field_academic_year', $academic_year)
+      ->accessCheck(TRUE)
+      ->range(0, 1);
+
+    $tids = $query->execute();
+
+    if (!empty($tids)) {
+      return \Drupal\taxonomy\Entity\Term::load(reset($tids));
+    }
+
+    // Nếu chưa có thì tạo mới
+    if ($month >= 8 && $month <= 12) {
+      $start_date = "$year-08-01";
+      $end_date = "$year-12-31";
+    }
+    elseif ($month >= 1 && $month <= 5) {
+      $start_date = "$year-01-01";
+      $end_date = "$year-05-31";
+    }
+    else {
+      $start_date = "$year-06-01";
+      $end_date = "$year-07-31";
+    }
+
+    $term = \Drupal\taxonomy\Entity\Term::create([
+      'vid' => 'semester',
+      'name' => $semester_name,
+      'field_academic_year' => $academic_year,
+      'field_semester_start_date' => [
+        'value' => $start_date . 'T00:00:00',
+      ],
+      'field_semester_end_date' => [
+        'value' => $end_date . 'T23:59:59',
+      ],
+    ]);
+
+    $term->save();
+    return $term;
+  }
+
+  /**
    * Tạo URL thanh toán VNPAY.
    */
   private function createVnpayPaymentUrl($order_info) {
@@ -89,12 +179,13 @@ final class RegisterCourseApiResource extends ResourceBase {
     $vnp_OrderInfo = json_encode([
       'class_code' => $order_info['class_code'],
       'user_id' => $current_user,
-      'description' => 'Thanh toan khoa hoc'
+      'description' => 'Thanh toan khoa hoc',
     ]);
     $vnp_OrderType = "billpayment";
     $vnp_Amount = (int) ($order_info['amount'] * 100);
     $vnp_Locale = "vn";
-    $vnp_ReturnUrl = \Drupal::request()->getSchemeAndHttpHost() . "/payment/vnpay-return?username=" . urlencode((string) $current_user);
+    $vnp_ReturnUrl = \Drupal::request()
+        ->getSchemeAndHttpHost() . "/payment/vnpay-return?username=" . urlencode((string) $current_user);
     $vnp_IpAddr = \Drupal::request()->getClientIp();
 
     $inputData = [
@@ -131,7 +222,7 @@ final class RegisterCourseApiResource extends ResourceBase {
     try {
       if ($vnpay_response['vnp_ResponseCode'] !== '00') {
         $this->logger->error('VNPAY response code không hợp lệ: @code', [
-          '@code' => $vnpay_response['vnp_ResponseCode']
+          '@code' => $vnpay_response['vnp_ResponseCode'],
         ]);
         return FALSE;
       }
@@ -236,11 +327,18 @@ final class RegisterCourseApiResource extends ResourceBase {
     array $payment_data = []
   ): void {
     try {
+      // Lấy học kỳ hiện tại
+      $current_semester = $this->getCurrentSemester();
+
       $transaction = \Drupal::entityTypeManager()
         ->getStorage('node')
         ->create([
           'type' => 'transaction_history',
-          'title' => sprintf('[PAYPAL] %s - %s', $class_name, $this->currentUser->getDisplayName()),
+          'title' => sprintf('[%s] %s - %s',
+            strtoupper($payment_method),
+            $class_name,
+            $this->currentUser->getDisplayName()
+          ),
           'field_transaction_course' => ['target_id' => $class_id],
           'field_transaction_date' => date('Y-m-d\TH:i:s'),
           'field_transaction_id' => $transaction_id,
@@ -248,6 +346,8 @@ final class RegisterCourseApiResource extends ResourceBase {
           'field_transaction_user' => ['target_id' => $this->currentUser->id()],
           'field_vnpay_transaction_no' => $payment_data['vnp_TransactionNo'] ?? '',
           'field_vnpay_txn_ref' => $payment_data['vnp_TxnRef'] ?? '',
+          // Thêm field học kỳ
+          'field_transaction_semester' => $current_semester ? ['target_id' => $current_semester->id()] : NULL,
           'status' => 1,
         ]);
 
@@ -389,16 +489,28 @@ final class RegisterCourseApiResource extends ResourceBase {
       }
 
       // Kiểm tra đăng ký trùng
+      $course_id = $class->get('field_class_course_reference')->target_id;
+      $course = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->load($course_id);
+
+      if (!$course) {
+        throw new HttpException(404, 'Không tìm thấy thông tin khóa học.');
+      }
+
+      $course_semester = $course->get('field_course_semester')->target_id;
+
       $existing_registration = \Drupal::entityQuery('node')
         ->condition('type', 'class_registered')
         ->condition('field_class_registered', $class_id)
         ->condition('field_user_class_registered', $this->currentUser->id())
+        ->condition('field_class_registered_semester', $course_semester)
         ->accessCheck(TRUE)
         ->range(0, 1)
         ->execute();
 
       if (!empty($existing_registration)) {
-        throw new HttpException(400, 'Bạn đã đăng ký lớp học này rồi.');
+        throw new HttpException(400, 'Bạn đã đăng ký lớp học này trong học kỳ này rồi.');
       }
 
       // Kiểm tra số lượng học viên
@@ -417,6 +529,9 @@ final class RegisterCourseApiResource extends ResourceBase {
           'title' => $class->label() . ' - ' . $this->currentUser->getDisplayName(),
           'field_class_registered' => ['target_id' => $class_id],
           'field_user_class_registered' => ['target_id' => $this->currentUser->id()],
+          'field_class_registered_semester' => $this->getCurrentSemester() ? [
+            'target_id' => $this->getCurrentSemester()->id(),
+          ] : NULL,
           'status' => 1,
         ]);
 
@@ -426,18 +541,67 @@ final class RegisterCourseApiResource extends ResourceBase {
       $class->set('field_current_num_of_participant', $current_participants + 1);
       $class->save();
 
-      return new ResourceResponse([
-        'message' => 'Đăng ký lớp học thành công',
-        'data' => [
-          'registration_id' => $class_registered->id(),
-          'transaction_id' => $data['payment_transaction_id'] ?? '',
-          'payment_method' => $data['payment_method'],
-          'class_code' => $data['class_code'],
-          'class_name' => $class->label(),
-          'registered_at' => date('Y-m-d H:i:s'),
-        ],
-      ], 201);
+      // return new ResourceResponse([
+      //   'message' => 'Đăng ký lớp học thành công',
+      //   'data' => [
+      //     'registration_id' => $class_registered->id(),
+      //     'transaction_id' => $data['payment_transaction_id'] ?? '',
+      //     'payment_method' => $data['payment_method'],
+      //     'class_code' => $data['class_code'],
+      //     'class_name' => $class->label(),
+      //     'registered_at' => date('Y-m-d H:i:s'),
+      //   ],
+      // ], 201);
+      // Với VNPAY
+      if ($data['payment_method'] === 'vnpay') {
+        $result = $this->handleVnpayPayment($data, $class);
+        if ($result instanceof ResourceResponse) {
+          $payment_url = $result->getResponseData()['payment_url'];
+          return new ResourceResponse([
+            'payment_url' => $payment_url,
+            'analytics_data' => [
+              'class_code' => $data['class_code'],
+              'class_name' => $class->label(),
+              'course_code' => $course->get('field_course_code')->value,
+              'course_name' => $course->label(),
+              'amount' => $course->get('field_course_tuition_fee')->value,
+              'currency' => 'VND',
+              'payment_method' => 'vnpay',
+              'student_id' => $this->currentUser->id(),
+              'student_name' => $this->currentUser->getDisplayName(),
+            ],
+          ]);
+        }
+      }
 
+      // Với PayPal
+      if ($data['payment_method'] === 'paypal') {
+        $result = $this->handlePaypalPayment($data, $class);
+        return new ResourceResponse([
+          'message' => 'Đăng ký lớp học thành công',
+          'data' => [
+            'registration_id' => $class_registered->id(),
+            'transaction_id' => $data['payment_transaction_id'],
+            'payment_method' => 'paypal',
+            'class_code' => $data['class_code'],
+            'class_name' => $class->label(),
+            'registered_at' => date('Y-m-d H:i:s'),
+          ],
+          'analytics_data' => [
+            'transaction_id' => $data['payment_transaction_id'],
+            'amount' => $course->get('field_course_tuition_fee')->value,
+            'currency' => 'VND',
+            'payment_method' => 'paypal',
+            'class_code' => $data['class_code'],
+            'class_name' => $class->label(),
+            'course_code' => $course->get('field_course_code')->value,
+            'course_name' => $course->label(),
+            'payment_date' => date('Y-m-d H:i:s'),
+            'student_id' => $this->currentUser->id(),
+            'student_name' => $this->currentUser->getDisplayName(),
+          ],
+        ], 201);
+      }
     }
     catch (HttpException $e) {
       throw $e;

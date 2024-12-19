@@ -1,0 +1,47 @@
+# course_register.content_all:
+#   route_name: system.admin_content
+#   title: 'All content'
+#   base_route: system.admin_content
+#   weight: 0
+
+course_register.content_class:
+  route_name: course_register.content_class
+  title: 'Classes'
+  base_route: system.admin_content
+  weight: 1
+
+course_register.content_course:
+  route_name: course_register.content_course
+  title: 'Courses'
+  base_route: system.admin_content
+  weight: 2
+
+course_register.content_class_registered:
+  route_name: course_register.content_class_registered
+  title: 'Class Registrations'
+  base_route: system.admin_content
+  weight: 3
+
+course_register.content_transaction:
+  route_name: course_register.content_transaction
+  title: 'Transactions'
+  base_route: system.admin_content
+  weight: 4
+
+course_register.content_exam_schedule:
+  route_name: course_register.content_exam_schedule
+  title: 'Exam Schedule'
+  base_route: system.admin_content
+  weight: 5
+
+course_register.content_student_scores:
+  route_name: course_register.content_student_scores
+  title: 'Student Scores'
+  base_route: system.admin_content
+  weight: 6
+
+course_register.content_certificate:
+  route_name: course_register.content_certificate
+  title: 'Certificates'
+  base_route: system.admin_content
+  weight: 7

@@ -3,6 +3,8 @@ langcode: en
 status: true
 dependencies:
   module:
+    - rest
+    - serialization
     - user
 _core:
   default_config_hash: FFLg74mnzRE10lgg5fspPCZWLnIEcvCnJMlNzj8OEtw

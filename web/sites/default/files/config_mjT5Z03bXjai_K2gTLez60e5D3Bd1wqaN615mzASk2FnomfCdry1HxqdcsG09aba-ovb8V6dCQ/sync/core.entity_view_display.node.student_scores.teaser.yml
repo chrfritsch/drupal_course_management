@@ -1,0 +1,32 @@
+uuid: 05178129-961b-49c7-8225-4cf49a6b1357
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.student_scores.field_average
+    - field.field.node.student_scores.field_course_in_scores
+    - field.field.node.student_scores.field_final
+    - field.field.node.student_scores.field_midterm
+    - field.field.node.student_scores.field_testing_state
+    - field.field.node.student_scores.field_user_in_scores
+    - node.type.student_scores
+  module:
+    - user
+id: node.student_scores.teaser
+targetEntityType: node
+bundle: student_scores
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_average: true
+  field_course_in_scores: true
+  field_final: true
+  field_midterm: true
+  field_testing_state: true
+  field_user_in_scores: true

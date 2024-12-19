@@ -1,0 +1,21 @@
+uuid: 57851d5c-a7eb-4dbe-837a-94d7ac09ddba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_class_end_time
+    - node.type.class
+  module:
+    - time_field
+id: node.class.field_class_end_time
+field_name: field_class_end_time
+entity_type: node
+bundle: class
+label: 'Class end time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: time
