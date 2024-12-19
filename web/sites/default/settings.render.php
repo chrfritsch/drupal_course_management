@@ -13,3 +13,14 @@ $databases['default']['default'] = [
 ];
 
 $settings['hash_salt'] = getenv('DRUPAL_HASH_SALT');
+
+// Thêm cấu hình trusted_host_patterns
+$settings['trusted_host_patterns'] = [
+  '^.*\.render\.com$',  // Cho phép tất cả subdomain của render.com
+  '^localhost$',
+  '^127\.0\.0\.1$',
+];
+
+// Thêm cấu hình reverse proxy nếu cần
+$settings['reverse_proxy'] = TRUE;
+$settings['reverse_proxy_addresses'] = array($_SERVER['REMOTE_ADDR']);
