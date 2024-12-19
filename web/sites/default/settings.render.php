@@ -14,13 +14,17 @@ $databases['default']['default'] = [
 
 $settings['hash_salt'] = getenv('DRUPAL_HASH_SALT');
 
-// Thêm cấu hình trusted_host_patterns
+// Cập nhật trusted_host_patterns với domain chính xác
 $settings['trusted_host_patterns'] = [
-  '^.*\.render\.com$',  // Cho phép tất cả subdomain của render.com
+  '^drupal\-course\-management\.onrender\.com$',  // Domain chính xác của bạn
+  '^.*\.onrender\.com$',  // Các subdomain khác của onrender.com
   '^localhost$',
   '^127\.0\.0\.1$',
 ];
 
-// Thêm cấu hình reverse proxy nếu cần
+// Cấu hình reverse proxy
 $settings['reverse_proxy'] = TRUE;
 $settings['reverse_proxy_addresses'] = array($_SERVER['REMOTE_ADDR']);
+
+// Thêm debug mode nếu cần
+$config['system.logging']['error_level'] = 'verbose';
