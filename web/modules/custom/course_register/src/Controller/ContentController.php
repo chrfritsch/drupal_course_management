@@ -527,6 +527,73 @@ public function courseContent() {
     return $build;
   }
 
+  public function newsContent() {
+    // Thêm nút Add Transaction
+    $build['add_news'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Add News'),
+      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'news']),
+      '#attributes' => [
+        'class' => ['button', 'button--primary', 'button--action'],
+      ],
+      '#prefix' => '<div class="action-links">',
+      '#suffix' => '</div>',
+    ];
+
+    $build['table'] = [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Title'),
+        $this->t('Author'),
+        $this->t('Status'),
+        $this->t('Updated'),
+        $this->t('Operations'),
+      ],
+      '#empty' => $this->t('No content available.'),
+    ];
+
+    $query = $this->entityTypeManager->getStorage('node')->getQuery()
+      ->condition('type', 'news')
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE);
+
+    $nids = $query->execute();
+    $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
+
+    foreach ($nodes as $node) {
+      $build['table'][] = [
+        'title' => [
+          '#markup' => $node->toLink()->toString(),
+        ],
+        'author' => [
+          '#markup' => $node->getOwner()->getDisplayName(),
+        ],
+        'status' => [
+          '#markup' => $node->isPublished() ? $this->t('Published') : $this->t('Unpublished'),
+        ],
+        'updated' => [
+          '#markup' => \Drupal::service('date.formatter')
+            ->format($node->getChangedTime(), 'short'),
+        ],
+        'operations' => [
+          '#type' => 'operations',
+          '#links' => [
+            'edit' => [
+              'title' => $this->t('Edit'),
+              'url' => $node->toUrl('edit-form'),
+            ],
+            'delete' => [
+              'title' => $this->t('Delete'),
+              'url' => $node->toUrl('delete-form'),
+            ],
+          ],
+        ],
+      ];
+    }
+
+    return $build;
+  }
+
   // Tương tự cho các method khác: courseContent(), classRegisteredContent(), transactionContent()
   // Copy cấu trúc tương tự nhưng thay đổi condition type tương ứng
 }

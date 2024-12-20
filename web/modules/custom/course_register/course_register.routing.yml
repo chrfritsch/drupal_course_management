@@ -64,3 +64,11 @@ course_register.content_certificate:
     _title: 'Certificates'
   requirements:
     _permission: 'access content overview'
+
+course_register.content_news:
+  path: '/admin/content/news'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ContentController::newsContent'
+    _title: 'News'
+  requirements:
+    _permission: 'access content overview'

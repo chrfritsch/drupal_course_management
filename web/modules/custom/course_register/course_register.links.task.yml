@@ -45,3 +45,9 @@ course_register.content_certificate:
   title: 'Certificates'
   base_route: system.admin_content
   weight: 7
+
+course_register.content_news:
+  route_name: course_register.content_news
+  title: 'News'
+  base_route: system.admin_content
+  weight: 8
