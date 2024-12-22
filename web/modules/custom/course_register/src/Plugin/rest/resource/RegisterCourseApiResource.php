@@ -218,43 +218,43 @@ final class RegisterCourseApiResource extends ResourceBase {
   /**
    * Xác thực giao dịch VNPay.
    */
-  private function verifyVnpayTransaction(array $vnpay_response): bool {
-    try {
-      if ($vnpay_response['vnp_ResponseCode'] !== '00') {
-        $this->logger->error('VNPAY response code không hợp lệ: @code', [
-          '@code' => $vnpay_response['vnp_ResponseCode'],
-        ]);
-        return FALSE;
-      }
+  // private function verifyVnpayTransaction(array $vnpay_response): bool {
+  //   try {
+  //     if ($vnpay_response['vnp_ResponseCode'] !== '00') {
+  //       $this->logger->error('VNPAY response code không hợp lệ: @code', [
+  //         '@code' => $vnpay_response['vnp_ResponseCode'],
+  //       ]);
+  //       return FALSE;
+  //     }
 
-      $vnp_SecureHash = $vnpay_response['vnp_SecureHash'];
-      $inputData = array_filter($vnpay_response, function($key) {
-        return strpos($key, 'vnp_') === 0 && $key !== 'vnp_SecureHash';
-      }, ARRAY_FILTER_USE_KEY);
+  //     $vnp_SecureHash = $vnpay_response['vnp_SecureHash'];
+  //     $inputData = array_filter($vnpay_response, function($key) {
+  //       return strpos($key, 'vnp_') === 0 && $key !== 'vnp_SecureHash';
+  //     }, ARRAY_FILTER_USE_KEY);
 
-      ksort($inputData);
-      $hashData = "";
-      foreach ($inputData as $key => $value) {
-        $hashData .= $key . "=" . $value . "&";
-      }
-      $hashData = rtrim($hashData, "&");
+  //     ksort($inputData);
+  //     $hashData = "";
+  //     foreach ($inputData as $key => $value) {
+  //       $hashData .= $key . "=" . $value . "&";
+  //     }
+  //     $hashData = rtrim($hashData, "&");
 
-      $secureHash = hash_hmac('sha512', $hashData, $this->vnpayConfig['hash_secret']);
+  //     $secureHash = hash_hmac('sha512', $hashData, $this->vnpayConfig['hash_secret']);
 
-      if ($vnp_SecureHash !== $secureHash) {
-        $this->logger->error('VNPAY secure hash không khớp');
-        return FALSE;
-      }
+  //     if ($vnp_SecureHash !== $secureHash) {
+  //       $this->logger->error('VNPAY secure hash không khớp');
+  //       return FALSE;
+  //     }
 
-      return TRUE;
-    }
-    catch (\Exception $e) {
-      $this->logger->error('Lỗi khi xác thực VNPAY: @error', [
-        '@error' => $e->getMessage(),
-      ]);
-      return FALSE;
-    }
-  }
+  //     return TRUE;
+  //   }
+  //   catch (\Exception $e) {
+  //     $this->logger->error('Lỗi khi xác thực VNPAY: @error', [
+  //       '@error' => $e->getMessage(),
+  //     ]);
+  //     return FALSE;
+  //   }
+  // }
 
   /**
    * Xác thực giao dịch PayPal.
@@ -276,27 +276,40 @@ final class RegisterCourseApiResource extends ResourceBase {
   /**
    * Tạo transaction history cho giao dịch VNPAY.
    */
-  private function createVnpayTransactionHistory(
-    int $class_id,
-    string $transaction_id,
-    string $class_name,
-    array $vnpay_response
-  ): void {
-    $payment_data = [
-      'vnp_TransactionNo' => $vnpay_response['vnp_TransactionNo'] ?? '',
-      'vnp_TxnRef' => $vnpay_response['vnp_TxnRef'] ?? '',
-      'vnp_ResponseCode' => $vnpay_response['vnp_ResponseCode'] ?? '',
-      'vnp_Amount' => $vnpay_response['vnp_Amount'] ?? '',
-    ];
+  // private function createVnpayTransactionHistory(
+  //   int $class_id,
+  //   string $transaction_id,
+  //   string $class_name,
+  //   array $vnpay_response
+  // ): void {
+  //   $payment_data = [
+  //     'vnp_TransactionNo' => $vnpay_response['vnp_TransactionNo'] ?? '',
+  //     'vnp_TxnRef' => $vnpay_response['vnp_TxnRef'] ?? '',
+  //     'vnp_ResponseCode' => $vnpay_response['vnp_ResponseCode'] ?? '',
+  //     'vnp_Amount' => $vnpay_response['vnp_Amount'] ?? '',
+  //   ];
 
-    $this->saveTransactionHistory(
-      $class_id,
-      $transaction_id,
-      $class_name,
-      'vnpay',
-      $payment_data
-    );
-  }
+  //   $query = \Drupal::entityQuery('node')
+  //     ->condition('type', 'transaction_history')
+  //     ->condition('field_transaction_id', $transaction_id)
+  //     ->condition('field_transaction_method', 'vnpay')
+  //     ->accessCheck(TRUE)
+  //     ->range(0, 1);
+
+  //   $results = $query->execute();
+
+  //   if (!empty($results)) {
+  //     return;
+  //   }
+
+  //   $this->saveTransactionHistory(
+  //     $class_id,
+  //     $transaction_id,
+  //     $class_name,
+  //     'vnpay',
+  //     $payment_data
+  //   );
+  // }
 
   /**
    * Tạo transaction history cho giao dịch PayPal.
@@ -307,6 +320,19 @@ final class RegisterCourseApiResource extends ResourceBase {
     string $class_name,
     array $paypal_data = []
   ): void {
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'transaction_history')
+      ->condition('field_transaction_id', $transaction_id)
+      ->condition('field_transaction_method', 'paypal')
+      ->accessCheck(TRUE)
+      ->range(0, 1);
+
+    $results = $query->execute();
+
+    if (!empty($results)) {
+      return;
+    }
+
     $this->saveTransactionHistory(
       $class_id,
       $transaction_id,
@@ -364,72 +390,72 @@ final class RegisterCourseApiResource extends ResourceBase {
   /**
    * Xử lý thanh toán qua VNPAY.
    */
-  private function handleVnpayPayment(array $data, $class) {
-    // Bước 1: Tạo URL thanh toán
-    if (empty($data['payment_transaction_id'])) {
-      $course_id = $class->get('field_class_course_reference')->target_id;
-      $course = \Drupal::entityTypeManager()
-        ->getStorage('node')
-        ->load($course_id);
+  // private function handleVnpayPayment(array $data, $class) {
+  //   // Bước 1: Tạo URL thanh toán
+  //   if (empty($data['payment_transaction_id'])) {
+  //     $course_id = $class->get('field_class_course_reference')->target_id;
+  //     $course = \Drupal::entityTypeManager()
+  //       ->getStorage('node')
+  //       ->load($course_id);
 
-      if (!$course) {
-        throw new HttpException(404, 'Không tìm thấy thông tin khóa học.');
-      }
+  //     if (!$course) {
+  //       throw new HttpException(404, 'Không tìm thấy thông tin khóa học.');
+  //     }
 
-      $order_info = [
-        'amount' => $course->get('field_course_tuition_fee')->value,
-        'class_id' => $class->id(),
-        'class_code' => $data['class_code'],
-      ];
+  //     $order_info = [
+  //       'amount' => $course->get('field_course_tuition_fee')->value,
+  //       'class_id' => $class->id(),
+  //       'class_code' => $data['class_code'],
+  //     ];
 
-      $payment_url = $this->createVnpayPaymentUrl($order_info);
+  //     $payment_url = $this->createVnpayPaymentUrl($order_info);
 
-      return new ResourceResponse([
-        'payment_url' => $payment_url,
-      ]);
-    }
+  //     return new ResourceResponse([
+  //       'payment_url' => $payment_url,
+  //     ]);
+  //   }
 
-    // Bước 2: Xử lý kết quả thanh toán
-    $vnpay_response = \Drupal::request()->query->all();
+  //   // Bước 2: Xử lý kết quả thanh toán
+  //   $vnpay_response = \Drupal::request()->query->all();
 
-    // Verify giao dịch
-    if (!$this->verifyVnpayTransaction($vnpay_response)) {
-      throw new HttpException(400, 'Giao dịch VNPAY không hợp lệ hoặc chưa được xác nhận.');
-    }
+  //   // Verify giao dịch
+  //   if (!$this->verifyVnpayTransaction($vnpay_response)) {
+  //     throw new HttpException(400, 'Giao dịch VNPAY không hợp lệ hoặc chưa được xác nhận.');
+  //   }
 
-    // Lưu transaction history
-    $this->createVnpayTransactionHistory(
-      $class->id(),
-      $data['payment_transaction_id'],
-      $class->label(),
-      $vnpay_response
-    );
+  //   // Lưu transaction history
+  //   $this->createVnpayTransactionHistory(
+  //     $class->id(),
+  //     $data['payment_transaction_id'],
+  //     $class->label(),
+  //     $vnpay_response
+  //   );
 
-    return TRUE;
-  }
+  //   return TRUE;
+  // }
 
   /**
    * Xử lý thanh toán qua PayPal.
    */
-  private function handlePaypalPayment(array $data, $class) {
-    if (empty($data['payment_transaction_id'])) {
-      throw new HttpException(400, 'Thiếu thông tin giao dịch PayPal.');
-    }
-
-    // Verify giao dịch PayPal
-    if (!$this->verifyPaypalTransaction($data['payment_transaction_id'])) {
-      throw new HttpException(400, 'Giao dịch PayPal không hợp lệ.');
-    }
-
-    // Lưu transaction history cho PayPal
-    $this->createPaypalTransactionHistory(
-      (int) $class->id(),
-      $data['payment_transaction_id'],
-      $class->label()
-    );
-
-    return TRUE;
-  }
+//  private function handlePaypalPayment(array $data, $class) {
+//    if (empty($data['payment_transaction_id'])) {
+//      throw new HttpException(400, 'Thiếu thông tin giao dịch PayPal.');
+//    }
+//
+//    // Verify giao dịch PayPal
+//    if (!$this->verifyPaypalTransaction($data['payment_transaction_id'])) {
+//      throw new HttpException(400, 'Giao dịch PayPal không hợp lệ.');
+//    }
+//
+//    // Lưu transaction history cho PayPal
+//    $this->createPaypalTransactionHistory(
+//      (int) $class->id(),
+//      $data['payment_transaction_id'],
+//      $class->label()
+//    );
+//
+//    return TRUE;
+//  }
 
   /**
    * Responds to POST requests.
@@ -471,92 +497,26 @@ final class RegisterCourseApiResource extends ResourceBase {
         throw new HttpException(404, 'Không tìm thấy thông tin lớp học.');
       }
 
-      // Xử lý thanh toán
+      // Xử lý thanh toán dựa trên phương thức
       switch ($data['payment_method']) {
         case 'vnpay':
-          $result = $this->handleVnpayPayment($data, $class);
-          if ($result instanceof ResourceResponse) {
-            return $result;
+          // Với VNPAY, chỉ tạo URL thanh toán và trả về
+          $course_id = $class->get('field_class_course_reference')->target_id;
+          $course = \Drupal::entityTypeManager()
+            ->getStorage('node')
+            ->load($course_id);
+
+          if (!$course) {
+            throw new HttpException(404, 'Không tìm thấy thông tin khóa học.');
           }
-          break;
 
-        case 'paypal':
-          $result = $this->handlePaypalPayment($data, $class);
-          break;
+          $order_info = [
+            'amount' => $course->get('field_course_tuition_fee')->value,
+            'class_code' => $data['class_code'],
+          ];
 
-        default:
-          throw new HttpException(400, 'Phương thức thanh toán không hợp lệ.');
-      }
+          $payment_url = $this->createVnpayPaymentUrl($order_info);
 
-      // Kiểm tra đăng ký trùng
-      $course_id = $class->get('field_class_course_reference')->target_id;
-      $course = \Drupal::entityTypeManager()
-        ->getStorage('node')
-        ->load($course_id);
-
-      if (!$course) {
-        throw new HttpException(404, 'Không tìm thấy thông tin khóa học.');
-      }
-
-      $course_semester = $course->get('field_course_semester')->target_id;
-
-      $existing_registration = \Drupal::entityQuery('node')
-        ->condition('type', 'class_registered')
-        ->condition('field_class_registered', $class_id)
-        ->condition('field_user_class_registered', $this->currentUser->id())
-        ->condition('field_class_registered_semester', $course_semester)
-        ->accessCheck(TRUE)
-        ->range(0, 1)
-        ->execute();
-
-      if (!empty($existing_registration)) {
-        throw new HttpException(400, 'Bạn đã đăng ký lớp học này trong học kỳ này rồi.');
-      }
-
-      // Kiểm tra số lượng học viên
-      $current_participants = (int) $class->get('field_current_num_of_participant')->value;
-      $max_participants = (int) $class->get('field_max_num_of_participant')->value;
-
-      if ($current_participants >= $max_participants) {
-        throw new HttpException(400, 'Lớp học đã đầy.');
-      }
-
-      // Tạo đăng ký lớp học
-      $class_registered = \Drupal::entityTypeManager()
-        ->getStorage('node')
-        ->create([
-          'type' => 'class_registered',
-          'title' => $class->label() . ' - ' . $this->currentUser->getDisplayName(),
-          'field_class_registered' => ['target_id' => $class_id],
-          'field_user_class_registered' => ['target_id' => $this->currentUser->id()],
-          'field_class_registered_semester' => $this->getCurrentSemester() ? [
-            'target_id' => $this->getCurrentSemester()->id(),
-          ] : NULL,
-          'status' => 1,
-        ]);
-
-      $class_registered->save();
-
-      // Cập nhật số lượng học viên
-      $class->set('field_current_num_of_participant', $current_participants + 1);
-      $class->save();
-
-      // return new ResourceResponse([
-      //   'message' => 'Đăng ký lớp học thành công',
-      //   'data' => [
-      //     'registration_id' => $class_registered->id(),
-      //     'transaction_id' => $data['payment_transaction_id'] ?? '',
-      //     'payment_method' => $data['payment_method'],
-      //     'class_code' => $data['class_code'],
-      //     'class_name' => $class->label(),
-      //     'registered_at' => date('Y-m-d H:i:s'),
-      //   ],
-      // ], 201);
-      // Với VNPAY
-      if ($data['payment_method'] === 'vnpay') {
-        $result = $this->handleVnpayPayment($data, $class);
-        if ($result instanceof ResourceResponse) {
-          $payment_url = $result->getResponseData()['payment_url'];
           return new ResourceResponse([
             'payment_url' => $payment_url,
             'analytics_data' => [
@@ -571,36 +531,64 @@ final class RegisterCourseApiResource extends ResourceBase {
               'student_name' => $this->currentUser->getDisplayName(),
             ],
           ]);
-        }
-      }
 
-      // Với PayPal
-      if ($data['payment_method'] === 'paypal') {
-        $result = $this->handlePaypalPayment($data, $class);
-        return new ResourceResponse([
-          'message' => 'Đăng ký lớp học thành công',
-          'data' => [
-            'registration_id' => $class_registered->id(),
-            'transaction_id' => $data['payment_transaction_id'],
-            'payment_method' => 'paypal',
-            'class_code' => $data['class_code'],
-            'class_name' => $class->label(),
-            'registered_at' => date('Y-m-d H:i:s'),
-          ],
-          'analytics_data' => [
-            'transaction_id' => $data['payment_transaction_id'],
-            'amount' => $course->get('field_course_tuition_fee')->value,
-            'currency' => 'VND',
-            'payment_method' => 'paypal',
-            'class_code' => $data['class_code'],
-            'class_name' => $class->label(),
-            'course_code' => $course->get('field_course_code')->value,
-            'course_name' => $course->label(),
-            'payment_date' => date('Y-m-d H:i:s'),
-            'student_id' => $this->currentUser->id(),
-            'student_name' => $this->currentUser->getDisplayName(),
-          ],
-        ], 201);
+        case 'paypal':
+          if (empty($data['payment_transaction_id'])) {
+            throw new HttpException(400, 'Thiếu thông tin giao dịch PayPal.');
+          }
+
+          // Load thông tin course trước khi sử dụng
+          $course_id = $class->get('field_class_course_reference')->target_id;
+          $course = \Drupal::entityTypeManager()
+            ->getStorage('node')
+            ->load($course_id);
+
+          if (!$course) {
+            throw new HttpException(404, 'Không tìm thấy thông tin khóa học.');
+          }
+
+          // Verify giao dịch PayPal
+          if (!$this->verifyPaypalTransaction($data['payment_transaction_id'])) {
+            throw new HttpException(400, 'Giao dịch PayPal không hợp lệ.');
+          }
+
+          // Tạo transaction history cho PayPal
+          $this->createPaypalTransactionHistory(
+            (int) $class->id(),
+            $data['payment_transaction_id'],
+            $class->label()
+          );
+
+          // Tạo class registration và cập nhật số lượng học viên
+          $class_registered = $this->createClassRegistration($class, $this->currentUser);
+
+          return new ResourceResponse([
+            'message' => 'Đăng ký lớp học thành công',
+            'data' => [
+              'registration_id' => $class_registered->id(),
+              'transaction_id' => $data['payment_transaction_id'],
+              'payment_method' => 'paypal',
+              'class_code' => $data['class_code'],
+              'class_name' => $class->label(),
+              'registered_at' => date('Y-m-d H:i:s'),
+            ],
+            'analytics_data' => [
+              'transaction_id' => $data['payment_transaction_id'],
+              'amount' => $course->get('field_course_tuition_fee')->value,
+              'currency' => 'VND',
+              'payment_method' => 'paypal',
+              'class_code' => $data['class_code'],
+              'class_name' => $class->label(),
+              'course_code' => $course->get('field_course_code')->value,
+              'course_name' => $course->label(),
+              'payment_date' => date('Y-m-d H:i:s'),
+              'student_id' => $this->currentUser->id(),
+              'student_name' => $this->currentUser->getDisplayName(),
+            ],
+          ], 201);
+
+        default:
+          throw new HttpException(400, 'Phương thức thanh toán không hợp lệ.');
       }
     }
     catch (HttpException $e) {
@@ -612,6 +600,65 @@ final class RegisterCourseApiResource extends ResourceBase {
       ]);
       throw new HttpException(500, 'Có lỗi xảy ra khi đăng ký lớp học. Vui lòng thử lại sau.');
     }
+  }
+
+  /**
+   * Tạo đăng ký lớp học và cập nhật số lượng học viên.
+   */
+  private function createClassRegistration($class, $user) {
+    // Kiểm tra đăng ký trùng
+    $course_id = $class->get('field_class_course_reference')->target_id;
+    $course = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->load($course_id);
+
+    if (!$course) {
+      throw new HttpException(404, 'Không tìm thấy thông tin khóa học.');
+    }
+
+    $course_semester = $course->get('field_course_semester')->target_id;
+    $existing_registration = \Drupal::entityQuery('node')
+      ->condition('type', 'class_registered')
+      ->condition('field_class_registered', $class->id())
+      ->condition('field_user_class_registered', $user->id())
+      ->condition('field_class_registered_semester', $course_semester)
+      ->accessCheck(TRUE)
+      ->range(0, 1)
+      ->execute();
+
+    if (!empty($existing_registration)) {
+      throw new HttpException(400, 'Bạn đã đăng ký lớp học này trong học kỳ này rồi.');
+    }
+
+    // Kiểm tra số lượng học viên
+    $current_participants = (int) $class->get('field_current_num_of_participant')->value;
+    $max_participants = (int) $class->get('field_max_num_of_participant')->value;
+
+    if ($current_participants >= $max_participants) {
+      throw new HttpException(400, 'Lớp học đã đầy.');
+    }
+
+    // Tạo đăng ký lớp học
+    $class_registered = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->create([
+        'type' => 'class_registered',
+        'title' => $class->label() . ' - ' . $user->getDisplayName(),
+        'field_class_registered' => ['target_id' => $class->id()],
+        'field_user_class_registered' => ['target_id' => $user->id()],
+        'field_class_registered_semester' => $this->getCurrentSemester() ? [
+          'target_id' => $this->getCurrentSemester()->id(),
+        ] : NULL,
+        'status' => 1,
+      ]);
+
+    $class_registered->save();
+
+    // Cập nhật số lượng học viên
+    $class->set('field_current_num_of_participant', $current_participants + 1);
+    $class->save();
+
+    return $class_registered;
   }
 
 }
