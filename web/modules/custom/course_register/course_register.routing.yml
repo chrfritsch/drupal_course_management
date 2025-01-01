@@ -12,34 +12,35 @@ course_register.vnpay_return:
 course_register.content_class:
   path: '/admin/content/class'
   defaults:
-    _controller: '\Drupal\course_register\Controller\ContentController::classContent'
+    # _controller: '\Drupal\course_register\Controller\ContentController::classContent'
+    _form: '\Drupal\course_register\Form\ClassBulkOperationsForm'
     _title: 'Classes'
   requirements:
     _permission: 'access content overview'
 
 course_register.content_course:
- path: '/admin/content/course'
- defaults:
-   _controller: '\Drupal\course_register\Controller\ContentController::courseContent'
-   _title: 'Courses'
- requirements:
-   _permission: 'access content overview'
+  path: '/admin/content/course'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ContentController::courseContent'
+    _title: 'Courses'
+  requirements:
+    _permission: 'access content overview'
 
 course_register.content_class_registered:
- path: '/admin/content/class-registered'
- defaults:
-   _controller: '\Drupal\course_register\Controller\ContentController::classRegisteredContent'
-   _title: 'Class Registrations'
- requirements:
-   _permission: 'access content overview'
+  path: '/admin/content/class-registered'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ContentController::classRegisteredContent'
+    _title: 'Class Registrations'
+  requirements:
+    _permission: 'access content overview'
 
 course_register.content_transaction:
- path: '/admin/content/transaction'
- defaults:
-   _controller: '\Drupal\course_register\Controller\ContentController::transactionContent'
-   _title: 'Transactions'
- requirements:
-   _permission: 'access content overview'
+  path: '/admin/content/transaction'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ContentController::transactionContent'
+    _title: 'Transactions'
+  requirements:
+    _permission: 'access content overview'
 
 course_register.content_exam_schedule:
   path: '/admin/content/exam-schedule'
@@ -72,3 +73,46 @@ course_register.content_news:
     _title: 'News'
   requirements:
     _permission: 'access content overview'
+
+course_register.receipt_pdf:
+  path: '/receipt/{receipt_id}/pdf'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ReceiptController::downloadPdf'
+    _title: 'Download Receipt'
+  requirements:
+    _permission: 'access content'
+    receipt_id: '\d+'
+
+course_register.get_materials:
+  path: '/api/course/{course_id}/materials'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\CourseMaterialController::getMaterials'
+  requirements:
+    _permission: 'access content'
+
+course_register.analytics_dashboard:
+  path: '/admin/analytics/dashboard'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\AnalyticsController::dashboard'
+    _title: 'Analytics Dashboard'
+  requirements:
+    _permission: 'access content'
+  options:
+    _admin_route: TRUE
+
+course_register.exam_vnpay_return:
+  path: '/payment/exam-vnpay-return'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ExamPaymentController::examVnpayReturn'
+    _title: 'VNPAY Payment Return'
+  requirements:
+    _permission: 'access content'
+
+course_register.exam_receipt_pdf:
+  path: '/exam-receipt/{receipt_id}/pdf'
+  defaults:
+    _controller: '\Drupal\course_register\Controller\ExamReceiptController::downloadPdf'
+    _title: 'Download Exam Receipt'
+  requirements:
+    _permission: 'access content'
+    receipt_id: '\d+'

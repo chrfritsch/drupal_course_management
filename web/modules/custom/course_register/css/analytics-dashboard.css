@@ -1,0 +1,27 @@
+.analytics-dashboard {
+    padding: 20px;
+  }
+  
+  .chart-container {
+    background: white;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    margin-bottom: 20px;
+  }
+  
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+  }
+  
+  .col-12 {
+    width: 100%;
+    padding: 0 10px;
+  }
+  
+  .col-6 {
+    width: 50%;
+    padding: 0 10px;
+  }

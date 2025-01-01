@@ -1,0 +1,162 @@
+{# templates/mail/exam-registration-confirmation.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+    .title {
+      color: #2c3e50;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .info-table th {
+      background-color: #f8f9fa;
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #dee2e6;
+    }
+    .info-table td {
+      padding: 12px;
+      border: 1px solid #dee2e6;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #007bff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #dee2e6;
+      text-align: center;
+      font-size: 14px;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="{{ site_url }}/themes/custom/your_theme/logo.png" alt="{{ site_name }}" class="logo">
+      <h1 class="title">Xác nhận đăng ký kỳ thi</h1>
+    </div>
+
+    <p>Xin chào {{ candidate_info.name }},</p>
+    
+    <p>Cảm ơn bạn đã đăng ký tham gia kỳ thi. Dưới đây là thông tin chi tiết về kỳ thi:</p>
+
+    <table class="info-table">
+      <tr>
+        <th colspan="2">Thông tin kỳ thi</th>
+      </tr>
+      <tr>
+        <td>Tên kỳ thi:</td>
+        <td>{{ exam_info.name }}</td>
+      </tr>
+      <tr>
+        <td>Ngày thi:</td>
+        <td>{{ exam_info.date|date('d/m/Y') }}</td>
+      </tr>
+      <tr>
+        <td>Thời gian:</td>
+        <td>{{ exam_info.start_time }} - {{ exam_info.end_time }}</td>
+      </tr>
+      <tr>
+        <td>Địa điểm:</td>
+        <td>{{ exam_info.location }}</td>
+      </tr>
+      <tr>
+        <td>Lệ phí thi:</td>
+        <td>{{ exam_info.fee }}</td>
+      </tr>
+    </table>
+
+    <table class="info-table">
+      <tr>
+        <th colspan="2">Thông tin thí sinh</th>
+      </tr>
+      <tr>
+        <td>Họ và tên:</td>
+        <td>{{ candidate_info.name }}</td>
+      </tr>
+      <tr>
+        <td>Số CCCD:</td>
+        <td>{{ candidate_info.identification }}</td>
+      </tr>
+      <tr>
+        <td>Ngày sinh:</td>
+        <td>{{ candidate_info.birthday|date('d/m/Y') }}</td>
+      </tr>
+      <tr>
+        <td>Giới tính:</td>
+        <td>{{ candidate_info.gender }}</td>
+      </tr>
+      <tr>
+        <td>Số điện thoại:</td>
+        <td>{{ candidate_info.phone }}</td>
+      </tr>
+      <tr>
+        <td>Email:</td>
+        <td>{{ candidate_info.email }}</td>
+      </tr>
+    </table>
+
+    <p><strong>Vui lòng thanh toán lệ phí thi trước ngày: {{ registration_info.payment_deadline|date('d/m/Y H:i') }}</strong></p>
+
+    <p style="text-align: center;">
+      <a href="{{ registration_info.payment_url }}" class="button">Thanh toán ngay</a>
+    </p>
+
+    {% if account_info is defined %}
+    <table class="info-table">
+      <tr>
+        <th colspan="2">Thông tin tài khoản</th>
+      </tr>
+      <tr>
+        <td>Tên đăng nhập:</td>
+        <td>{{ account_info.username }}</td>
+      </tr>
+      <tr>
+        <td>Mật khẩu:</td>
+        <td>{{ account_info.password }}</td>
+      </tr>
+    </table>
+
+    <p><em>Vui lòng đổi mật khẩu sau khi đăng nhập lần đầu để bảo mật tài khoản.</em></p>
+    {% endif %}
+
+    <div class="footer">
+      <p>Email này được gửi tự động từ {{ site_name }}.</p>
+      <p>Nếu bạn cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email hoặc hotline.</p>
+      <p>© {{ "now"|date('Y') }} {{ site_name }}. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

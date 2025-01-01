@@ -1,0 +1,78 @@
+{# templates/mail/exam-payment-confirmation.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* Sử dụng lại CSS từ template trước */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="{{ site_url }}/themes/custom/your_theme/logo.png" alt="{{ site_name }}" class="logo">
+      <h1 class="title">Xác nhận thanh toán lệ phí thi</h1>
+    </div>
+
+    <p>Xin chào {{ candidate_info.name }},</p>
+    
+    <p>Chúng tôi xác nhận đã nhận được thanh toán lệ phí thi của bạn. Dưới đây là thông tin chi tiết:</p>
+
+    <table class="info-table">
+      <tr>
+        <th colspan="2">Thông tin thanh toán</th>
+      </tr>
+      <tr>
+        <td>Số tiền:</td>
+        <td>{{ payment_info.amount }}</td>
+      </tr>
+      <tr>
+        <td>Phương thức:</td>
+        <td>{{ payment_info.method }}</td>
+      </tr>
+      <tr>
+        <td>Mã giao dịch:</td>
+        <td>{{ payment_info.transaction_id }}</td>
+      </tr>
+      <tr>
+        <td>Thời gian:</td>
+        <td>{{ payment_info.date|date('d/m/Y H:i:s') }}</td>
+      </tr>
+    </table>
+
+    <table class="info-table">
+      <tr>
+        <th colspan="2">Thông tin kỳ thi</th>
+      </tr>
+      <tr>
+        <td>Tên kỳ thi:</td>
+        <td>{{ exam_info.name }}</td>
+      </tr>
+      <tr>
+        <td>Ngày thi:</td>
+        <td>{{ exam_info.date|date('d/m/Y') }}</td>
+      </tr>
+      <tr>
+        <td>Thời gian:</td>
+        <td>{{ exam_info.start_time }} - {{ exam_info.end_time }}</td>
+      </tr>
+      <tr>
+        <td>Địa điểm:</td>
+        <td>{{ exam_info.location }}</td>
+      </tr>
+    </table>
+
+    <p><strong>Lưu ý:</strong></p>
+    <ul>
+      <li>Vui lòng đến đúng giờ và mang theo CCCD/CMND để đối chiếu thông tin.</li>
+      <li>Nếu có thay đổi về lịch thi, chúng tôi sẽ thông báo qua email này.</li>
+    </ul>
+
+    <div class="footer">
+      <p>Email này được gửi tự động từ {{ site_name }}.</p>
+      <p>Nếu bạn cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email hoặc hotline.</p>
+      <p>© {{ "now"|date('Y') }} {{ site_name }}. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

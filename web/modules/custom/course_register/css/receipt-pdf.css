@@ -1,0 +1,106 @@
+body {
+  font-family: 'DejaVu Sans', sans-serif;
+  font-size: 11pt;
+  line-height: 1.3;
+  color: #000;
+  margin: 0;
+  padding: 20px;
+}
+
+.receipt-container {
+  width: 100%;
+}
+
+/* Header styles */
+.header-table {
+  margin-bottom: 20px;
+}
+
+.main-title {
+  font-size: 16pt;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+}
+
+.sub-title {
+  font-size: 12pt;
+  margin: 5px 0;
+  text-align: center;
+}
+
+.copy-note, .date {
+  margin: 5px 0;
+  text-align: center;
+}
+
+.receipt-info p {
+  margin: 5px 0;
+  text-align: left;
+}
+
+/* Info section styles */
+.info-section {
+  margin: 10px 0;
+}
+
+.info-section p {
+  margin: 5px 0;
+}
+
+.label {
+  font-weight: normal;
+}
+
+/* Payment table styles */
+.payment-table {
+  border-collapse: collapse;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.payment-table th,
+.payment-table td {
+  border: 1px solid #000;
+  padding: 5px;
+  font-size: 11pt;
+}
+
+.table-header th {
+  font-weight: bold;
+  text-align: center;
+  background-color: #fff;
+}
+
+.table-subheader td {
+  font-size: 10pt;
+}
+
+/* Total section styles */
+.total-section {
+  margin: 20px 0;
+}
+
+.total-section p {
+  margin: 5px 0;
+}
+
+/* Signature section styles */
+.signature-table {
+  margin-top: 30px;
+}
+
+.sign-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.sign-note {
+  font-style: italic;
+  font-size: 10pt;
+  margin: 5px 0;
+}
+
+.sign-name {
+  margin: 0;
+}

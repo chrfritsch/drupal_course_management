@@ -1,5 +1,11 @@
 name: 'Course register'
 type: module
-description: '@todo Add description.'
-package: '@todo Add package'
+description: 'Course registration functionality'
+package: 'Custom'
 core_version_requirement: ^10
+dependencies:
+  - drupal:node
+  - drupal:views
+  - drupal:rest
+  - drupal:file
+  - charts:charts

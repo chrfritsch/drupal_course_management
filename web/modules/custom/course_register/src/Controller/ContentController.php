@@ -40,77 +40,112 @@ class ContentController extends ControllerBase {
   /**
    * Builds the response for the class content listing page.
    */
-  public function classContent() {
-    // Thêm nút Add Class
-    $build['add_class'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Add class'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'class']),
-      '#attributes' => [
-        'class' => ['button', 'button--primary', 'button--action'],
-      ],
-      '#prefix' => '<div class="action-links">',
-      '#suffix' => '</div>',
-    ];
+  // public function classContent() {
+  //   // Khởi tạo form để xử lý bulk operations
+  //   $form['admin_table'] = [
+  //     '#type' => 'form',
+  //     '#attributes' => ['id' => 'class-admin-table'],
+  //   ];
 
-    $build['table'] = [
-      '#type' => 'table',
-      '#header' => [
-        $this->t('Title'),
-        $this->t('Author'),
-        $this->t('Status'),
-        $this->t('Updated'),
-        $this->t('Operations'),
-      ],
-      '#empty' => $this->t('No content available.'),
-    ];
+  //   // Thêm nút Add Class
+  //   $form['admin_table']['add_class'] = [
+  //     '#type' => 'link',
+  //     '#title' => $this->t('Add class'),
+  //     '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'class']),
+  //     '#attributes' => [
+  //       'class' => ['button', 'button--primary', 'button--action'],
+  //     ],
+  //     '#prefix' => '<div class="action-links">',
+  //     '#suffix' => '</div>',
+  //   ];
 
-    $query = $this->entityTypeManager->getStorage('node')->getQuery()
-      ->condition('type', 'class')
-      ->sort('created', 'DESC')
-      ->accessCheck(TRUE);
+  //   // Định nghĩa bảng với checkbox
+  //   $form['admin_table']['table'] = [
+  //     '#type' => 'table',
+  //     '#header' => [
+  //       'checkbox' => ['data' => '', 'class' => ['select-all']],
+  //       'title' => $this->t('Title'),
+  //       'author' => $this->t('Author'),
+  //       'status' => $this->t('Status'),
+  //       'updated' => $this->t('Updated'),
+  //       'operations' => $this->t('Operations'),
+  //     ],
+  //     '#empty' => $this->t('No content available.'),
+  //   ];
 
-    $nids = $query->execute();
-    $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
+  //   // Thêm bulk operations
+  //   $form['admin_table']['actions'] = [
+  //     '#type' => 'container',
+  //     '#attributes' => ['class' => ['form-actions js-form-wrapper']],
+  //     'action' => [
+  //       '#type' => 'select',
+  //       '#title' => $this->t('Action'),
+  //       '#options' => [
+  //         'node_delete_action' => $this->t('Delete selected content'),
+  //         'node_publish_action' => $this->t('Publish selected content'),
+  //         'node_unpublish_action' => $this->t('Unpublish selected content'),
+  //       ],
+  //     ],
+  //     'submit' => [
+  //       '#type' => 'submit',
+  //       '#value' => $this->t('Apply to selected items'),
+  //       '#button_type' => 'primary',
+  //     ],
+  //   ];
 
-    foreach ($nodes as $node) {
-      $build['table'][] = [
-        'title' => [
-          '#markup' => $node->toLink()->toString(),
-        ],
-        'author' => [
-          '#markup' => $node->getOwner()->getDisplayName(),
-        ],
-        'status' => [
-          '#markup' => $node->isPublished() ? $this->t('Published') : $this->t('Unpublished'),
-        ],
-        'updated' => [
-          '#markup' => \Drupal::service('date.formatter')
-            ->format($node->getChangedTime(), 'short'),
-        ],
-        'operations' => [
-          '#type' => 'operations',
-          '#links' => [
-            'edit' => [
-              'title' => $this->t('Edit'),
-              'url' => $node->toUrl('edit-form'),
-            ],
-            'delete' => [
-              'title' => $this->t('Delete'),
-              'url' => $node->toUrl('delete-form'),
-            ],
-          ],
-        ],
-      ];
-    }
+  //   $query = $this->entityTypeManager->getStorage('node')->getQuery()
+  //     ->condition('type', 'class')
+  //     ->sort('created', 'DESC')
+  //     ->accessCheck(TRUE);
 
-    return $build;
-  }
+  //   $nids = $query->execute();
+  //   $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
+
+  //   foreach ($nodes as $node) {
+  //     $form['admin_table']['table'][$node->id()] = [
+  //       'checkbox' => [
+  //         '#type' => 'checkbox',
+  //         '#title' => $this->t('Update this item'),
+  //         '#title_display' => 'invisible',
+  //         '#return_value' => $node->id(),
+  //       ],
+  //       'title' => [
+  //         '#markup' => $node->toLink()->toString(),
+  //       ],
+  //       'author' => [
+  //         '#markup' => $node->getOwner()->getDisplayName(),
+  //       ],
+  //       'status' => [
+  //         '#markup' => $node->isPublished() ? $this->t('Published') : $this->t('Unpublished'),
+  //       ],
+  //       'updated' => [
+  //         '#markup' => \Drupal::service('date.formatter')
+  //           ->format($node->getChangedTime(), 'short'),
+  //       ],
+  //       'operations' => [
+  //         '#type' => 'operations',
+  //         '#links' => [
+  //           'edit' => [
+  //             'title' => $this->t('Edit'),
+  //             'url' => $node->toUrl('edit-form'),
+  //           ],
+  //           'delete' => [
+  //             'title' => $this->t('Delete'),
+  //             'url' => $node->toUrl('delete-form'),
+  //           ],
+  //         ],
+  //       ],
+  //     ];
+  //   }
+
+  //   $form['#attached']['library'][] = 'core/drupal.tableselect';
+  //   return $form;
+  // }
 
   /**
- * Builds the response for the course content listing page.
- */
-public function courseContent() {
+   * Builds the response for the course content listing page.
+   */
+  public function courseContent() {
     // Thêm nút Add Course
     $build['add_course'] = [
       '#type' => 'link',

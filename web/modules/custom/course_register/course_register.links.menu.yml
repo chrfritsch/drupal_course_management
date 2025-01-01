@@ -1,0 +1,6 @@
+course_register.analytics_dashboard:
+  title: 'Analytics Dashboard'
+  description: 'View analytics dashboard'
+  parent: system.admin_content
+  route_name: course_register.analytics_dashboard
+  weight: 10

@@ -4,78 +4,513 @@
  * Implements hook_cron().
  */
 function course_register_cron() {
-  $year = date('Y');
-  $vid = 'semester';
+  // Log bắt đầu chạy cron
+  \Drupal::logger('course_register')
+    ->notice('Bắt đầu chạy cron update class status');
 
-  // Query xem đã có terms cho năm hiện tại chưa
-  $query = \Drupal::entityQuery('taxonomy_term')
-    ->condition('vid', $vid)
-    ->condition('name', $year)
-    ->execute();
+  // Lấy ngày hiện tại
+  $current_date = date('Y-m-d');
+  \Drupal::logger('course_register')
+    ->notice('Ngày hiện tại: @date', ['@date' => $current_date]);
 
-  if (empty($query)) {
-    // Tạo terms mới cho năm hiện tại
-    $term = \Drupal\taxonomy\Entity\Term::create([
-      'vid' => $vid,
-      'name' => "Học kỳ I ($year-" . ($year + 1) . ")",
-    ]);
-    $term->save();
+  // Tìm TẤT CẢ các node class
+  $query = \Drupal::entityQuery('node')
+    ->condition('type', 'class')
+    ->accessCheck(FALSE);
 
-    $term = \Drupal\taxonomy\Entity\Term::create([
-      'vid' => $vid,
-      'name' => "Học kỳ II ($year-" . ($year + 1) . ")",
-    ]);
-    $term->save();
+  $nids = $query->execute();
 
-    $term = \Drupal\taxonomy\Entity\Term::create([
-      'vid' => $vid,
-      'name' => "Học kỳ hè ($year)",
-    ]);
-    $term->save();
+  // Log số lượng node tìm được
+  \Drupal::logger('course_register')->notice('Tìm thấy @count node class', [
+    '@count' => count($nids),
+  ]);
+
+  if (!empty($nids)) {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $classes = $storage->loadMultiple($nids);
+
+    foreach ($classes as $class) {
+      // Log thông tin của từng class
+      $end_date = $class->get('field_class_end_date')->value;
+      $current_status = $class->get('field_class_status')->value;
+
+      \Drupal::logger('course_register')
+        ->notice('Xử lý class @title - End date: @end_date - Current status: @status', [
+          '@title' => $class->getTitle(),
+          '@end_date' => $end_date,
+          '@status' => $current_status ?: 'chưa có trạng thái',
+        ]);
+
+      // Nếu end_date < current_date thì set completed
+      // Ngược lại set active
+      $new_status = (strtotime($end_date) < strtotime($current_date)) ? 'completed' : 'active';
+
+      try {
+        $class->set('field_class_status', $new_status);
+        $class->save();
+
+        \Drupal::logger('course_register')
+          ->notice('Đã cập nhật class @title từ trạng thái @old thành @new', [
+            '@title' => $class->getTitle(),
+            '@old' => $current_status ?: 'chưa có trạng thái',
+            '@new' => $new_status,
+          ]);
+      }
+      catch (\Exception $e) {
+        \Drupal::logger('course_register')
+          ->error('Lỗi khi cập nhật class @title: @error', [
+            '@title' => $class->getTitle(),
+            '@error' => $e->getMessage(),
+          ]);
+      }
+    }
+  }
+
+  \Drupal::logger('course_register')
+    ->notice('Kết thúc cron update class status');
+}
+
+/**
+ * Implements hook_mail().
+ */
+function course_register_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'registration_confirmation':
+      // Thiết lập tiêu đề email
+      $message['subject'] = t('Xác nhận đăng ký lớp học @class_title', [
+        '@class_title' => $params['class_title'],
+      ]);
+
+      // Tạo bảng HTML cho thông tin khóa học
+      $course_table = "
+        <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
+          <tr>
+            <th style='border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;' colspan='2'>
+              Thông tin khóa học
+            </th>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Tên khóa học</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['course_title']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Học phí</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>" . number_format($params['price']) . " VNĐ</td>
+          </tr>
+        </table>";
+
+      // Tạo bảng HTML cho thông tin lớp học
+      $class_table = "
+        <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
+          <tr>
+            <th style='border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;' colspan='2'>
+              Thông tin lớp học
+            </th>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Tên lớp</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['class_title']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Ngày khai giảng</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['class_open_date']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Ngày kết thúc</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['class_end_date']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Giảng viên</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['teacher_name']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Địa điểm học</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['room']}</td>
+          </tr>
+        </table>";
+
+      // Tạo nội dung email
+      $body = [];
+
+      // 1. Lời chào
+      $body[] = t('Xin chào @name,', [
+        '@name' => $params['user_name'],
+      ]);
+
+      // 2. Thông báo đăng ký thành công
+      $body[] = t('Bạn đã đăng ký khóa học thành công. Dưới đây là thông tin chi tiết:');
+
+      // 3. Thêm bảng thông tin khóa học và lớp học
+      $body[] = $course_table;
+      $body[] = $class_table;
+
+      // 4. Thông tin thời hạn thanh toán
+      $body[] = t('Thời hạn thanh toán học phí là: @deadline', [
+        '@deadline' => $params['deadline'],
+      ]);
+
+      // 5. Lưu ý về thanh toán
+      $body[] = t('Lưu ý: Nếu bạn không hoàn tất thanh toán học phí trong thời hạn quy định, bạn sẽ không được bổ sung vào danh sách lớp của lớp học và không thể tiếp tục theo học khóa học này cho đến khi khóa học này mở lại một lần nữa.');
+
+      // 6. Link thanh toán
+      $body[] = t('Vui lòng click vào đường dẫn sau để tiến hành thanh toán: @url', [
+        '@url' => $params['payment_url'],
+      ]);
+
+      // 7. Thêm thông tin đăng nhập nếu là anonymous user
+      if (!empty($params['username']) && !empty($params['password'])) {
+        $account_table = "
+          <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
+            <tr>
+              <th style='border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;' colspan='2'>
+                Thông tin tài khoản
+              </th>
+            </tr>
+            <tr>
+              <td style='border: 1px solid #ddd; padding: 8px;'>Tên đăng nhập</td>
+              <td style='border: 1px solid #ddd; padding: 8px;'>{$params['username']}</td>
+            </tr>
+            <tr>
+              <td style='border: 1px solid #ddd; padding: 8px;'>Mật khẩu</td>
+              <td style='border: 1px solid #ddd; padding: 8px;'>{$params['password']}</td>
+            </tr>
+          </table>";
+
+        $body[] = $account_table;
+        $body[] = t('Vui lòng đổi mật khẩu sau khi đăng nhập lần đầu để bảo mật tài khoản.');
+      }
+
+      // Gán nội dung vào message
+      $message['body'] = $body;
+
+      // Thiết lập định dạng HTML cho email
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+      break;
+
+    // Thêm case mới cho đăng ký thi
+    case 'exam_registration_confirmation':
+      // Thiết lập tiêu đề email
+      $message['subject'] = t('Xác nhận đăng ký kỳ thi @exam_name', [
+        '@exam_name' => $params['exam_name'],
+      ]);
+
+      // Tạo bảng HTML cho thông tin kỳ thi
+      $exam_table = "
+        <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
+          <tr>
+            <th style='border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;' colspan='2'>
+              Thông tin kỳ thi
+            </th>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Tên kỳ thi</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['exam_name']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Ngày thi</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['exam_date']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Thời gian</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['exam_start_time']} - {$params['exam_end_time']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Địa điểm thi</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['exam_location']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Lệ phí thi</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>" . number_format($params['exam_fee']) . " VNĐ</td>
+          </tr>
+        </table>";
+
+      // Tạo bảng HTML cho thông tin thí sinh
+      $candidate_table = "
+        <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
+          <tr>
+            <th style='border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;' colspan='2'>
+              Thông tin thí sinh
+            </th>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Họ và tên</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['candidate_name']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Số CCCD</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['identification']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Ngày sinh</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['birthday']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Số điện thoại</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['phone']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Email</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['email']}</td>
+          </tr>
+        </table>";
+
+      // Tạo nội dung email
+      $body = [];
+
+      // 1. Lời chào
+      $body[] = t('Xin chào @name,', [
+        '@name' => $params['candidate_name'],
+      ]);
+
+      // 2. Thông báo đăng ký thành công
+      $body[] = t('Bạn đã đăng ký kỳ thi thành công. Dưới đây là thông tin chi tiết:');
+
+      // 3. Thêm bảng thông tin kỳ thi và thông tin thí sinh
+      $body[] = $exam_table;
+      $body[] = $candidate_table;
+
+      // 4. Thông tin thời hạn thanh toán
+      $body[] = t('Thời hạn thanh toán lệ phí thi là: @deadline', [
+        '@deadline' => $params['payment_deadline'],
+      ]);
+
+      // 5. Link thanh toán
+      $body[] = t('Vui lòng click vào đường dẫn sau để tiến hành thanh toán: @url', [
+        '@url' => $params['payment_url'],
+      ]);
+
+      // 6. Thêm thông tin đăng nhập nếu là anonymous user
+      if (!empty($params['username']) && !empty($params['password'])) {
+        $account_table = "
+          <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
+            <tr>
+              <th style='border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;' colspan='2'>
+                Thông tin tài khoản
+              </th>
+            </tr>
+            <tr>
+              <td style='border: 1px solid #ddd; padding: 8px;'>Tên đăng nhập</td>
+              <td style='border: 1px solid #ddd; padding: 8px;'>{$params['username']}</td>
+            </tr>
+            <tr>
+              <td style='border: 1px solid #ddd; padding: 8px;'>Mật khẩu</td>
+              <td style='border: 1px solid #ddd; padding: 8px;'>{$params['password']}</td>
+            </tr>
+          </table>";
+
+        $body[] = $account_table;
+        $body[] = t('Vui lòng đổi mật khẩu sau khi đăng nhập lần đầu để bảo mật tài khoản.');
+      }
+
+      // 7. Lưu ý quan trọng
+      $body[] = t('<strong>Lưu ý:</strong>');
+      $body[] = t('- Vui lòng thanh toán lệ phí thi đúng hạn để hoàn tất đăng ký.');
+      $body[] = t('- Mang theo CCCD/CMND khi đến dự thi để đối chiếu thông tin.');
+      $body[] = t('- Đến trước giờ thi ít nhất 30 phút để làm thủ tục.');
+
+      // Gán nội dung vào message
+      $message['body'] = $body;
+
+      // Thiết lập định dạng HTML cho email
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+      break;
+
+    // Thêm case cho email xác nhận thanh toán
+    case 'exam_payment_confirmation':
+      $message['subject'] = t('Xác nhận thanh toán lệ phí thi @exam_name', [
+        '@exam_name' => $params['exam_name'],
+      ]);
+
+      // Tạo bảng HTML cho thông tin kỳ thi
+      // Tạo bảng HTML cho thông tin kỳ thi
+      $exam_table = "
+        <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
+          <tr>
+            <th style='border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;' colspan='2'>
+              Thông tin kỳ thi
+            </th>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Tên kỳ thi</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['exam_name']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Ngày thi</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['exam_date']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Thời gian</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['exam_start_time']} - {$params['exam_end_time']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Địa điểm thi</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['exam_location']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Lệ phí thi</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>" . number_format($params['exam_fee']) . " VNĐ</td>
+          </tr>
+        </table>";
+
+      // Tạo bảng HTML cho thông tin thanh toán
+      $payment_table = "
+        <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
+          <tr>
+            <th style='border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;' colspan='2'>
+              Thông tin thanh toán
+            </th>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Số tiền</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>" . number_format($params['amount']) . " VNĐ</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Phương thức</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['payment_method']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Mã giao dịch</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['transaction_id']}</td>
+          </tr>
+          <tr>
+            <td style='border: 1px solid #ddd; padding: 8px;'>Thời gian</td>
+            <td style='border: 1px solid #ddd; padding: 8px;'>{$params['payment_date']}</td>
+          </tr>
+        </table>";
+
+      $body = [];
+      $body[] = t('Xin chào @name,', [
+        '@name' => $params['candidate_name'],
+      ]);
+      $body[] = t('Chúng tôi xác nhận đã nhận được thanh toán lệ phí thi của bạn. Dưới đây là thông tin chi tiết:');
+      $body[] = $payment_table;
+      $body[] = $exam_table;
+      $body[] = t('<strong>Bạn đã hoàn tất đăng ký thi. Vui lòng lưu ý các thông tin sau:</strong>');
+      $body[] = t('- Mang theo CCCD/CMND khi đến dự thi.');
+      $body[] = t('- Có mặt trước giờ thi 30 phút.');
+      $body[] = t('- Tuân thủ nội quy phòng thi.');
+
+      $message['body'] = $body;
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+      break;
   }
 }
 
 /**
- * Implements hook_entity_presave().
+ * Implements hook_theme().
  */
-function course_register_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
-  // Kiểm tra xem entity có phải là node và có type là student_scores không
-  if ($entity->getEntityTypeId() !== 'node' ||
-    !in_array($entity->bundle(), ['student_scores', 'certificate'])) {
-    return;
+function course_register_theme() {
+  return [
+    'node__receipt__pdf' => [
+      'template' => 'node--receipt--pdf',
+      'base hook' => 'node',
+    ],
+
+    // Thêm theme definition mới cho analytics dashboard
+    'analytics_dashboard' => [
+      'variables' => [
+        'revenue_chart' => NULL,
+        'registration_chart' => NULL,
+        'payment_chart' => NULL,
+      ],
+    ],
+
+    'exam_registration_confirmation' => [
+      'variables' => [
+        'exam_info' => NULL,
+        'candidate_info' => NULL,
+        'registration_info' => NULL,
+        'account_info' => NULL,
+        'site_name' => NULL,
+        'site_url' => NULL,
+      ],
+      'template' => 'mail/exam-registration-confirmation',
+    ],
+    'exam_payment_confirmation' => [
+      'variables' => [
+        'exam_info' => NULL,
+        'payment_info' => NULL,
+        'candidate_info' => NULL,
+        'site_name' => NULL,
+        'site_url' => NULL,
+      ],
+      'template' => 'mail/exam-payment-confirmation',
+    ],
+    'node__exam_payment_receipt__pdf' => [
+      'template' => 'node--exam-payment-receipt--pdf',
+      'base hook' => 'node',
+    ],
+    'exam_payment_confirmation' => [
+      'template' => 'mail/exam-payment-confirmation',
+      'variables' => [
+        'student_name' => NULL,
+        'receipt_number' => NULL,
+        'amount' => NULL,
+        'payment_method' => NULL,
+        'transaction_id' => NULL,
+        'payment_date' => NULL,
+        'exam_info' => NULL,
+        'receipt_pdf_url' => NULL,
+        'site_name' => NULL,
+        'site_url' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ */
+function course_register_entity_view_mode_alter(&$view_mode, $entity, $context) {
+  if ($entity->getEntityTypeId() === 'node'
+    && $entity->bundle() === 'receipt'
+    && \Drupal::routeMatch()
+      ->getRouteName() === 'course_register.receipt_pdf') {
+    $view_mode = 'pdf';
   }
+}
 
-  try {
-    // Lấy reference đến user - khác nhau giữa 2 content type
-    if ($entity->bundle() === 'student_scores') {
-      $user_id = $entity->get('field_user_in_scores')->target_id;
-      $course_id = $entity->get('field_course_in_scores')->target_id;
-    } else {
-      $user_id = $entity->get('field_complete_lesson_user')->target_id;
-      $course_id = $entity->get('field_course_information')->target_id;
-    }
-
-    if ($user_id) {
-      $user = \Drupal\user\Entity\User::load($user_id);
-      $user_fullname = $user ? $user->getDisplayName() : '';
-    }
-
-    // Lấy reference đến course
-    if ($course_id) {
-      $course = \Drupal\node\Entity\Node::load($course_id);
-      $course_name = $course ? $course->label() : '';
-    }
-
-    // Tạo title mới nếu có đủ thông tin
-    if (!empty($user_fullname) && !empty($course_name)) {
-      $prefix = $entity->bundle() === 'student_scores' ? '[Điểm]' : '[Chứng chỉ]';
-      $new_title = sprintf('%s %s | %s', $prefix, $course_name, $user_fullname);
-      $entity->setTitle($new_title);
-    }
+/**
+ * Implements template_preprocess_node().
+ */
+function course_register_preprocess_node(&$variables) {
+  if ($variables['node']->bundle() === 'receipt'
+    && \Drupal::routeMatch()
+      ->getRouteName() === 'course_register.receipt_pdf') {
+    // Sử dụng extension.path.resolver thay vì drupal_get_path()
+    $variables['base_path'] = base_path();
+    $variables['directory'] = \Drupal::service('extension.path.resolver')
+      ->getPath('module', 'course_register');
   }
-  catch (\Exception $e) {
-    \Drupal::logger('course_register')->error('Lỗi khi tạo title cho student_scores: @error', [
-      '@error' => $e->getMessage(),
-    ]);
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function course_register_menu_local_tasks_alter(&$data, $route_name) {
+  // Kiểm tra nếu đang ở trang admin content
+  if ($route_name == 'system.admin_content') {
+    // Danh sách các tab cần giữ lại
+    $allowed_tabs = [
+      'system.admin_content',
+      'view.files.page_1',
+      'course_register.content_class',
+      'course_register.content_course',
+      'course_register.content_class_registered',
+      'course_register.content_transaction',
+      'course_register.content_exam_schedule',
+      'course_register.content_student_scores',
+      'course_register.content_certificate',
+      'course_register.content_news',
+    ];
+
+    // Lọc các tab không cần thiết
+    if (isset($data['tabs'][0])) {
+      foreach ($data['tabs'][0] as $route => $tab) {
+        if (!in_array($route, $allowed_tabs)) {
+          unset($data['tabs'][0][$route]);
+        }
+      }
+    }
   }
 }

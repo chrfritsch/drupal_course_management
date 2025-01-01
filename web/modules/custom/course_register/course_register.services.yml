@@ -1,0 +1,11 @@
+services:
+  course_register.receipt:
+    class: Drupal\course_register\Service\ReceiptService
+    arguments: ['@entity_type.manager']
+  course_register.twig.number_to_words:
+    class: Drupal\course_register\TwigExtension\NumberToWords
+    tags:
+      - { name: twig.extension }
+  course_register.email:
+    class: Drupal\course_register\Service\EmailService
+    arguments: ['@plugin.manager.mail', '@language_manager', '@config.factory']

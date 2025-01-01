@@ -911,9 +911,9 @@ $config['system.performance']['js']['preprocess'] = FALSE;
 
 $settings['trusted_host_patterns'] = [
   '^localhost$',
-  '^course\-management\.lndo\.site$',
   '^127\.0\.0\.1$',
-  // Thêm các domain khác nếu cần
+  '^course-management\.lndo\.site$', // Sửa dấu gạch ngang
+  '^.+\.lndo\.site$', // Cho phép tất cả subdomain .lndo.site
 ];
 
 // Cấu hình VNPAY.
@@ -948,3 +948,6 @@ if ($settings['cors_enabled'] && isset($_SERVER['HTTP_ORIGIN'])) {
 }
 
 $settings['file_private_path'] = 'sites/default/files/private';
+if (empty($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] === '/') {
+  $_GET['q'] = 'node';
+}

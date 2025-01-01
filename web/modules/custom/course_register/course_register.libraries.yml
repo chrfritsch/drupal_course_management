@@ -1,0 +1,11 @@
+receipt_pdf:
+  css:
+    theme:
+      css/receipt-pdf.css: { }
+
+analytics_dashboard:
+  css:
+    theme:
+      css/analytics-dashboard.css: { }
+  dependencies:
+    - charts/charts
