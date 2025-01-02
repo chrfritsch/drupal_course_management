@@ -19,19 +19,21 @@ class VnpayController extends ControllerBase {
    */
   public function vnpayReturn(Request $request) {
     try {
-      // Lấy user_id từ query parameter
+      #region Kiểm tra thong tin người dùng
       $user_id = $request->query->get('username');
       if (!$user_id) {
         throw new \Exception('Thiếu thông tin người dùng.');
       }
+      #endregion
 
-      // Load user
+      #region Tìm thong tin người dùng trong CSDL, nếu không có thì báo lỗi
       $user = \Drupal\user\Entity\User::load($user_id);
       if (!$user) {
         throw new \Exception('Không tìm thấy thông tin người dùng.');
       }
+      #endregion
 
-      // Lấy và verify response từ VNPAY
+      #region Lấy và xử lý thông tin trả về từ VNPAY
       $vnpay_response = $request->query->all();
       if (empty($vnpay_response['vnp_ResponseCode'])) {
         $error_data = [
@@ -46,6 +48,7 @@ class VnpayController extends ControllerBase {
         $query = http_build_query($error_data);
         return new TrustedRedirectResponse('http://localhost:5173/payment/vnpay-return?' . $query);
       }
+      #endregion
 
       // Verify hash
       if (!$this->verifyVnpayHash($vnpay_response)) {
@@ -77,22 +80,26 @@ class VnpayController extends ControllerBase {
         return new TrustedRedirectResponse('http://localhost:5173/payment/vnpay-return?' . $query);
       }
 
-      // Lưu transaction history
+      #region Xác thực Thông tin đơn hàng
       $order_info = json_decode($vnpay_response['vnp_OrderInfo'], TRUE);
       if (!$order_info || empty($order_info['class_codes'])) {
         throw new \Exception('Thông tin đơn hàng không hợp lệ.');
       }
+      #endregion
 
       $transactions = [];
       $class_ids = [];
-      $amount_per_class = $vnpay_response['vnp_Amount'] / 100 / count($order_info['class_codes']);
 
-      // Get receipt service
+      #region Dòng này là để chuyển lại số tiền ban đầu do VNPAY trả về là số tiền đã nhân 100
+      $amount_per_class = $vnpay_response['vnp_Amount'] / 100 / count($order_info['class_codes']);
+      #endregion
+
+      // khai báo service tạo hóa đơn
       /** @var \Drupal\course_register\Service\ReceiptService $receipt_service */
       $receipt_service = \Drupal::service('course_register.receipt');
 
       foreach ($order_info['class_codes'] as $class_code) {
-        // Tìm class node
+        #region Tìm lớp học
         $query = \Drupal::entityQuery('node')
           ->condition('type', 'class')
           ->condition('title', $class_code)
@@ -103,6 +110,7 @@ class VnpayController extends ControllerBase {
         if (empty($results)) {
           throw new \Exception('Không tìm thấy lớp học: ' . $class_code);
         }
+        #endregion
 
         $class_id = reset($results);
         $class_ids[] = $class_id;
@@ -111,7 +119,7 @@ class VnpayController extends ControllerBase {
           ->getStorage('node')
           ->load($class_id);
 
-        // Cập nhật trạng thái đăng ký
+        #region Cập nhật trạng thái đăng ký
         $registration_query = \Drupal::entityQuery('node')
           ->condition('type', 'class_registration')
           ->condition('field_registration_class', $class->id())
@@ -130,7 +138,9 @@ class VnpayController extends ControllerBase {
           $registration->save();
         }
 
-        // Tạo transaction history
+        #endregion
+
+        // Tạo lịch su giao dịch
         $transaction = \Drupal::entityTypeManager()
           ->getStorage('node')
           ->create([
@@ -207,7 +217,7 @@ class VnpayController extends ControllerBase {
             'vnp_TransactionStatus' => 99,
           ],
         ];
-        
+
         $query = http_build_query($error_data);
         return new TrustedRedirectResponse('http://localhost:5173/payment/vnpay-return?' . $query);
     }

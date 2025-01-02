@@ -9,3 +9,25 @@ services:
   course_register.email:
     class: Drupal\course_register\Service\EmailService
     arguments: ['@plugin.manager.mail', '@language_manager', '@config.factory']
+    
+  course_register.registration_repository:
+    class: Drupal\course_register\Repository\ClassRegistrationRepository
+    arguments: ['@entity_type.manager', '@database']
+
+  # Đổi tên service này thành email_class
+  course_register.email_class:
+    class: Drupal\course_register\Service\EmailClassService
+    arguments: ['@plugin.manager.mail', '@date.formatter']
+
+  course_register.registration_service:
+    class: Drupal\course_register\Service\ClassRegistrationService
+    # Cập nhật tên service trong arguments
+    arguments: ['@course_register.registration_repository', '@course_register.email_class', '@current_user']
+
+  course_register.exam_registration:
+    class: Drupal\course_register\Service\ExamRegistrationService
+    arguments:
+      - '@entity_type.manager'
+      - '@current_user'
+      - '@plugin.manager.mail'
+      - '@password_generator'

@@ -128,29 +128,44 @@ final class RegisterCourseApiResource extends ResourceBase {
   }
 
   /**
-   * Responds to POST requests.
+   * Hàm này là hàm nhận request từ front-end và bắt đầu tiến trình xử lý thanh toán.
+   * Tham số $data chứa thông tin từ client gửi lên.
+   *
+   * Ví dụ xử lý thanh toán với VNPAY, mảng $data sẽ có dạng:
+   * [
+   *   'class_codes' => ['MATH101', 'PHYS101'],
+   *   'payment_method' => 'vnpay'
+   * ]
+   *
+   * Ví dụ ử lý thanh toán với PayPal, mảng $data sẽ có dạng:
+   * [
+   *   'class_codes' => ['MATH101', 'PHYS101'],
+   *   'payment_method' => 'paypal',
+   *   'payment_transaction_id' => '123456'   // ID nhận được từ PayPal trả về
+   * ]
    */
   public function post(array $data) {
     try {
-      // Validate input data
-      if (empty($data['class_codes']) || !is_array($data['class_codes'])) {
-        throw new HttpException(400, 'Danh sách mã lớp học không được để trống và phải là mảng.');
-      }
-      if (empty($data['payment_method'])) {
-        throw new HttpException(400, 'Phương thức thanh toán không được để trống.');
-      }
 
-      // Kiểm tra đăng nhập
+
+      #region Bước 2: Kiểm tra đăng nhập xem người dùng có đăng nhập chưa
       if (!$this->currentUser->isAuthenticated()) {
         throw new HttpException(403, 'Bạn cần đăng nhập để thanh toán.');
       }
+      #endregion
 
-      // Tính tổng số tiền và kiểm tra đăng ký
+      #region Bước 3: Kiểm tra dữ liệu nhận được từ front-end xem có mã lớp không
+      if (empty($data['class_codes']) || !is_array($data['class_codes'])) {
+        throw new HttpException(400, 'Danh sách mã lớp học không được để trống và phải là mảng.');
+      }
+      #endregion
+
       $total_amount = 0;
       $class_info = [];
 
       foreach ($data['class_codes'] as $class_code) {
-        // Tìm class
+
+        #region Doan này kiem tra trong CSDL xem có lớp học không, không có thì báo lỗi
         $query = \Drupal::entityQuery('node')
           ->condition('type', 'class')
           ->condition('title', $class_code)
@@ -158,20 +173,28 @@ final class RegisterCourseApiResource extends ResourceBase {
           ->range(0, 1);
 
         $results = $query->execute();
+
         if (empty($results)) {
           throw new HttpException(404, 'Không tìm thấy lớp học: ' . $class_code);
         }
+        #endregion
 
+        #region Bước 4: Tải lên thông tin lớp học
         $class = \Drupal::entityTypeManager()
           ->getStorage('node')
           ->load(reset($results));
+        #endregion
 
-        // Load course
+        #region Doạn này thì biến $class ở bước thứ 3 có chứa id của khóa học, dùng nó để truy vấn trong CSDL và lấy thông tin khóa học
         $course = \Drupal::entityTypeManager()
           ->getStorage('node')
           ->load($class->get('field_class_course_reference')->target_id);
+        #endregion
 
-        // Kiểm tra đăng ký
+        #region Bước 5: Kiểm tra xem người dùng đã đăng ký lớp học chưa, không tìm thấy thông tin trong CSDL hoặc có nhưng trạng thái để là confirmed thay vì pending thì báo lỗi
+
+        // pending: tức là đã đăng ký nhưng chưa thanh toán.
+        // confirmed: tức là đã đăng ký và đã thanh toán.
         $registration_query = \Drupal::entityQuery('node')
           ->condition('type', 'class_registration')
           ->condition('field_registration_class', $class->id())
@@ -183,8 +206,17 @@ final class RegisterCourseApiResource extends ResourceBase {
         if (empty($registration_results)) {
           throw new HttpException(400, 'Bạn chưa đăng ký hoặc đã thanh toán lớp học: ' . $class_code);
         }
+        #endregion
 
+        #region Bước 6: Dòng này là để tính tổng số tiền cần thanh toán
+
+        // Cụ thể là ví dụ người dùng đăng ký 2 lớp học, mỗi lớp học thuộc khóa học có giá 1.000.000 VND
+        // thì vòng lặp foreach này sẽ chạy 2 lần, mỗi lần lấy ra một lớp học và cộng vào biến $total_amount
+        // tổng cộng biến $total_amount sẽ có giá trị là 2.000.000 VND.
         $total_amount += (float) $course->get('field_course_tuition_fee')->value;
+        #endregion
+
+        #region Doạn này là để lưu thông tin lớp học phục vụ cho chức năng Google Analytics nhưng hiện tại chưa làm được nên đoạn này tạm bỏ qua
         $class_info[] = [
           'class_id' => $class->id(),
           'class_code' => $class_code,
@@ -193,23 +225,35 @@ final class RegisterCourseApiResource extends ResourceBase {
           'course_name' => $course->label(),
           'amount' => $course->get('field_course_tuition_fee')->value,
         ];
+        #endregion
       }
+
+      #region Doạn này kiểm tra xem front-end có gửi thông tin phương thức thanh toán không, không có thì báo lỗi
+      if (empty($data['payment_method'])) {
+        throw new HttpException(400, 'Phương thức thanh toán không được để trống.');
+      }
+      #endregion
 
       // Get receipt service
       /** @var \Drupal\course_register\Service\ReceiptService $receipt_service */
       $receipt_service = \Drupal::service('course_register.receipt');
 
-      // Xử lý thanh toán
+      #region Bước 7: Kiểm tra phương thức thanh toán.
       switch ($data['payment_method']) {
         case 'vnpay':
-          $order_info = [
-            'amount' => $total_amount,
-            'class_codes' => $data['class_codes'],
-            'user_id' => $this->currentUser->id(),
-          ];
 
+          #region Doạn này là chuẩn bị thông tin đơn hàng để gửi sang VNPAY
+          $order_info = [
+            'amount' => $total_amount,                // Tổng số tiền cần thanh toán, xem lại bước 6.
+            'class_codes' => $data['class_codes'],    // Danh sách mã lớp học, xem lại bước 3.
+            'user_id' => $this->currentUser->id(),    // ID của người dùng đăng nhập.
+          ];
+          #endregion
+
+          // Gọi hàm tạo URL thanh toán VNPAY.
           $payment_url = $this->createVnpayPaymentUrl($order_info);
 
+          #region Doạn trả về response cho front-end thì quan tâm đến 'payment_url' là được rồi còn phần 'analytics_data' là để phục vụ cho chức năng Google Analytics nên hiện tại chưa cần quan tâm
           return new ResourceResponse([
             'payment_url' => $payment_url,
             'analytics_data' => [
@@ -221,6 +265,7 @@ final class RegisterCourseApiResource extends ResourceBase {
               'student_name' => $this->currentUser->getDisplayName(),
             ],
           ]);
+          #endregion
 
         case 'paypal':
           if (empty($data['payment_transaction_id'])) {
@@ -323,6 +368,7 @@ final class RegisterCourseApiResource extends ResourceBase {
         default:
           throw new HttpException(400, 'Phương thức thanh toán không hợp lệ.');
       }
+      #endregion
     }
     catch (HttpException $e) {
       throw $e;
