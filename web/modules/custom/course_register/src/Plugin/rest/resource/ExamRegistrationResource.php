@@ -133,27 +133,31 @@ class ExamRegistrationResource extends ResourceBase {
       $this->examRegistrationService->validateUserInfo($data['user_info']);
       #endregion
 
-      // Load exam node
+      #region Tải thông tin kỳ thi từ CSDL
       $exam = $this->entityTypeManager->getStorage('node')
         ->load($data['exam_id']);
 
       if (!$exam || $exam->bundle() !== 'exam_schedule') {
         throw new HttpException(404, 'Không tìm thấy kỳ thi');
       }
+      #endregion
 
-      // Validate exam status and capacity
+      #region Kiểm tra trạng thái kỳ thi
       $this->examRegistrationService->validateExam($exam);
+      #endregion
 
-      // Handle registration based on user status
+      #region Kiểm tra xem user đã đăng nhập chưa và phân luồng xử lý
       if ($this->currentUser->isAuthenticated()) {
         $registration = $this->examRegistrationService->handleAuthenticatedRegistration($exam, $data['user_info']);
       }
       else {
         $registration = $this->examRegistrationService->handleAnonymousRegistration($exam, $data['user_info']);
       }
+      #endregion
 
-      // Send confirmation email
+      #region Gửi email xác nhận
       $this->examRegistrationService->sendConfirmationEmail($registration);
+      #endregion
 
       return new ResourceResponse([
         'message' => 'Đăng ký thành công',

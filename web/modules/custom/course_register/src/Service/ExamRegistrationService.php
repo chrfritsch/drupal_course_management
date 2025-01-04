@@ -29,6 +29,8 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
+   * Kiểm tra thông tin user
+   *
    * {@inheritdoc}
    */
   public function validateUserInfo($user_info) {
@@ -38,7 +40,7 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
       'gender',
       'identification',
       'permanent_address',
-      'temporary_address', 
+      'temporary_address',
       'phone',
       'email',
     ];
@@ -74,6 +76,8 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
+   * Kiểm tra thông tin kỳ thi
+   *
    * {@inheritdoc}
    */
   public function validateExam($exam) {
@@ -90,6 +94,8 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
+   * Xử lý đăng ký kỳ thi cho user đã đăng nhập
+   *
    * {@inheritdoc}
    */
   public function handleAuthenticatedRegistration($exam, $user_info) {
@@ -164,6 +170,8 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
+   * Xử lý đăng ký kỳ thi cho user chưa đăng nhập
+   *
    * {@inheritdoc}
    */
   public function handleAnonymousRegistration($exam, $user_info) {
@@ -222,6 +230,8 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
+   * Gửi email xác nhận
+   *
    * {@inheritdoc}
    */
   public function sendConfirmationEmail($registration) {
@@ -263,6 +273,8 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
+   * Lấy số lượng thí sinh đã đăng ký
+   *
    * {@inheritdoc}
    */
   public function getRegisteredCount($exam_id) {
@@ -277,6 +289,9 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
+   * Chuyển đổi họ tên thành tên đăng nhập
+   * Ví dụ: Nguyen Thi Thu Men => nguyenthithumen
+   *
    * {@inheritdoc}
    */
   public function convertFullnameToUsername($fullname) {
