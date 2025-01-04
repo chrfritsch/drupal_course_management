@@ -21,24 +21,34 @@ class ClassRegistrationService {
   }
 
   public function registerForClass($data) {
+    #region Kiểm tra coi dữ liệu từ request có thiếu mã lớp học không
     if (empty($data['class_id'])) {
       throw new \Exception('Class ID is required');
     }
+    #endregion
 
+    #region Kiểm tra coi có lớp học có mã lớp này trong CSDL không
     $class = $this->repository->getClass($data['class_id']);
     if (!$class || $class->bundle() !== 'class') {
       throw new \Exception('Invalid class');
     }
+    #endregion
 
+    #region Kiểm tra trạng thái của lớp học, nếu không phải active th không thể đăng ký
+    // Nếu trạng thái lớp học là active thì lớp học đó vẫn còn mở và nhận đăng ký
     if ($class->get('field_class_status')->value !== 'active') {
       throw new \Exception('Lớp học này đã kết thúc hoặc không còn nhận đăng ký');
     }
+    #endregion
 
+    #region Kiểm tra coi có khóa học mà lớp học này thuộc về không
     $course = $this->repository->getCourse($class->get('field_class_course_reference')->target_id);
     if (!$course) {
       throw new \Exception('Invalid course');
     }
+    #endregion
 
+    #region Doạn này sẽ kiểm tra xem xử lý đăng ký cho user đã đăng nhập hay là user chưa đăng nhập
     if ($this->currentUser->isAuthenticated()) {
       return $this->handleAuthenticatedRegistration($class, $course);
     }
@@ -48,20 +58,23 @@ class ClassRegistrationService {
       }
       return $this->handleAnonymousRegistration($class, $course, $data['user_info']);
     }
+    #endregion
   }
 
   protected function handleAuthenticatedRegistration($class, $course) {
-    // Check if user already registered for this class
+    #region Kiem tra coi user đã đăng ký lớp học này chưa
     $existingRegistration = $this->repository->checkExistingRegistration($this->currentUser->id(), $class->id());
     if (!empty($existingRegistration)) {
       throw new \Exception('Bạn đã đăng ký lớp học này rồi');
     }
+    #endregion
 
-    // Get current time and payment deadline
+    #region Lay ngay hien tai va ngay deadline thanh toan
     $current_time = new \DateTime();
     $payment_deadline = new \DateTime('+7 days');
+    #endregion
 
-    // Create registration node
+    #region Tao dang ky lop hoc
     $registration = $this->repository->createRegistration([
       'type' => 'class_registration',
       'title' => '[Đăng ký] ' . $this->currentUser->getAccountName() . ' - ' . $class->getTitle(),
@@ -75,14 +88,17 @@ class ClassRegistrationService {
         'value' => $payment_deadline->format('Y-m-d\TH:i:s'),
       ],
     ]);
+    #endregion
 
-    // Add user to class's user list
+    #region Thêm user vào danh sách user của lớp học
     $this->repository->updateClassUserList($class, $this->currentUser->id());
+    #endregion
 
-    // Get user email
+    #region Tải thông tin user
     $user = $this->repository->getUser($this->currentUser->id());
+    #endregion
 
-    // Send confirmation email
+    #region Gửi mail xác nhận đăng ký thành công
     $this->emailService->sendRegistrationConfirmation(
       $user->getEmail(),
       $class,
@@ -90,30 +106,35 @@ class ClassRegistrationService {
       $course->get('field_course_tuition_fee')->value,
       $registration->id()
     );
+    #endregion
 
     return ['message' => 'Registration successful'];
   }
 
   protected function handleAnonymousRegistration($class, $course, $user_info) {
-    // Validate user info
+    #region Kiểm tra thông tin user
     $this->validateUserInfo($user_info);
+    #endregion
 
-    // Check if email already exists
+    #region Kiểm tra coi có user nào đã đăng ký với email này chưa
     $existing_users = $this->repository->getUserByEmail($user_info['email']);
     if (!empty($existing_users)) {
       throw new \Exception('Email address is already registered');
     }
+    #endregion
 
-    // Check if username already exists
+    #region Kiểm tra coi có user nào đã đăng ký với username này chưa
     $existing_users = $this->repository->getUserByUsername($user_info['email']);
     if (!empty($existing_users)) {
       throw new \Exception('Username is already taken');
     }
+    #endregion
 
-    // Generate random password
+    #region Tạo password ngẫu nhiên
     $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 8);
+    #endregion
 
-    // Create new user account
+    #region Tạo tài khoản user mới
     $user = $this->repository->createUser([
       'name' => $user_info['username'],
       'mail' => $user_info['email'],
@@ -124,18 +145,21 @@ class ClassRegistrationService {
       'status' => 1,
       'pass' => $password,
     ]);
+    #endregion
 
-    // Check if user already registered for this class
+    #region Kiểm tra coi user đã đăng ký lớp học này chưa
     $existingRegistration = $this->repository->checkExistingRegistration($user->id(), $class->id());
     if (!empty($existingRegistration)) {
       throw new \Exception('Bạn đã đăng ký lớp học này rồi');
     }
+    #endregion
 
-    // Get current time and payment deadline
+    #region Lấy ngày hiện tại và ngày deadline thanh toán
     $current_time = new \DateTime();
     $payment_deadline = new \DateTime('+7 days');
+    #endregion
 
-    // Create registration node
+    #region Tạo đăng ký lớp học
     $registration = $this->repository->createRegistration([
       'type' => 'class_registration',
       'title' => '[Đăng ký] ' . $user_info['username'] . ' - ' . $class->getTitle(),
@@ -149,11 +173,13 @@ class ClassRegistrationService {
         'value' => $payment_deadline->format('Y-m-d\TH:i:s'),
       ],
     ]);
+    #endregion
 
-    // Add user to class's user list
+    #region Thêm user vào danh sách user của lớp học
     $this->repository->updateClassUserList($class, $user->id());
+    #endregion
 
-    // Send confirmation email
+    #region Gửi mail xác nhận đăng ký thành công
     $this->emailService->sendRegistrationConfirmation(
       $user_info['email'],
       $class,
@@ -163,6 +189,7 @@ class ClassRegistrationService {
       $user_info['username'],
       $password
     );
+    #endregion
 
     return ['message' => 'Registration successful'];
   }

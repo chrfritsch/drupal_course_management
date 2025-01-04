@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ClassRegistrationResource extends ResourceBase {
   protected $registrationService;
 
+
   public function __construct(
     array $configuration,
     $plugin_id,
