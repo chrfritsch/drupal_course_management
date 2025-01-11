@@ -15,7 +15,7 @@ class NumberToWords extends AbstractExtension {
    */
   public function getFilters() {
     return [
-      new TwigFilter('number_to_words', [$this, 'numberToWords']),
+      new TwigFilter('number_to_words', $this->numberToWords(...)),
     ];
   }
 
