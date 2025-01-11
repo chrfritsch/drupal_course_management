@@ -40,7 +40,7 @@ class EmailService {
   public function __construct(
     MailManagerInterface $mail_manager,
     LanguageManagerInterface $language_manager,
-    ConfigFactoryInterface $config_factory
+    ConfigFactoryInterface $config_factory,
   ) {
     $this->mailManager = $mail_manager;
     $this->languageManager = $language_manager;
@@ -85,7 +85,7 @@ class EmailService {
       'site_url' => $GLOBALS['base_url'],
     ];
 
-    // Add login credentials for new users
+    // Add login credentials for new users.
     if (isset($user->plain_password)) {
       $params['account_info'] = [
         'username' => $user->getAccountName(),
@@ -172,4 +172,5 @@ class EmailService {
   private function getPaymentUrl($registration_id) {
     return $GLOBALS['base_url'] . '/payment/exam/' . $registration_id;
   }
+
 }
