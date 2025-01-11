@@ -5,20 +5,32 @@ namespace Drupal\course_register\TwigExtension;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
+/**
+ *
+ */
 class NumberToWords extends AbstractExtension {
 
+  /**
+   *
+   */
   public function getFilters() {
     return [
       new TwigFilter('number_to_words', $this->numberToWords(...)),
     ];
   }
 
+  /**
+   *
+   */
   public function getName() {
     return 'number_to_words';
   }
 
+  /**
+   *
+   */
   public function numberToWords($number) {
-    $dictionary = array(
+    $dictionary = [
       0 => 'không',
       1 => 'một',
       2 => 'hai',
@@ -29,24 +41,24 @@ class NumberToWords extends AbstractExtension {
       7 => 'bảy',
       8 => 'tám',
       9 => 'chín',
-    );
+    ];
 
     if (!is_numeric($number)) {
-      return false;
+      return FALSE;
     }
 
     if ($number == 0) {
       return 'không đồng';
     }
 
-    // Xử lý số âm
+    // Xử lý số âm.
     if ($number < 0) {
       return 'âm ' . $this->numberToWords(abs($number));
     }
 
     $string = '';
 
-    // Xử lý hàng tỷ
+    // Xử lý hàng tỷ.
     if ($number >= 1000000000) {
       $billions = floor($number / 1000000000);
       $string .= $this->readHundreds($billions) . ' tỷ';
@@ -56,7 +68,7 @@ class NumberToWords extends AbstractExtension {
       }
     }
 
-    // Xử lý hàng triệu
+    // Xử lý hàng triệu.
     if ($number >= 1000000) {
       $millions = floor($number / 1000000);
       $string .= $this->readHundreds($millions) . ' triệu';
@@ -66,7 +78,7 @@ class NumberToWords extends AbstractExtension {
       }
     }
 
-    // Xử lý hàng nghìn
+    // Xử lý hàng nghìn.
     if ($number >= 1000) {
       $thousands = floor($number / 1000);
       $string .= $this->readHundreds($thousands) . ' nghìn';
@@ -76,7 +88,7 @@ class NumberToWords extends AbstractExtension {
       }
     }
 
-    // Xử lý hàng trăm
+    // Xử lý hàng trăm.
     if ($number > 0) {
       $string .= $this->readHundreds($number);
     }
@@ -84,8 +96,11 @@ class NumberToWords extends AbstractExtension {
     return $string . ' đồng';
   }
 
+  /**
+   *
+   */
   private function readHundreds($number) {
-    $dictionary = array(
+    $dictionary = [
       0 => 'không',
       1 => 'một',
       2 => 'hai',
@@ -96,11 +111,11 @@ class NumberToWords extends AbstractExtension {
       7 => 'bảy',
       8 => 'tám',
       9 => 'chín',
-    );
+    ];
 
     $string = '';
 
-    // Xử lý hàng trăm
+    // Xử lý hàng trăm.
     $hundreds = floor($number / 100);
     $number -= $hundreds * 100;
     if ($hundreds > 0) {
@@ -110,7 +125,7 @@ class NumberToWords extends AbstractExtension {
       }
     }
 
-    // Xử lý hàng chục
+    // Xử lý hàng chục.
     if ($number > 0) {
       $tens = floor($number / 10);
       $ones = $number % 10;
@@ -134,4 +149,5 @@ class NumberToWords extends AbstractExtension {
 
     return $string;
   }
+
 }
