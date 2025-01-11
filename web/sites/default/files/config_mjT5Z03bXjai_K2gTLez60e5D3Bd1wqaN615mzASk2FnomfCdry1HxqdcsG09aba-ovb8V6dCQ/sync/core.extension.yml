@@ -10,8 +10,8 @@ module:
   block: 0
   block_content: 0
   breakpoint: 0
-  ckeditor5: 0
   charts: 0
+  ckeditor5: 0
   comment: 0
   config: 0
   contact: 0
@@ -57,16 +57,14 @@ module:
   update: 0
   user: 0
   user_info: 0
+  views: 10
   views_data_export: 0
   views_ui: 0
   webform: 0
   webform_entity_handler: 0
   webform_node: 0
   webform_ui: 0
-  views: 10
-  standard: 1000
 theme:
-  olivero: 0
   claro: 0
   gin: 0
-profile: standard
+  olivero: 0
