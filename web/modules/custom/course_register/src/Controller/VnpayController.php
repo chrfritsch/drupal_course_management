@@ -2,6 +2,7 @@
 
 namespace Drupal\course_register\Controller;
 
+use Drupal\user\Entity\User;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,7 +28,7 @@ class VnpayController extends ControllerBase {
       #endregion
 
       #region Tìm thong tin người dùng trong CSDL, nếu không có thì báo lỗi
-      $user = \Drupal\user\Entity\User::load($user_id);
+      $user = User::load($user_id);
       if (!$user) {
         throw new \Exception('Không tìm thấy thông tin người dùng.');
       }
