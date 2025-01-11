@@ -57,7 +57,7 @@ final class ExamPaymentResource extends ResourceBase {
     LoggerInterface $logger,
     EntityTypeManagerInterface $entity_type_manager,
     AccountProxyInterface $current_user,
-    MailManagerInterface $mail_manager
+    MailManagerInterface $mail_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->entityTypeManager = $entity_type_manager;
@@ -93,7 +93,7 @@ final class ExamPaymentResource extends ResourceBase {
    */
   public function post(array $data): ResourceResponse {
     try {
-      // Validate input
+      // Validate input.
       if (empty($data['registration_ids']) || !is_array($data['registration_ids'])) {
         throw new HttpException(400, 'Danh sách đăng ký không được để trống và phải là mảng.');
       }
@@ -101,12 +101,12 @@ final class ExamPaymentResource extends ResourceBase {
         throw new HttpException(400, 'Phương thức thanh toán không được để trống.');
       }
 
-      // Kiểm tra đăng nhập
+      // Kiểm tra đăng nhập.
       if (!$this->currentUser->isAuthenticated()) {
         throw new HttpException(403, 'Bạn cần đăng nhập để thanh toán.');
       }
 
-      // Load tất cả registrations và tính tổng tiền
+      // Load tất cả registrations và tính tổng tiền.
       $total_amount = 0;
       $exam_info = [];
       $registrations = [];
@@ -120,24 +120,24 @@ final class ExamPaymentResource extends ResourceBase {
           throw new HttpException(404, 'Không tìm thấy thông tin đăng ký: ' . $registration_id);
         }
 
-        // Kiểm tra quyền sở hữu registration
+        // Kiểm tra quyền sở hữu registration.
         if ($registration->get('field_registration_exam_user')->target_id != $this->currentUser->id()) {
           throw new HttpException(403, 'Bạn không có quyền thanh toán đăng ký này.');
         }
 
-        // Kiểm tra trạng thái đăng ký
+        // Kiểm tra trạng thái đăng ký.
         $registration_status = $registration->get('field_registration_exam_status')->value;
         if ($registration_status !== 'pending') {
           throw new HttpException(400, 'Đăng ký này không ở trạng thái chờ thanh toán.');
         }
 
-        // Load thông tin kỳ thi
+        // Load thông tin kỳ thi.
         $exam = $registration->get('field_exam_reference')->entity;
         if (!$exam) {
           throw new HttpException(404, 'Không tìm thấy thông tin kỳ thi.');
         }
 
-        // Kiểm tra deadline thanh toán
+        // Kiểm tra deadline thanh toán.
         $payment_deadline = $registration->get('field_payment_exam_deadline')->value;
         if (strtotime($payment_deadline) < time()) {
           throw new HttpException(400, 'Đã quá hạn thanh toán cho đăng ký này.');
@@ -148,7 +148,7 @@ final class ExamPaymentResource extends ResourceBase {
           throw new HttpException(400, 'Không tìm thấy thông tin lệ phí thi.');
         }
 
-        $total_amount += (float)$exam_fee;
+        $total_amount += (float) $exam_fee;
         $exam_info[] = [
           'exam_id' => $exam->id(),
           'exam_name' => $exam->label(),
@@ -164,15 +164,15 @@ final class ExamPaymentResource extends ResourceBase {
             'identification' => $registration->get('field_participant_identification')->value,
             'permanent_address' => $registration->get('field_permanent_address')->value,
             'temporary_address' => $registration->get('field_temporary_address')->value,
-          ]
+          ],
         ];
         $registrations[] = $registration;
       }
 
-      // Xử lý theo phương thức thanh toán
+      // Xử lý theo phương thức thanh toán.
       switch ($data['payment_method']) {
         case 'vnpay':
-          // Kiểm tra config VNPAY
+          // Kiểm tra config VNPAY.
           if (empty($this->vnpayConfig) ||
               empty($this->vnpayConfig['tmn_code']) ||
               empty($this->vnpayConfig['hash_secret']) ||
@@ -202,7 +202,7 @@ final class ExamPaymentResource extends ResourceBase {
           }
           catch (\Exception $e) {
             $this->logger->error('Lỗi tạo URL VNPAY: @error', [
-              '@error' => $e->getMessage()
+              '@error' => $e->getMessage(),
             ]);
             throw new HttpException(500, 'Không thể tạo URL thanh toán VNPAY.');
           }
@@ -212,12 +212,12 @@ final class ExamPaymentResource extends ResourceBase {
             throw new HttpException(400, 'Thiếu transaction ID.');
           }
 
-          // Cập nhật trạng thái các registrations
+          // Cập nhật trạng thái các registrations.
           foreach ($registrations as $registration) {
             $registration->set('field_registration_exam_status', 'confirmed');
             $registration->save();
 
-            // Gửi email thông báo
+            // Gửi email thông báo.
             $this->sendPaymentConfirmationEmail($registration);
           }
 
