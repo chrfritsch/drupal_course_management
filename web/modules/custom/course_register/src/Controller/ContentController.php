@@ -2,6 +2,7 @@
 
 namespace Drupal\course_register\Controller;
 
+use Drupal\Core\Url;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -150,7 +151,7 @@ class ContentController extends ControllerBase {
     $build['add_course'] = [
       '#type' => 'link',
       '#title' => $this->t('Add course'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'course']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'course']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -220,7 +221,7 @@ class ContentController extends ControllerBase {
     $build['add_class_registered'] = [
       '#type' => 'link',
       '#title' => $this->t('Add class registration'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'class_registered']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'class_registered']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -290,7 +291,7 @@ class ContentController extends ControllerBase {
     $build['add_transaction'] = [
       '#type' => 'link',
       '#title' => $this->t('Add transaction'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'transaction_history']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'transaction_history']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -360,7 +361,7 @@ class ContentController extends ControllerBase {
     $build['add_exam_schedule'] = [
       '#type' => 'link',
       '#title' => $this->t('Add Exam Schedule'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'exam_schedule']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'exam_schedule']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -430,7 +431,7 @@ class ContentController extends ControllerBase {
     $build['add_student_scores'] = [
       '#type' => 'link',
       '#title' => $this->t('Add Student Scores'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'student_scores']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'student_scores']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -500,7 +501,7 @@ class ContentController extends ControllerBase {
     $build['add_certificate'] = [
       '#type' => 'link',
       '#title' => $this->t('Add Certificate'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'certificate']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'certificate']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -567,7 +568,7 @@ class ContentController extends ControllerBase {
     $build['add_news'] = [
       '#type' => 'link',
       '#title' => $this->t('Add News'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'news']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'news']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
