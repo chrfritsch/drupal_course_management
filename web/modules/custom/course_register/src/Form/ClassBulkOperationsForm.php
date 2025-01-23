@@ -2,12 +2,16 @@
 
 namespace Drupal\course_register\Form;
 
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Action\ActionManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
+/**
+ *
+ */
 class ClassBulkOperationsForm extends FormBase {
 
   /**
@@ -53,11 +57,11 @@ class ClassBulkOperationsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // Add Class button
+    // Add Class button.
     $form['add_class'] = [
       '#type' => 'link',
       '#title' => $this->t('Add class'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'class']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'class']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -65,7 +69,7 @@ class ClassBulkOperationsForm extends FormBase {
       '#suffix' => '</div>',
     ];
 
-    // Table
+    // Table.
     $form['table'] = [
       '#type' => 'tableselect',
       '#header' => [
@@ -79,7 +83,7 @@ class ClassBulkOperationsForm extends FormBase {
       '#options' => [],
     ];
 
-    // Get nodes
+    // Get nodes.
     $query = $this->entityTypeManager->getStorage('node')->getQuery()
       ->condition('type', 'class')
       ->sort('created', 'DESC')
@@ -88,7 +92,7 @@ class ClassBulkOperationsForm extends FormBase {
     $nids = $query->execute();
     $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
 
-    // Build rows
+    // Build rows.
     foreach ($nodes as $node) {
       $form['table']['#options'][$node->id()] = [
         'title' => $node->toLink()->toString(),
@@ -113,7 +117,7 @@ class ClassBulkOperationsForm extends FormBase {
       ];
     }
 
-    // Action select
+    // Action select.
     $form['action'] = [
       '#type' => 'select',
       '#title' => $this->t('Action'),
@@ -144,7 +148,7 @@ class ClassBulkOperationsForm extends FormBase {
     if (!empty($selected) && !empty($action)) {
       $action_instance = $this->actionManager->createInstance($action);
       $entities = $this->entityTypeManager->getStorage('node')->loadMultiple($selected);
-      
+
       foreach ($entities as $entity) {
         $action_instance->execute($entity);
       }
@@ -152,4 +156,5 @@ class ClassBulkOperationsForm extends FormBase {
       $this->messenger()->addMessage($this->t('The update has been performed.'));
     }
   }
+
 }
