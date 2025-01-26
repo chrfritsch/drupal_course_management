@@ -4,10 +4,16 @@ namespace Drupal\course_register\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
+/**
+ *
+ */
 class AnalyticsController extends ControllerBase {
 
+  /**
+   *
+   */
   public function dashboard() {
-    // Tạo dữ liệu mẫu đơn giản
+    // Tạo dữ liệu mẫu đơn giản.
     $chart = [
       '#type' => 'chart',
       '#chart_type' => 'line',
@@ -27,11 +33,12 @@ class AnalyticsController extends ControllerBase {
     return [
       '#theme' => 'analytics_dashboard',
       '#content' => [
-        '#markup' => '<div class="chart-container">' . render($chart) . '</div>',
+        '#markup' => '<div class="chart-container">' . \Drupal::service('renderer')->render($chart) . '</div>',
       ],
       '#attached' => [
         'library' => ['course_register/analytics_dashboard'],
       ],
     ];
   }
+
 }

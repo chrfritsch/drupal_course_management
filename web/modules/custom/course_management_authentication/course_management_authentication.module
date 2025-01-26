@@ -1,17 +1,27 @@
 <?php
 
 /**
+ * @file
+ */
+
+/**
  * Implements hook_views_pre_render().
  */
-function course_management_authentication_views_pre_view(\Drupal\views\ViewExecutable $view, $display_id, array &$args) {
-//  dd($view);
-//  /** @var \Drupal\views\ViewExecutable $view */
-//  $view = $variables['view'];
-//  if ($view->id() == 'course_view' && $view->current_display == "rest_export_1") {
-//    dd($variables['rows'][0]['#rows'][0]['#view_mode']);
-//    //    if (count($view->result) == 1) {
-////      // Change view mode to teaser when there is only 1 item.
-////      $variables['rows'][0]['#rows'][0]['#view_mode'] = 'teaser';
-////    }
-//  }
+
+use Drupal\views\ViewExecutable;
+
+/**
+ *
+ */
+function course_management_authentication_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+  // dd($view);
+  //  /** @var \Drupal\views\ViewExecutable $view */
+  //  $view = $variables['view'];
+  //  if ($view->id() == 'course_view' && $view->current_display == "rest_export_1") {
+  //    dd($variables['rows'][0]['#rows'][0]['#view_mode']);
+  //    //    if (count($view->result) == 1) {
+  // Change view mode to teaser when there is only 1 item.
+  // $variables['rows'][0]['#rows'][0]['#view_mode'] = 'teaser';
+  // }
+  //  }.
 }
