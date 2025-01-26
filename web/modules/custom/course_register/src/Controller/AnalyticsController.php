@@ -33,7 +33,7 @@ class AnalyticsController extends ControllerBase {
     return [
       '#theme' => 'analytics_dashboard',
       '#content' => [
-        '#markup' => '<div class="chart-container">' . render($chart) . '</div>',
+        '#markup' => '<div class="chart-container">' . \Drupal::service('renderer')->render($chart) . '</div>',
       ],
       '#attached' => [
         'library' => ['course_register/analytics_dashboard'],
