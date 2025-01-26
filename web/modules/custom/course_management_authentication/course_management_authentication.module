@@ -1,9 +1,11 @@
 <?php
 
+use Drupal\views\ViewExecutable;
+
 /**
  * Implements hook_views_pre_render().
  */
-function course_management_authentication_views_pre_view(\Drupal\views\ViewExecutable $view, $display_id, array &$args) {
+function course_management_authentication_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
 //  dd($view);
 //  /** @var \Drupal\views\ViewExecutable $view */
 //  $view = $variables['view'];

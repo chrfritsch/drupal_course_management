@@ -2,6 +2,7 @@
 
 namespace Drupal\course_register\Form;
 
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Action\ActionManager;
@@ -57,7 +58,7 @@ class ClassBulkOperationsForm extends FormBase {
     $form['add_class'] = [
       '#type' => 'link',
       '#title' => $this->t('Add class'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'class']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'class']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
