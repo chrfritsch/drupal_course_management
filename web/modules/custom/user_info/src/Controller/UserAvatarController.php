@@ -7,22 +7,28 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 
-// Thêm dòng này
+// Thêm dòng này.
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+/**
+ *
+ */
 class UserAvatarController extends ControllerBase {
 
+  /**
+   *
+   */
   public function upload($uid, Request $request) {
     try {
-      // Kiểm tra quyền truy cập
+      // Kiểm tra quyền truy cập.
       if (!$this->currentUser()->hasPermission('edit any user profile') &&
         $this->currentUser()->id() != $uid) {
         throw new HttpException(403, 'Không có quyền chỉnh sửa thông tin người dùng.');
       }
 
-      // Load user entity
+      // Load user entity.
       $user = $this->entityTypeManager()->getStorage('user')->load($uid);
       if (!$user) {
         throw new HttpException(404, 'Không tìm thấy người dùng.');
@@ -35,13 +41,13 @@ class UserAvatarController extends ControllerBase {
 
       $file = $files->get('avatar');
 
-      // Kiểm tra file type sử dụng FileInfo
+      // Kiểm tra file type sử dụng FileInfo.
       $finfo = new \finfo(FILEINFO_MIME_TYPE);
       $mime_type = $finfo->file($file->getRealPath());
-      
-      // Debug
+
+      // Debug.
       \Drupal::logger('user_info')->notice('File mime type: @mime', [
-        '@mime' => $mime_type
+        '@mime' => $mime_type,
       ]);
 
       $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
@@ -52,7 +58,7 @@ class UserAvatarController extends ControllerBase {
         ));
       }
 
-      // Lưu file
+      // Lưu file.
       $file_system = \Drupal::service('file_system');
       $directory = 'public://avatars';
       $file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
@@ -65,11 +71,12 @@ class UserAvatarController extends ControllerBase {
         ),
         'filename' => $file->getClientOriginalName(),
         'filemime' => $mime_type,
-        'status' => FileInterface::STATUS_PERMANENT, // Sửa dòng này
+      // Sửa dòng này.
+        'status' => FileInterface::STATUS_PERMANENT,
       ]);
       $file_entity->save();
 
-      // Cập nhật avatar cho user
+      // Cập nhật avatar cho user.
       $user->set('field_avatar', $file_entity->id());
       $user->save();
 
