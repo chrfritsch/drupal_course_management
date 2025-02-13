@@ -2,7 +2,11 @@
 
 namespace Drupal\course_register\Interface;
 
+/**
+ *
+ */
 interface ExamRegistrationServiceInterface {
+
   /**
    * Validate user information.
    *
@@ -85,4 +89,5 @@ interface ExamRegistrationServiceInterface {
    *   The string without accents.
    */
   public function removeAccents($string);
+
 }

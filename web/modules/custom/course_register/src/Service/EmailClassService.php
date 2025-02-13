@@ -5,18 +5,24 @@ namespace Drupal\course_register\Service;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 
+/**
+ *
+ */
 class EmailClassService {
   protected $mailManager;
   protected $dateFormatter;
 
   public function __construct(
     MailManagerInterface $mailManager,
-    DateFormatterInterface $dateFormatter
+    DateFormatterInterface $dateFormatter,
   ) {
     $this->mailManager = $mailManager;
     $this->dateFormatter = $dateFormatter;
   }
 
+  /**
+   *
+   */
   public function sendRegistrationConfirmation($to, $class, $userName, $price, $registrationId, $username = NULL, $password = NULL) {
     $course = $class->get('field_class_course_reference')->entity;
     $teacher = $class->get('field_class_teacher')->entity;
@@ -50,4 +56,5 @@ class EmailClassService {
       $params
     );
   }
+
 }

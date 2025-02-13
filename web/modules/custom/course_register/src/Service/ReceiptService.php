@@ -29,23 +29,23 @@ class ReceiptService {
    */
   public function createReceipt($data) {
     try {
-      // Generate receipt number
+      // Generate receipt number.
       $receipt_number = $this->generateReceiptNumber();
 
-      // Prepare class references
+      // Prepare class references.
       $class_references = [];
       if (isset($data['class_id'])) {
-        // Support old format
+        // Support old format.
         $class_references[] = ['target_id' => $data['class_id']];
       }
       elseif (isset($data['class_ids']) && is_array($data['class_ids'])) {
-        // Support multiple classes
+        // Support multiple classes.
         foreach ($data['class_ids'] as $class_id) {
           $class_references[] = ['target_id' => $class_id];
         }
       }
 
-      // Create receipt node
+      // Create receipt node.
       $receipt = Node::create([
         'type' => 'receipt',
         'title' => 'Receipt #' . $receipt_number,
