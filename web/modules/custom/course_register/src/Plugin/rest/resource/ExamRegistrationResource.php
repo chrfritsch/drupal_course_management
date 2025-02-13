@@ -76,7 +76,7 @@ class ExamRegistrationResource extends ResourceBase {
     EntityTypeManagerInterface $entity_type_manager,
     MailManagerInterface $mail_manager,
     PasswordGeneratorInterface $password_generator,
-    ExamRegistrationServiceInterface $exam_registration_service
+    ExamRegistrationServiceInterface $exam_registration_service,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->currentUser = $current_user;
@@ -115,50 +115,45 @@ class ExamRegistrationResource extends ResourceBase {
    */
   public function post($data) {
     try {
-      // Debug
+      // Debug.
       $request = \Drupal::request();
       \Drupal::logger('exam_registration')->notice('Auth header: @auth', [
-        '@auth' => $request->headers->get('Authorization')
+        '@auth' => $request->headers->get('Authorization'),
       ]);
       \Drupal::logger('exam_registration')->notice('User: @user', [
-        '@user' => $this->currentUser->id()
+        '@user' => $this->currentUser->id(),
       ]);
 
-      // Validate required data
+      // Validate required data.
       if (empty($data['exam_id']) || empty($data['user_info'])) {
         throw new HttpException(400, 'Thiếu thông tin bắt buộc');
       }
 
-      #region Kiểm tra xem user_info có đúng format không
+      // Region Kiểm tra xem user_info có đúng format không.
       $this->examRegistrationService->validateUserInfo($data['user_info']);
-      #endregion
-
-      #region Tải thông tin kỳ thi từ CSDL
+      // Endregion
+      // Region Tải thông tin kỳ thi từ CSDL.
       $exam = $this->entityTypeManager->getStorage('node')
         ->load($data['exam_id']);
 
       if (!$exam || $exam->bundle() !== 'exam_schedule') {
         throw new HttpException(404, 'Không tìm thấy kỳ thi');
       }
-      #endregion
-
-      #region Kiểm tra trạng thái kỳ thi
+      // Endregion
+      // Region Kiểm tra trạng thái kỳ thi.
       $this->examRegistrationService->validateExam($exam);
-      #endregion
-
-      #region Kiểm tra xem user đã đăng nhập chưa và phân luồng xử lý
+      // Endregion
+      // Region Kiểm tra xem user đã đăng nhập chưa và phân luồng xử lý.
       if ($this->currentUser->isAuthenticated()) {
         $registration = $this->examRegistrationService->handleAuthenticatedRegistration($exam, $data['user_info']);
       }
       else {
         $registration = $this->examRegistrationService->handleAnonymousRegistration($exam, $data['user_info']);
       }
-      #endregion
-
-      #region Gửi email xác nhận
+      // Endregion
+      // Region Gửi email xác nhận.
       $this->examRegistrationService->sendConfirmationEmail($registration);
-      #endregion
-
+      // Endregion.
       return new ResourceResponse([
         'message' => 'Đăng ký thành công',
         'registration_id' => $registration->id(),
@@ -169,4 +164,5 @@ class ExamRegistrationResource extends ResourceBase {
       throw new HttpException(500, $e->getMessage());
     }
   }
+
 }

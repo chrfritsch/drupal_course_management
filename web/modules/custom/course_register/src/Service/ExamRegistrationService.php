@@ -9,6 +9,9 @@ use Drupal\Core\Mail\MailManagerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Drupal\course_register\Interface\ExamRegistrationServiceInterface;
 
+/**
+ *
+ */
 class ExamRegistrationService implements ExamRegistrationServiceInterface {
 
   protected $entityTypeManager;
@@ -20,7 +23,7 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
     EntityTypeManagerInterface $entity_type_manager,
     AccountProxyInterface $current_user,
     MailManagerInterface $mail_manager,
-    PasswordGeneratorInterface $password_generator
+    PasswordGeneratorInterface $password_generator,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
@@ -29,7 +32,7 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
-   * Kiểm tra thông tin user
+   * Kiểm tra thông tin user.
    *
    * {@inheritdoc}
    */
@@ -51,32 +54,32 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
       }
     }
 
-    // Validate email format
+    // Validate email format.
     if (!filter_var($user_info['email'], FILTER_VALIDATE_EMAIL)) {
       throw new HttpException(400, 'Email không hợp lệ');
     }
 
-    // Validate phone format - chấp nhận cả định dạng quốc tế
+    // Validate phone format - chấp nhận cả định dạng quốc tế.
     $phone = $user_info['phone'];
-    // Xóa dấu + ở đầu nếu có
+    // Xóa dấu + ở đầu nếu có.
     if (strpos($phone, '+') === 0) {
       $phone = substr($phone, 1);
     }
-    // Xóa mã quốc gia 84 nếu có
+    // Xóa mã quốc gia 84 nếu có.
     if (strpos($phone, '84') === 0) {
       $phone = substr($phone, 2);
     }
-    // Kiểm tra số điện thoại còn lại phải là 9 hoặc 10 số
+    // Kiểm tra số điện thoại còn lại phải là 9 hoặc 10 số.
     if (!preg_match('/^[0-9]{9,10}$/', $phone)) {
       throw new HttpException(400, 'Số điện thoại không hợp lệ');
     }
 
-    // Format lại số điện thoại trước khi lưu
+    // Format lại số điện thoại trước khi lưu.
     $user_info['phone'] = '+84' . ltrim($phone, '0');
   }
 
   /**
-   * Kiểm tra thông tin kỳ thi
+   * Kiểm tra thông tin kỳ thi.
    *
    * {@inheritdoc}
    */
@@ -94,13 +97,13 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
-   * Xử lý đăng ký kỳ thi cho user đã đăng nhập
+   * Xử lý đăng ký kỳ thi cho user đã đăng nhập.
    *
    * {@inheritdoc}
    */
   public function handleAuthenticatedRegistration($exam, $user_info) {
     try {
-      // Format phone number
+      // Format phone number.
       $phone = $user_info['phone'];
       if (strpos($phone, '+') === 0) {
         $phone = substr($phone, 1);
@@ -110,13 +113,13 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
       }
       $phone = '+84' . ltrim($phone, '0');
 
-      // Tìm user dựa vào email
+      // Tìm user dựa vào email.
       $users = $this->entityTypeManager->getStorage('user')
         ->loadByProperties(['mail' => $user_info['email']]);
       $user = reset($users);
 
       if ($user) {
-        // Cập nhật thông tin user
+        // Cập nhật thông tin user.
         $user->set('field_fullname', $user_info['fullname']);
         $user->set('field_identification_code', $user_info['identification']);
         $user->set('field_phone_number', $phone);
@@ -136,7 +139,7 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
           ]);
       }
 
-      // Create exam registration node
+      // Create exam registration node.
       $registration = $this->entityTypeManager->getStorage('node')->create([
         'type' => 'exam_registration',
         'title' => $exam->getTitle() . ' - ' . $user_info['fullname'],
@@ -170,18 +173,18 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
-   * Xử lý đăng ký kỳ thi cho user chưa đăng nhập
+   * Xử lý đăng ký kỳ thi cho user chưa đăng nhập.
    *
    * {@inheritdoc}
    */
   public function handleAnonymousRegistration($exam, $user_info) {
-    // Generate password
+    // Generate password.
     $password = $this->passwordGenerator->generate(8);
 
-    // Convert fullname to username
+    // Convert fullname to username.
     $username = $this->convertFullnameToUsername($user_info['fullname']);
 
-    // Create new user account
+    // Create new user account.
     $user = $this->entityTypeManager->getStorage('user')->create([
       'name' => $username,
       'mail' => $user_info['email'],
@@ -199,7 +202,7 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
     $user->addRole('student');
     $user->save();
 
-    // Create exam registration node
+    // Create exam registration node.
     $registration = $this->entityTypeManager->getStorage('node')->create([
       'type' => 'exam_registration',
       'title' => $exam->getTitle() . ' - ' . $user_info['fullname'],
@@ -220,7 +223,7 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
     ]);
     $registration->save();
 
-    // Lưu thông tin tạm thời vào registration
+    // Lưu thông tin tạm thời vào registration.
     $registration->temporary_account_info = [
       'username' => $username,
       'password' => $password,
@@ -230,14 +233,14 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
   }
 
   /**
-   * Gửi email xác nhận
+   * Gửi email xác nhận.
    *
    * {@inheritdoc}
    */
   public function sendConfirmationEmail($registration) {
     $exam = $registration->get('field_exam_reference')->entity;
 
-    // Format thời gian từ seconds sang H:i
+    // Format thời gian từ seconds sang H:i.
     $start_time = date('H:i', $exam->get('field_exam_start_time')->value);
     $end_time = date('H:i', $exam->get('field_exam_end_time')->value);
 
@@ -257,7 +260,7 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
       'payment_url' => '/payment/exam/' . $registration->id(),
     ];
 
-    // Add login credentials for new users
+    // Add login credentials for new users.
     if (isset($registration->temporary_account_info)) {
       $params['username'] = $registration->temporary_account_info['username'];
       $params['password'] = $registration->temporary_account_info['password'];
@@ -295,14 +298,14 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
    * {@inheritdoc}
    */
   public function convertFullnameToUsername($fullname) {
-    // Chuyển về chữ thường và bỏ dấu
+    // Chuyển về chữ thường và bỏ dấu.
     $username = mb_strtolower($fullname, 'UTF-8');
     $username = $this->removeAccents($username);
 
-    // Thay thế khoảng trắng bằng không gì cả
+    // Thay thế khoảng trắng bằng không gì cả.
     $username = preg_replace('/\s+/', '', $username);
 
-    // Chỉ giữ lại chữ cái và số
+    // Chỉ giữ lại chữ cái và số.
     $username = preg_replace('/[^a-z0-9]/', '', $username);
 
     return $username;
@@ -322,7 +325,7 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
       'Ặ', 'Ẳ', 'Ẵ', 'È', 'É', 'Ẹ', 'Ẻ', 'Ẽ', 'Ê', 'Ề', 'Ế', 'Ệ', 'Ể', 'Ễ',
       'Ì', 'Í', 'Ị', 'Ỉ', 'Ĩ', 'Ò', 'Ó', 'Ọ', 'Ỏ', 'Õ', 'Ô', 'Ồ', 'Ố', 'Ộ',
       'Ổ', 'Ỗ', 'Ơ', 'Ờ', 'Ớ', 'Ợ', 'Ở', 'Ỡ', 'Ù', 'Ú', 'Ụ', 'Ủ', 'Ũ', 'Ư',
-      'Ừ', 'Ứ', 'Ự', 'Ử', 'Ữ', 'Ỳ', 'Ý', 'Ỵ', 'Ỷ', 'Ỹ', 'Đ'
+      'Ừ', 'Ứ', 'Ự', 'Ử', 'Ữ', 'Ỳ', 'Ý', 'Ỵ', 'Ỷ', 'Ỹ', 'Đ',
     ];
     $replace = [
       'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a',
@@ -334,8 +337,9 @@ class ExamRegistrationService implements ExamRegistrationServiceInterface {
       'a', 'a', 'a', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e',
       'i', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o',
       'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'u', 'u',
-      'u', 'u', 'u', 'u', 'u', 'y', 'y', 'y', 'y', 'y', 'd'
+      'u', 'u', 'u', 'u', 'u', 'y', 'y', 'y', 'y', 'y', 'd',
     ];
     return str_replace($search, $replace, $string);
   }
+
 }

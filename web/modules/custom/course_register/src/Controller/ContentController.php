@@ -2,6 +2,7 @@
 
 namespace Drupal\course_register\Controller;
 
+use Drupal\Core\Url;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -40,14 +41,13 @@ class ContentController extends ControllerBase {
   /**
    * Builds the response for the class content listing page.
    */
-  // public function classContent() {
+  // Public function classContent() {
   //   // Khởi tạo form để xử lý bulk operations
   //   $form['admin_table'] = [
   //     '#type' => 'form',
   //     '#attributes' => ['id' => 'class-admin-table'],
-  //   ];
-
-  //   // Thêm nút Add Class
+  //   ];.
+  // // Thêm nút Add Class
   //   $form['admin_table']['add_class'] = [
   //     '#type' => 'link',
   //     '#title' => $this->t('Add class'),
@@ -58,8 +58,7 @@ class ContentController extends ControllerBase {
   //     '#prefix' => '<div class="action-links">',
   //     '#suffix' => '</div>',
   //   ];
-
-  //   // Định nghĩa bảng với checkbox
+  // // Định nghĩa bảng với checkbox
   //   $form['admin_table']['table'] = [
   //     '#type' => 'table',
   //     '#header' => [
@@ -72,8 +71,7 @@ class ContentController extends ControllerBase {
   //     ],
   //     '#empty' => $this->t('No content available.'),
   //   ];
-
-  //   // Thêm bulk operations
+  // // Thêm bulk operations
   //   $form['admin_table']['actions'] = [
   //     '#type' => 'container',
   //     '#attributes' => ['class' => ['form-actions js-form-wrapper']],
@@ -92,16 +90,13 @@ class ContentController extends ControllerBase {
   //       '#button_type' => 'primary',
   //     ],
   //   ];
-
-  //   $query = $this->entityTypeManager->getStorage('node')->getQuery()
+  // $query = $this->entityTypeManager->getStorage('node')->getQuery()
   //     ->condition('type', 'class')
   //     ->sort('created', 'DESC')
   //     ->accessCheck(TRUE);
-
-  //   $nids = $query->execute();
+  // $nids = $query->execute();
   //   $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
-
-  //   foreach ($nodes as $node) {
+  // foreach ($nodes as $node) {
   //     $form['admin_table']['table'][$node->id()] = [
   //       'checkbox' => [
   //         '#type' => 'checkbox',
@@ -136,21 +131,20 @@ class ContentController extends ControllerBase {
   //         ],
   //       ],
   //     ];
-  //   }
-
-  //   $form['#attached']['library'][] = 'core/drupal.tableselect';
+  //   }.
+  // $form['#attached']['library'][] = 'core/drupal.tableselect';
   //   return $form;
-  // }
+  // }.
 
   /**
    * Builds the response for the course content listing page.
    */
   public function courseContent() {
-    // Thêm nút Add Course
+    // Thêm nút Add Course.
     $build['add_course'] = [
       '#type' => 'link',
       '#title' => $this->t('Add course'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'course']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'course']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -216,11 +210,11 @@ class ContentController extends ControllerBase {
    * Builds the response for the class registered content listing page.
    */
   public function classRegisteredContent() {
-    // Thêm nút Add Class Registration
+    // Thêm nút Add Class Registration.
     $build['add_class_registered'] = [
       '#type' => 'link',
       '#title' => $this->t('Add class registration'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'class_registered']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'class_registered']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -286,11 +280,11 @@ class ContentController extends ControllerBase {
    * Builds the response for the transaction content listing page.
    */
   public function transactionContent() {
-    // Thêm nút Add Transaction
+    // Thêm nút Add Transaction.
     $build['add_transaction'] = [
       '#type' => 'link',
       '#title' => $this->t('Add transaction'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'transaction_history']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'transaction_history']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -356,11 +350,11 @@ class ContentController extends ControllerBase {
    * Builds the response for the exam schedule content listing page.
    */
   public function examScheduleContent() {
-    // Thêm nút Add Transaction
+    // Thêm nút Add Transaction.
     $build['add_exam_schedule'] = [
       '#type' => 'link',
       '#title' => $this->t('Add Exam Schedule'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'exam_schedule']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'exam_schedule']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -426,11 +420,11 @@ class ContentController extends ControllerBase {
    * Builds the response for the student scores content listing page.
    */
   public function studentScoresContent() {
-    // Thêm nút Add Transaction
+    // Thêm nút Add Transaction.
     $build['add_student_scores'] = [
       '#type' => 'link',
       '#title' => $this->t('Add Student Scores'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'student_scores']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'student_scores']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -496,11 +490,11 @@ class ContentController extends ControllerBase {
    * Builds the response for the certificate content listing page.
    */
   public function certificateContent() {
-    // Thêm nút Add Transaction
+    // Thêm nút Add Transaction.
     $build['add_certificate'] = [
       '#type' => 'link',
       '#title' => $this->t('Add Certificate'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'certificate']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'certificate']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -562,12 +556,15 @@ class ContentController extends ControllerBase {
     return $build;
   }
 
+  /**
+   *
+   */
   public function newsContent() {
-    // Thêm nút Add Transaction
+    // Thêm nút Add Transaction.
     $build['add_news'] = [
       '#type' => 'link',
       '#title' => $this->t('Add News'),
-      '#url' => \Drupal\Core\Url::fromRoute('node.add', ['node_type' => 'news']),
+      '#url' => Url::fromRoute('node.add', ['node_type' => 'news']),
       '#attributes' => [
         'class' => ['button', 'button--primary', 'button--action'],
       ],
@@ -630,5 +627,5 @@ class ContentController extends ControllerBase {
   }
 
   // Tương tự cho các method khác: courseContent(), classRegisteredContent(), transactionContent()
-  // Copy cấu trúc tương tự nhưng thay đổi condition type tương ứng
+  // Copy cấu trúc tương tự nhưng thay đổi condition type tương ứng.
 }

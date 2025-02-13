@@ -49,7 +49,7 @@ class ExamReceiptController extends ControllerBase {
    * Downloads a PDF version of the exam receipt.
    */
   public function downloadPdf($receipt_id) {
-    // Load receipt node
+    // Load receipt node.
     $receipt = $this->entityTypeManager()
       ->getStorage('node')
       ->load($receipt_id);
@@ -58,13 +58,14 @@ class ExamReceiptController extends ControllerBase {
       throw new NotFoundHttpException('Không tìm thấy biên lai.');
     }
 
-    // Kiểm tra quyền truy cập
+    // Kiểm tra quyền truy cập.
     if (!$receipt->access('view')) {
       throw new NotFoundHttpException('Bạn không có quyền xem biên lai này.');
     }
 
-    // Generate PDF
+    // Generate PDF.
     $entities = [$receipt];
     return $this->printBuilder->deliverPrintable($entities, $this->printEngine, TRUE);
   }
+
 }

@@ -6,15 +6,12 @@ namespace Drupal\course_management_authentication\Plugin\rest\resource;
 
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
-use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Route;
 
 /**
  * Represents Register API records as resources.
@@ -71,6 +68,9 @@ final class RegisterApiResource extends ResourceBase {
     $this->storage = $keyValueFactory->get('course_management_authentication_register_api');
   }
 
+  /**
+   *
+   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
@@ -82,6 +82,9 @@ final class RegisterApiResource extends ResourceBase {
     );
   }
 
+  /**
+   *
+   */
   public function post(array $data) {
     try {
       // Validate required fields.

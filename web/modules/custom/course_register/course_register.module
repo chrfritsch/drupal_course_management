@@ -1,26 +1,30 @@
 <?php
 
 /**
+ * @file
+ */
+
+/**
  * Implements hook_cron().
  */
 function course_register_cron() {
-  // Log bắt đầu chạy cron
+  // Log bắt đầu chạy cron.
   \Drupal::logger('course_register')
     ->notice('Bắt đầu chạy cron update class status');
 
-  // Lấy ngày hiện tại
+  // Lấy ngày hiện tại.
   $current_date = date('Y-m-d');
   \Drupal::logger('course_register')
     ->notice('Ngày hiện tại: @date', ['@date' => $current_date]);
 
-  // Tìm TẤT CẢ các node class
+  // Tìm TẤT CẢ các node class.
   $query = \Drupal::entityQuery('node')
     ->condition('type', 'class')
     ->accessCheck(FALSE);
 
   $nids = $query->execute();
 
-  // Log số lượng node tìm được
+  // Log số lượng node tìm được.
   \Drupal::logger('course_register')->notice('Tìm thấy @count node class', [
     '@count' => count($nids),
   ]);
@@ -30,7 +34,7 @@ function course_register_cron() {
     $classes = $storage->loadMultiple($nids);
 
     foreach ($classes as $class) {
-      // Log thông tin của từng class
+      // Log thông tin của từng class.
       $end_date = $class->get('field_class_end_date')->value;
       $current_status = $class->get('field_class_status')->value;
 
@@ -42,7 +46,7 @@ function course_register_cron() {
         ]);
 
       // Nếu end_date < current_date thì set completed
-      // Ngược lại set active
+      // Ngược lại set active.
       $new_status = (strtotime($end_date) < strtotime($current_date)) ? 'completed' : 'active';
 
       try {
@@ -76,12 +80,12 @@ function course_register_cron() {
 function course_register_mail($key, &$message, $params) {
   switch ($key) {
     case 'registration_confirmation':
-      // Thiết lập tiêu đề email
+      // Thiết lập tiêu đề email.
       $message['subject'] = t('Xác nhận đăng ký lớp học @class_title', [
         '@class_title' => $params['class_title'],
       ]);
 
-      // Tạo bảng HTML cho thông tin khóa học
+      // Tạo bảng HTML cho thông tin khóa học.
       $course_table = "
         <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
           <tr>
@@ -99,7 +103,7 @@ function course_register_mail($key, &$message, $params) {
           </tr>
         </table>";
 
-      // Tạo bảng HTML cho thông tin lớp học
+      // Tạo bảng HTML cho thông tin lớp học.
       $class_table = "
         <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
           <tr>
@@ -129,7 +133,7 @@ function course_register_mail($key, &$message, $params) {
           </tr>
         </table>";
 
-      // Tạo nội dung email
+      // Tạo nội dung email.
       $body = [];
 
       // 1. Lời chào
@@ -180,21 +184,21 @@ function course_register_mail($key, &$message, $params) {
         $body[] = t('Vui lòng đổi mật khẩu sau khi đăng nhập lần đầu để bảo mật tài khoản.');
       }
 
-      // Gán nội dung vào message
+      // Gán nội dung vào message.
       $message['body'] = $body;
 
-      // Thiết lập định dạng HTML cho email
+      // Thiết lập định dạng HTML cho email.
       $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
       break;
 
-    // Thêm case mới cho đăng ký thi
+    // Thêm case mới cho đăng ký thi.
     case 'exam_registration_confirmation':
-      // Thiết lập tiêu đề email
+      // Thiết lập tiêu đề email.
       $message['subject'] = t('Xác nhận đăng ký kỳ thi @exam_name', [
         '@exam_name' => $params['exam_name'],
       ]);
 
-      // Tạo bảng HTML cho thông tin kỳ thi
+      // Tạo bảng HTML cho thông tin kỳ thi.
       $exam_table = "
         <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
           <tr>
@@ -224,7 +228,7 @@ function course_register_mail($key, &$message, $params) {
           </tr>
         </table>";
 
-      // Tạo bảng HTML cho thông tin thí sinh
+      // Tạo bảng HTML cho thông tin thí sinh.
       $candidate_table = "
         <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
           <tr>
@@ -254,7 +258,7 @@ function course_register_mail($key, &$message, $params) {
           </tr>
         </table>";
 
-      // Tạo nội dung email
+      // Tạo nội dung email.
       $body = [];
 
       // 1. Lời chào
@@ -308,21 +312,21 @@ function course_register_mail($key, &$message, $params) {
       $body[] = t('- Mang theo CCCD/CMND khi đến dự thi để đối chiếu thông tin.');
       $body[] = t('- Đến trước giờ thi ít nhất 30 phút để làm thủ tục.');
 
-      // Gán nội dung vào message
+      // Gán nội dung vào message.
       $message['body'] = $body;
 
-      // Thiết lập định dạng HTML cho email
+      // Thiết lập định dạng HTML cho email.
       $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
       break;
 
-    // Thêm case cho email xác nhận thanh toán
+    // Thêm case cho email xác nhận thanh toán.
     case 'exam_payment_confirmation':
       $message['subject'] = t('Xác nhận thanh toán lệ phí thi @exam_name', [
         '@exam_name' => $params['exam_name'],
       ]);
 
       // Tạo bảng HTML cho thông tin kỳ thi
-      // Tạo bảng HTML cho thông tin kỳ thi
+      // Tạo bảng HTML cho thông tin kỳ thi.
       $exam_table = "
         <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
           <tr>
@@ -352,7 +356,7 @@ function course_register_mail($key, &$message, $params) {
           </tr>
         </table>";
 
-      // Tạo bảng HTML cho thông tin thanh toán
+      // Tạo bảng HTML cho thông tin thanh toán.
       $payment_table = "
         <table style='border-collapse: collapse; width: 100%; margin: 15px 0;'>
           <tr>
@@ -406,7 +410,7 @@ function course_register_theme() {
       'base hook' => 'node',
     ],
 
-    // Thêm theme definition mới cho analytics dashboard
+    // Thêm theme definition mới cho analytics dashboard.
     'analytics_dashboard' => [
       'variables' => [
         'revenue_chart' => NULL,
@@ -488,9 +492,9 @@ function course_register_preprocess_node(&$variables) {
  * Implements hook_menu_local_tasks_alter().
  */
 function course_register_menu_local_tasks_alter(&$data, $route_name) {
-  // Kiểm tra nếu đang ở trang admin content
+  // Kiểm tra nếu đang ở trang admin content.
   if ($route_name == 'system.admin_content') {
-    // Danh sách các tab cần giữ lại
+    // Danh sách các tab cần giữ lại.
     $allowed_tabs = [
       'system.admin_content',
       'view.files.page_1',
@@ -504,7 +508,7 @@ function course_register_menu_local_tasks_alter(&$data, $route_name) {
       'course_register.content_news',
     ];
 
-    // Lọc các tab không cần thiết
+    // Lọc các tab không cần thiết.
     if (isset($data['tabs'][0])) {
       foreach ($data['tabs'][0] as $route => $tab) {
         if (!in_array($route, $allowed_tabs)) {

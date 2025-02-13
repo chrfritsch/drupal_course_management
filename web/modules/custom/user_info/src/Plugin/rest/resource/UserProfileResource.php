@@ -10,14 +10,11 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\file\Entity\File;
-use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Route;
 
 /**
  * Represents API records as resources.
@@ -89,7 +86,7 @@ final class UserProfileResource extends ResourceBase {
     LoggerInterface $logger,
     KeyValueFactoryInterface $keyValueFactory,
     AccountProxyInterface $currentUser,
-    EntityTypeManagerInterface $entityTypeManager
+    EntityTypeManagerInterface $entityTypeManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->storage = $keyValueFactory->get('user_info_api');
@@ -125,17 +122,16 @@ final class UserProfileResource extends ResourceBase {
   public function get($uid) {
     try {
       // Kiểm tra quyền truy cập
-//      if (!$this->currentUser->hasPermission('access user profiles')) {
-//        throw new HttpException(403, 'Không có quyền truy cập thông tin người dùng.');
-//      }
-
-      // Load user entity
+      //      if (!$this->currentUser->hasPermission('access user profiles')) {
+      //        throw new HttpException(403, 'Không có quyền truy cập thông tin người dùng.');
+      //      }
+      // Load user entity.
       $user = $this->entityTypeManager->getStorage('user')->load($uid);
       if (!$user) {
         throw new HttpException(404, 'Không tìm thấy người dùng.');
       }
 
-      // Chuẩn bị dữ liệu trả về
+      // Chuẩn bị dữ liệu trả về.
       $data = [
         'uid' => $user->id(),
         'username' => $user->getAccountName(),
@@ -146,19 +142,19 @@ final class UserProfileResource extends ResourceBase {
         'workplace' => $user->get('field_workplace')->value,
         'avatar' => $user->get('field_avatar')->entity ? $user->get('field_avatar')->entity->createFileUrl() : NULL,
       ];
-  
+
       if ($user->get('field_user_career')->entity) {
         $data['career'] = [
           'tid' => $user->get('field_user_career')->entity->id(),
           'name' => $user->get('field_user_career')->entity->getName(),
         ];
       }
-  
+
       $response = new ResourceResponse($data);
-      // Disable caching
+      // Disable caching.
       $response->addCacheableDependency($user);
       $response->getCacheableMetadata()->setCacheMaxAge(0);
-      
+
       return $response;
     }
     catch (\Exception $e) {
@@ -180,18 +176,17 @@ final class UserProfileResource extends ResourceBase {
   public function patch($uid, array $data) {
     try {
       // Kiểm tra quyền truy cập
-//      if (!$this->currentUser->hasPermission('edit any user profile') &&
-//        $this->currentUser->id() != $uid) {
-//        throw new HttpException(403, 'Không có quyền chỉnh sửa thông tin người dùng.');
-//      }
-
-      // Load user entity
+      //      if (!$this->currentUser->hasPermission('edit any user profile') &&
+      //        $this->currentUser->id() != $uid) {
+      //        throw new HttpException(403, 'Không có quyền chỉnh sửa thông tin người dùng.');
+      //      }
+      // Load user entity.
       $user = $this->entityTypeManager->getStorage('user')->load($uid);
       if (!$user) {
         throw new HttpException(404, 'Không tìm thấy người dùng.');
       }
 
-      // Cập nhật thông tin cơ bản
+      // Cập nhật thông tin cơ bản.
       $fields_to_update = [
         'fullname' => 'field_fullname',
         'identification_code' => 'field_identification_code',
@@ -205,15 +200,15 @@ final class UserProfileResource extends ResourceBase {
         }
       }
 
-      // Cập nhật career nếu có
+      // Cập nhật career nếu có.
       if (isset($data['career']) && !empty($data['career']['tid'])) {
         $user->set('field_user_career', $data['career']['tid']);
       }
 
-      // Lưu thay đổi
+      // Lưu thay đổi.
       $user->save();
 
-      // Chuẩn bị dữ liệu trả về
+      // Chuẩn bị dữ liệu trả về.
       $response_data = [
         'uid' => $user->id(),
         'username' => $user->getAccountName(),
@@ -225,7 +220,7 @@ final class UserProfileResource extends ResourceBase {
         'avatar' => $user->get('field_avatar')->entity ? $user->get('field_avatar')->entity->createFileUrl() : NULL,
       ];
 
-      // Thêm thông tin career nếu có
+      // Thêm thông tin career nếu có.
       if ($user->get('field_user_career')->entity) {
         $response_data['career'] = [
           'tid' => $user->get('field_user_career')->entity->id(),
