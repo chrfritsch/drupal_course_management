@@ -38,7 +38,7 @@ class ExamPaymentController extends ControllerBase {
    */
   public function __construct(
     MailManagerInterface $mail_manager,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     $this->mailManager = $mail_manager;
     $this->entityTypeManager = $entity_type_manager;
@@ -60,23 +60,23 @@ class ExamPaymentController extends ControllerBase {
    */
   public function examVnpayReturn(Request $request) {
     try {
-      // Verify response từ VNPAY
+      // Verify response từ VNPAY.
       $vnpay_response = $request->query->all();
       if (empty($vnpay_response['vnp_ResponseCode'])) {
         throw new \Exception('Thiếu thông tin response từ VNPAY');
       }
 
-      // Verify hash
+      // Verify hash.
       if (!$this->verifyVnpayHash($vnpay_response)) {
         throw new \Exception('Sai chữ ký từ VNPAY');
       }
 
       if ($vnpay_response['vnp_ResponseCode'] === '00') {
-        // Tách registration_ids từ vnp_TxnRef
+        // Tách registration_ids từ vnp_TxnRef.
         $txn_ref_parts = explode('_', $vnpay_response['vnp_TxnRef']);
         $registration_ids = explode(',', $txn_ref_parts[0]);
 
-        // Load tất cả registrations
+        // Load tất cả registrations.
         $registrations = $this->entityTypeManager
           ->getStorage('node')
           ->loadMultiple($registration_ids);
@@ -85,7 +85,7 @@ class ExamPaymentController extends ControllerBase {
           throw new NotFoundHttpException('Không tìm thấy thông tin đăng ký.');
         }
 
-        // Tạo mảng exam references và cập nhật trạng thái registrations
+        // Tạo mảng exam references và cập nhật trạng thái registrations.
         $exam_references = [];
         foreach ($registrations as $registration) {
           if ($registration->bundle() !== 'exam_registration') {
@@ -101,19 +101,19 @@ class ExamPaymentController extends ControllerBase {
             'target_id' => $exam->id(),
           ];
 
-          // Cập nhật trạng thái registration
+          // Cập nhật trạng thái registration.
           $registration->set('field_registration_exam_status', 'confirmed');
           $registration->save();
         }
 
-        // Lấy user từ registration đầu tiên
+        // Lấy user từ registration đầu tiên.
         $first_registration = reset($registrations);
         $user = $first_registration->get('field_registration_exam_user')->entity;
         if (!$user) {
           throw new \Exception('Không tìm thấy thông tin người dùng.');
         }
 
-        // Tạo receipt
+        // Tạo receipt.
         $receipt = Node::create([
           'type' => 'exam_payment_receipt',
           'title' => 'Exam Payment Receipt #' . time(),
@@ -128,10 +128,10 @@ class ExamPaymentController extends ControllerBase {
         ]);
         $receipt->save();
 
-        // Gửi email xác nhận
+        // Gửi email xác nhận.
         $this->sendPaymentConfirmationEmail($registrations, $receipt);
 
-        // Tạo mảng transactions
+        // Tạo mảng transactions.
         $transactions = [];
         foreach ($registrations as $registration) {
           $exam = $registration->get('field_exam_reference')->entity;
@@ -141,10 +141,10 @@ class ExamPaymentController extends ControllerBase {
 
           $transactions[] = [
             'transaction_id' => $vnpay_response['vnp_TransactionNo'],
-//            'exam_code' => $exam->get('field_exam_code')->value,
+          // 'exam_code' => $exam->get('field_exam_code')->value,
             'exam_name' => $exam->getTitle(),
             'amount' => $exam->get('field_exam_fee')->value,
-            'receipt_id' => $receipt->id()
+            'receipt_id' => $receipt->id(),
           ];
         }
 
@@ -162,14 +162,14 @@ class ExamPaymentController extends ControllerBase {
             'transactions' => $transactions,
             'student_name' => $student_name,
             'receipt_id' => $receipt->id(),
-          ]
+          ],
         ];
 
         $query = http_build_query($response_data);
         return new TrustedRedirectResponse('http://localhost:5173/payment/exam-vnpay-return?' . $query);
       }
 
-      // Xử lý khi giao dịch thất bại
+      // Xử lý khi giao dịch thất bại.
       $error_data = [
         'status' => 'error',
         'code' => $vnpay_response['vnp_ResponseCode'],
@@ -178,7 +178,7 @@ class ExamPaymentController extends ControllerBase {
           'vnp_ResponseCode' => $vnpay_response['vnp_ResponseCode'],
           'vnp_TransactionStatus' => $vnpay_response['vnp_ResponseCode'],
           'payment_date' => date('Y-m-d H:i:s'),
-        ]
+        ],
       ];
 
       $query = http_build_query($error_data);
@@ -196,7 +196,7 @@ class ExamPaymentController extends ControllerBase {
         'data' => [
           'error' => $e->getMessage(),
           'payment_date' => date('Y-m-d H:i:s'),
-        ]
+        ],
       ];
 
       $query = http_build_query($error_data);
@@ -245,8 +245,8 @@ class ExamPaymentController extends ControllerBase {
    */
   private function sendPaymentConfirmationEmail(array $registrations, Node $receipt): void {
     $exam_info = [];
-    $first_exam = null;
-    $first_registration = null;
+    $first_exam = NULL;
+    $first_registration = NULL;
 
     foreach ($registrations as $registration) {
       $exam = $registration->get('field_exam_reference')->entity;
@@ -257,7 +257,7 @@ class ExamPaymentController extends ControllerBase {
         continue;
       }
 
-      // Lưu exam và registration đầu tiên để dùng sau
+      // Lưu exam và registration đầu tiên để dùng sau.
       if (!$first_exam) {
         $first_exam = $exam;
         $first_registration = $registration;
@@ -275,7 +275,7 @@ class ExamPaymentController extends ControllerBase {
       ];
     }
 
-    // Kiểm tra nếu không có exam nào hợp lệ
+    // Kiểm tra nếu không có exam nào hợp lệ.
     if (!$first_exam || !$first_registration || empty($exam_info)) {
       \Drupal::logger('exam_payment')->error('Không có thông tin kỳ thi hợp lệ để gửi email');
       return;
@@ -295,7 +295,7 @@ class ExamPaymentController extends ControllerBase {
       'payment_date' => $receipt->get('field_exam_receipt_date')->value,
       'exam_info' => $exam_info,
       'receipt_pdf_url' => '/exam-receipt/' . $receipt->id() . '/pdf',
-      // Thêm thông tin thí sinh
+      // Thêm thông tin thí sinh.
       'candidate_name' => $first_registration->get('field_participant_fullname')->value,
       'identification' => $first_registration->get('field_participant_identification')->value,
       'birthday' => $first_registration->get('field_participant_birthday')->value,
@@ -314,4 +314,5 @@ class ExamPaymentController extends ControllerBase {
       );
     }
   }
+
 }

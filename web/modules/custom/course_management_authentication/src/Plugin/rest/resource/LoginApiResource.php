@@ -7,16 +7,13 @@ namespace Drupal\course_management_authentication\Plugin\rest\resource;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
-use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Drupal\user\UserAuthInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Routing\Route;
 
 /**
  * Represents Login API records as resources.
@@ -88,7 +85,7 @@ final class LoginApiResource extends ResourceBase {
     LoggerInterface $logger,
     KeyValueFactoryInterface $keyValueFactory,
     UserAuthInterface $userAuth,
-    CsrfTokenGenerator $csrfToken
+    CsrfTokenGenerator $csrfToken,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->storage = $keyValueFactory->get('course_management_authentication_login_api');
@@ -140,7 +137,7 @@ final class LoginApiResource extends ResourceBase {
 
       // Verify password.
       if ($this->userAuth->authenticate($user->getAccountName(), $data['pass'])) {
-        // Generate tokens
+        // Generate tokens.
         $csrf_token = $this->csrfToken->get('rest');
         $logout_token = $this->csrfToken->get('user/logout');
 

@@ -20,19 +20,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ClassRegistrationResource extends ResourceBase {
   protected $registrationService;
 
-
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
     array $serializer_formats,
     LoggerInterface $logger,
-    ClassRegistrationService $registrationService
+    ClassRegistrationService $registrationService,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->registrationService = $registrationService;
   }
 
+  /**
+   *
+   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
@@ -74,4 +76,5 @@ class ClassRegistrationResource extends ResourceBase {
       return new ResourceResponse(['error' => $e->getMessage()], 400);
     }
   }
+
 }
